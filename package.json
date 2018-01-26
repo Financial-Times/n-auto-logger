@@ -1,0 +1,14 @@
+{
+  "name": "@financial-times/n-event-logger",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@financial-times/n-gage": "^1.19.3"
+  },
+  "scripts": {
+    "precommit": "node_modules/.bin/secret-squirrel",
+    "commitmsg": "node_modules/.bin/secret-squirrel-commitmsg",
+    "prepush": "make verify -j3"
+  }
+}

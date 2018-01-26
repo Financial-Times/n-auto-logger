@@ -1,0 +1,7 @@
+.editorconfig
+.eslintrc.js
+
+/.idea/
+/dist/
+/node_modules/
+*.env*
