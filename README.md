@@ -1,4 +1,4 @@
-# n-event-logger
+# n-event-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-event-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-event-logger)
 log all your API service calls and function calls with a single line of code
 
 ### enhance a single API service call
