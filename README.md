@@ -1,6 +1,48 @@
 # n-event-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-event-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-event-logger)
 log all your API service calls and function calls with a single line of code
 
+
+### brief
+```javascript
+import { withLogger } from '@financial-times/n-event-logger';
+
+await withLogger(meta)(yourCallFunction)(params, meta);
+```
+```javascript
+import { withServiceLogger } from '@financial-times/n-event-logger';
+
+export default withServiceLogger{
+    apiServiceCallA,
+    apiServiceCallB,
+};
+
+await APIService.apiServiceCallA(params, meta);
+await APIService.apiServiceCallB(params, meta);
+
+```
+```javascript
+import { eventLogger } from '@financial-times/n-event-logger';
+
+const meta = {
+    transactionId,
+    userId,
+    operation,
+};
+
+const event = eventLogger(meta);
+
+try {
+    event.action('someAction').success();
+    /* ... */
+    event.success();
+    /* ... */
+} catch(e) {
+    event.failure(e);
+    /* ... */
+}
+
+```
+
 ### enhance a single API service call
 
 ```javascript
