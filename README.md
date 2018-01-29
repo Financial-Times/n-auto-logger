@@ -1,5 +1,5 @@
 # n-event-logger
-log all your API service calls with a single line of code
+log all your API service calls and function calls with a single line of code
 
 ### enhance a single API service call
 
