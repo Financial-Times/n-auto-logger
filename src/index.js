@@ -16,6 +16,7 @@ const createEventLogger = event => ({
 // TODO: support surpress meta such as transactionId, userId locally for dev
 // TODO: failure input to be compatible with Error format standard
 // TODO: use callback function to selectively log result data
+// TODO: add support to enhance non-async callFunction without using await
 export const loggerEvent = event => {
 	const eventLogger = createEventLogger(event);
 	eventLogger.start();
