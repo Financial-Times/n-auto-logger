@@ -6,6 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint src",
+    "watch": "nodemon --watch src -q --exec 'eslint src --fix'",
     "test": "jest",
     "cover": "jest --coverage",
     "prepublish": "make build",
@@ -29,6 +30,7 @@
     "eslint-plugin-jest": "^21.7.0",
     "eslint-plugin-prettier": "^2.5.0",
     "jest": "^22.1.4",
+    "nodemon": "^1.14.11",
     "prettier": "^1.10.2"
   },
   "engines": {
