@@ -1,0 +1,26 @@
+# dependencies
+/node_modules/
+
+# tests
+coverage/
+reports/
+tests/
+test/
+
+# src
+src/
+
+# dot files
+.babelrc
+.editorconfig
+.eslintrc.yml
+.gitatrributes
+.gitignore
+ft.yml
+Makefile
+secret-squirrel.js
+yarn.lock
+
+# hidden dot file
+.idea/
+.DS_Store

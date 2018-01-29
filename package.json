@@ -1,14 +1,37 @@
 {
   "name": "@financial-times/n-event-logger",
   "version": "0.0.1",
-  "main": "dist/index.js",
   "license": "MIT",
-  "devDependencies": {
-    "@financial-times/n-gage": "^1.19.3"
-  },
+  "repository": "https://github.com/Financial-Times/n-event-logger.git",
+  "main": "dist/index.js",
   "scripts": {
+    "lint": "eslint src",
+    "test": "jest",
+    "cover": "jest --coverage",
+    "prepublish": "make build",
     "precommit": "node_modules/.bin/secret-squirrel",
     "commitmsg": "node_modules/.bin/secret-squirrel-commitmsg",
     "prepush": "make verify -j3"
+  },
+  "dependencies": {
+    "@financial-times/n-logger": "^5.5.11"
+  },
+  "devDependencies": {
+    "@financial-times/n-gage": "^1.19.3",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.16.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jest": "^21.7.0",
+    "eslint-plugin-prettier": "^2.5.0",
+    "jest": "^22.1.4",
+    "prettier": "^1.10.2"
+  },
+  "engines": {
+    "node": ">=6.1.0"
   }
 }

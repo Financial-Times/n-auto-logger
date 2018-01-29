@@ -1,7 +1,14 @@
-.editorconfig
-.eslintrc.js
-
-/.idea/
-/dist/
+# dependencies
 /node_modules/
-*.env*
+
+# test output
+coverage/
+reports/
+
+# dist
+lib/
+dist/
+
+# dot files
+.DS_Store
+.env
