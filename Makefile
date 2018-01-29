@@ -13,4 +13,6 @@ unit-test: build
 	@echo "Unit Testing…"
 	@jest
 
-test: verify unit-test
+lint: npm run lint
+
+test: verify lint unit-test
