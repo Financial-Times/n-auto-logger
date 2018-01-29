@@ -9,10 +9,12 @@ build: $(shell find src -type f)
 	@rm -rf dist
 	@babel src -d dist --ignore '**/__tests__/*.js'
 
-unit-test: build
+unit-test:
 	@echo "Unit Testing…"
 	@jest
 
-lint: npm run lint
+lint:
+	@echo 'linting…'
+	@eslint src
 
 test: verify lint unit-test
