@@ -5,50 +5,50 @@ log all your API service calls and function calls with a single line of code
 
 ```javascript
 /*
-	One opinionated pre-requisite is to have the callFunction input format as (params, meta) so that the callFunction can be invoked correctly with extra meta for logger
+    One opinionated pre-requisite is to have the callFunction input format as (params, meta) so that the callFunction can be invoked correctly with extra meta for logger
  */
 
 /*-- api-service.js --*/
 import { withLogger } from '@financial-times/n-event-logger';
 
 export const callSomeAPIService = (params, meta) => {
-	const options = {
-		headers: {
-			/* some meta data specific headers... */
-		}
-	};
+    const options = {
+        headers: {
+            /* some meta data specific headers... */
+        }
+    };
 
-	/* maybe some code before fetch... */
+    /* maybe some code before fetch... */
 
-	return fetch(url, options)
-		.then(/* some code for response... */)
-		.catch(/* some error hanlding... */);
+    return fetch(url, options)
+        .then(/* some code for response... */)
+        .catch(/* some error hanlding... */);
 }
 
 // this would record the name of the function 'callSomeAPIService' as action in the logger automatically
 export const enhancedCallSomeAPIService = (params, meta) => withLogger(meta)(callSomeAPIService)(params, meta);
 
 /*
-	currently async/await is needed for the logger to work correctly, update coming soon
+    currently async/await is needed for the logger to work correctly, update coming soon
  */
 
 /*-- middleware/controller.js --*/
 import { enhancedCallSomeAPIService } from '../api-service';
 
 const someOperationFunction = async (req, res, next) => {
-	const meta = {
-		/* some fields for headers */
-		transactionId: req.transactionId,
-		/* extra fields for loggers */
-		operation: 'someOperation',
-		userId: req.userId,
-	};
+    const meta = {
+        /* some fields for headers */
+        transactionId: req.transactionId,
+        /* extra fields for loggers */
+        operation: 'someOperation',
+        userId: req.userId,
+    };
 
-	try{
-		await enhancedCallSomeAPIService(params, meta);
-	} catch (e) {
-		next(e);
-	}
+    try{
+        await enhancedCallSomeAPIService(params, meta);
+    } catch (e) {
+        next(e);
+    }
 }
 ```
 ---
@@ -76,26 +76,26 @@ export const apiServiceCallB = (params, meta) => {}
 
 // helper to enhance all API service call functions as object methods
 export default withServiceLogger{
-	apiServiceCallA,
-	apiServiceCallB
+    apiServiceCallA,
+    apiServiceCallB
 };
 
 /*-- middleware/controller.js --*/
 import SomeAPIService from '../some-api-service';
 
 const someOperationFunction = async (req, res, next) => {
-	const meta = {
-		transactionId: req.transactionId,
-		userId: req.userId,
-		operation: 'someOperation',
-	};
+    const meta = {
+        transactionId: req.transactionId,
+        userId: req.userId,
+        operation: 'someOperation',
+    };
 
-	try{
-		await someAPIService.apiServiceCallA(params, meta);
-		await someAPIService.apiServiceCallB(params, meta);
-	} catch (e) {
-		next(e);
-	}
+    try{
+        await someAPIService.apiServiceCallA(params, meta);
+        await someAPIService.apiServiceCallB(params, meta);
+    } catch (e) {
+        next(e);
+    }
 }
 ```
 
@@ -107,24 +107,24 @@ import { loggerEvent } from '@financial-times/n-event-logger';
 import SomeAPIService from '../some-api-service';
 
 const someOperationFunction = async (req, res, next) => {
-	const meta = {
-		transactionId: req.transactionId,
-		userId: req.userId,
-		operation: 'someOperation',
-	};
-	const event = loggerEvent(meta);
+    const meta = {
+        transactionId: req.transactionId,
+        userId: req.userId,
+        operation: 'someOperation',
+    };
+    const event = loggerEvent(meta);
 
-	try{
-		const a = await someAPIService.apiServiceCallA(params, meta);
-		const b = await someAPIService.apiServiceCallB(params, meta);
-		/* some other code... */
-		const c = someFunction(a, b);
-		event.success({ c });
-		/* some other code... */
-	} catch (e) {
-		event.failure(e);
-		next(e);
-	}
+    try{
+        const a = await someAPIService.apiServiceCallA(params, meta);
+        const b = await someAPIService.apiServiceCallB(params, meta);
+        /* some other code... */
+        const c = someFunction(a, b);
+        event.success({ c });
+        /* some other code... */
+    } catch (e) {
+        event.failure(e);
+        next(e);
+    }
 }
 ```
 
@@ -155,36 +155,36 @@ logs help you track down exactly which function call leads to the operation fail
 import { loggerEvent, withLogger } from '@financial-times/n-event-logger';
 
 const someFunction = (a, b) => {
-	try {
-		/* some code... */
-		return c;
-	} catch(e) {
-		/* some error handling... */
-		// function needs to throw error or return Promise.reject() for failure status to be logged
-		throw e;
-	}
+    try {
+        /* some code... */
+        return c;
+    } catch(e) {
+        /* some error handling... */
+        // function needs to throw error or return Promise.reject() for failure status to be logged
+        throw e;
+    }
 }
 
 const someOperationFunction = async (req, res, next) => {
-	const meta = {
-		transactionId: req.transactionId,
-		userId: req.userId,
-		operation: 'someOperation',
-	};
-	const event = loggerEvent(meta);
+    const meta = {
+        transactionId: req.transactionId,
+        userId: req.userId,
+        operation: 'someOperation',
+    };
+    const event = loggerEvent(meta);
 
-	try{
-		const a = await someAPIService.apiServiceCallA(params, meta);
-		const b = await someAPIService.apiServiceCallB(params, meta);
-		/* some other code... */
-		// await is needed for the result status logger to work correctly
-		const c = await withLogger(meta)(someFunction)(a, b);
-		event.success({ c });
-		/* some other code... */
-	} catch (e) {
-		event.failure(e);
-		next(e);
-	}
+    try{
+        const a = await someAPIService.apiServiceCallA(params, meta);
+        const b = await someAPIService.apiServiceCallB(params, meta);
+        /* some other code... */
+        // await is needed for the result status logger to work correctly
+        const c = await withLogger(meta)(someFunction)(a, b);
+        event.success({ c });
+        /* some other code... */
+    } catch (e) {
+        event.failure(e);
+        next(e);
+    }
 }
 ```
 
@@ -193,29 +193,29 @@ const someOperationFunction = async (req, res, next) => {
 ```javascript
 /*-- middleware/controller.js --*/
 const someOperationFunction = async (req, res, next) => {
-	const meta = {
-		transactionId: req.transactionId,
-		userId: req.userId,
-		operation: 'someOperation',
-	};
-	const event = loggerEvent(meta);
+    const meta = {
+        transactionId: req.transactionId,
+        userId: req.userId,
+        operation: 'someOperation',
+    };
+    const event = loggerEvent(meta);
 
-	try{
-		const a = await someAPIService.apiServiceCallA(params, meta);
-		const b = await someAPIService.apiServiceCallB(params, meta);
-		/* some other code... */
-		if(someCondition && someCheck){
-			event.action('someAction').success();
-		} else {
-			event.action('someAction').failure();
-			throw ;
-		}
-		/* some other code... */
-		event.success();
-		/* some other code... */
-	} catch (e) {
-		event.failure(e);
-		next(e);
-	}
+    try{
+        const a = await someAPIService.apiServiceCallA(params, meta);
+        const b = await someAPIService.apiServiceCallB(params, meta);
+        /* some other code... */
+        if(someCondition && someCheck){
+            event.action('someAction').success();
+        } else {
+            event.action('someAction').failure();
+            throw ;
+        }
+        /* some other code... */
+        event.success();
+        /* some other code... */
+    } catch (e) {
+        event.failure(e);
+        next(e);
+    }
 }
 ```
