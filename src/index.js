@@ -3,37 +3,41 @@ import logger from '@financial-times/n-logger';
 const createEventLogger = event => ({
 	start: () => logger.info(event),
 	success: data => logger.info({ ...event, result: 'success', data }),
-	failure: ({ message, status, data }) => logger[ status >= 500 ? 'error' : 'warn']({
-		...event,
-		result: 'failure',
-		message,
-		...data
-	}),
-	action: action => createEventLogger({ ...event, action })
+	failure: ({ message, status, data }) =>
+		logger[status >= 500 ? 'error' : 'warn']({
+			...event,
+			result: 'failure',
+			message,
+			...data,
+		}),
+	action: action => createEventLogger({ ...event, action }),
 });
 
-//TODO: support surpress meta such as transactionId, userId locally for dev
+// TODO: support surpress meta such as transactionId, userId locally for dev
 // TODO: failure input to be compatible with Error format standard
-export const loggerEvent = (event) => {
+export const loggerEvent = event => {
 	const eventLogger = createEventLogger(event);
 	eventLogger.start();
 	return eventLogger;
 };
 
-export const withLogger = (meta={}, options={}) => callFunction => async params => {
+export const withLogger = (
+	meta = {},
+	options = {},
+) => callFunction => async params => {
 	const event = loggerEvent({
 		...meta,
 		action: meta.action || callFunction.name,
-		...params
+		...params,
 	});
 
-	const { logResult=false } = options;
+	const { logResult = false } = options;
 
 	try {
 		const data = await callFunction(params, meta);
 		event.success(logResult ? data : null);
 		return data;
-	} catch(e) {
+	} catch (e) {
 		event.failure(e);
 		return Promise.reject(e);
 	}
@@ -47,4 +51,4 @@ export const withServiceLogger = helperStandardService => {
 			withLogger(meta)(helperStandardService[methodName])(params, meta);
 	});
 	return enhanced;
-}
+};
