@@ -5,12 +5,12 @@ node_modules/@financial-times/n-gage/index.mk:
 -include node_modules/@financial-times/n-gage/index.mk
 
 build: $(shell find src -type f)
-	@echo "Building…"
+	@echo 'Building…'
 	@rm -rf dist
 	@babel src -d dist --ignore '**/__tests__/*.js'
 
 unit-test:
-	@echo "Unit Testing…"
+	@echo 'Unit Testing…'
 	@jest
 
 lint:
@@ -18,3 +18,9 @@ lint:
 	@eslint src
 
 test: verify lint unit-test
+
+lint-fix:
+	@eslint src --fix
+
+watch:
+	@watchman-make -s 1 -p 'src/**/*.js' -t lint-fix
