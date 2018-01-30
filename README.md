@@ -1,6 +1,17 @@
 # n-event-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-event-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-event-logger)
 log all your API service calls and function calls with a single line of code
 
+- [brief](#install)
+- [install](#install)
+- [usage](#usage)
+    * [enhance a single API service call](#enhance-a-single-api-service-call)
+    * [enhance a whole series of API service call](#enhance-a-whole-series-of-api-service-call)
+    * [log your operation in structure with loggerEvent](#log-your-operation-in-structure-with-loggerevent)
+    * [auto log non-api-service function with withLogger enhancer](#auto-log-non-api-service-function-with-withlogger-enhancer)
+    * [track some non-api-service function on the fly](#track-some-non-api-service-function-on-the-fly)
+- [development](#development)
+- [todos](#todos)
+
 
 ## brief
 ```javascript
@@ -43,18 +54,7 @@ try {
 ```javascript
 // set key names of fields to be muted in .env to reduce log for development
 LOGGER_MUTE_FIELDS=transactionId, userId
-```
-
-## Table of Contents
-- [install](#install)
-- [usage](#usage)
-    * [enhance a single API service call](#enhance-a-single-api-service-call)
-    * [enhance a whole series of API service call](#enhance-a-whole-series-of-api-service-call)
-    * [log your operation in structure with loggerEvent](#log-your-operation-in-structure-with-loggerevent)
-    * [auto log non-api-service function with withLogger enhancer](#auto-log-non-api-service-function-with-withlogger-enhancer)
-    * [track some non-api-service function on the fly](#track-some-non-api-service-function-on-the-fly)
-- [development](#development)
-    
+``` 
 
 ## install
 ```shell
