@@ -21,6 +21,9 @@ export const trimObject = obj => {
 };
 
 export const removeObjectKeys = obj => keys => {
+	if (!Array.isArray(keys)) {
+		throw Error('keys need to be formatted in array');
+	}
 	const output = {};
 	Object.keys(obj).forEach(key => {
 		const toBeRemoved = keys.includes(key);
@@ -30,3 +33,6 @@ export const removeObjectKeys = obj => keys => {
 	});
 	return output;
 };
+
+export const fieldStringToArray = fieldString =>
+	fieldString.split(',').map(keyName => keyName.trim());

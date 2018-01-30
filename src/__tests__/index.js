@@ -32,6 +32,19 @@ describe('n-event-logger', () => {
 			expect(logger.info.mock.calls[0][0]).toMatchObject(commonTrimmedMeta);
 		});
 
+		it('should suppress configured meta field for development', () => {
+			process.env.LOGGER_MUTE_FIELDS = 'transactionId, userId';
+			const mutedMeta = {
+				operation: 'test',
+				a: 'test',
+				b: 'test',
+			};
+			loggerEvent(commonMeta);
+			expect(logger.info.mock.calls).toHaveLength(1);
+			expect(logger.info.mock.calls[0][0]).toMatchObject(mutedMeta);
+			delete process.env.LOGGER_MUTE_FIELDS;
+		});
+
 		it('should fire info when initialised', () => {
 			loggerEvent(commonMeta);
 			expect(logger.info.mock.calls).toHaveLength(1);
@@ -203,6 +216,7 @@ describe('n-event-logger', () => {
 			});
 		});
 
+		// TODO: add support to enhance non-async callFunction without using await
 		// it('should work without async await for non-async function', () => {
 		// 	const callFunction = () => null;
 		// 	const enhanced = (params, meta) =>

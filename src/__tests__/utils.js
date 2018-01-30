@@ -65,4 +65,18 @@ describe('removeObjectKeys', () => {
 		const result = removeObjectKeys(obj)(removeKeyList);
 		expect(result).toMatchObject({ b: 2, c: 'test' });
 	});
+
+	it('works correctly for empty input array', () => {
+		const obj = { a: 1, b: 2, c: 'test', 'more-complex': 'test' };
+		const removeKeyList = [];
+		const result = removeObjectKeys(obj)(removeKeyList);
+		expect(result).toMatchObject(obj);
+	});
+
+	it('throw error if keys input is not an array', () => {
+		const obj = { a: 1, b: 2, c: 'test', 'more-complex': 'test' };
+		const removeKeyList = '';
+		const wrongInput = () => removeObjectKeys(obj)(removeKeyList);
+		expect(wrongInput).toThrow();
+	});
 });

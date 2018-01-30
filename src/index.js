@@ -1,10 +1,15 @@
 import logger from '@financial-times/n-logger';
-import { trimObject } from './utils';
+import { trimObject, removeObjectKeys, fieldStringToArray } from './utils';
 
 // TODO: format update in n-logger
 // TODO: testing nested data fields
 const createEventLogger = event => {
-	const trimmedEvent = trimObject(event);
+	const { LOGGER_MUTE_FIELDS } = process.env;
+	const trimmedEvent = LOGGER_MUTE_FIELDS
+		? removeObjectKeys(trimObject(event))(
+				fieldStringToArray(LOGGER_MUTE_FIELDS),
+			)
+		: trimObject(event);
 	return {
 		start: () => logger.info(trimmedEvent),
 		success: data =>
@@ -23,7 +28,6 @@ const createEventLogger = event => {
 	};
 };
 
-// TODO: support surpress meta such as transactionId, userId locally for dev
 // TODO: failure input to be compatible with Error format standard
 // TODO: use callback function to selectively log result data
 // TODO: add support to enhance non-async callFunction without using await
