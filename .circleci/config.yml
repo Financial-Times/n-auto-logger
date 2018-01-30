@@ -54,6 +54,7 @@ workflows:
           requires:
             - test-on-boron
             - test-on-carbon
+            - test-on-latest
           filters:
             branches:
               ignore: /.*/
