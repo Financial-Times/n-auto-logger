@@ -42,6 +42,10 @@ try {
 }
 
 ```
+```
+// set key names of fields to be muted in .env to reduce log for development
+LOGGER_MUTE_FIELDS=transactionId, userId
+```
 
 ### enhance a single API service call
 

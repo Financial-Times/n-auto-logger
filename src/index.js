@@ -1,7 +1,6 @@
 import logger from '@financial-times/n-logger';
 import { trimObject, removeObjectKeys, fieldStringToArray } from './utils';
 
-// TODO: format update in n-logger
 // TODO: testing nested data fields
 const createEventLogger = event => {
 	const { LOGGER_MUTE_FIELDS } = process.env;
