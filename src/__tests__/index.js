@@ -18,20 +18,34 @@ describe('n-event-logger', () => {
 			b: 'test',
 		};
 
+		const commonTrimmedMeta = {
+			operation: 'test',
+			userId: 'test',
+			transactionId: 'test',
+			a: 'test',
+			b: 'test',
+		};
+
+		it('should trim excessive field in event meta for logger', () => {
+			loggerEvent(commonMeta);
+			expect(logger.info.mock.calls).toHaveLength(1);
+			expect(logger.info.mock.calls[0][0]).toMatchObject(commonTrimmedMeta);
+		});
+
 		it('should fire info when initialised', () => {
 			loggerEvent(commonMeta);
 			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.info.mock.calls[0][0]).toMatchObject(commonMeta);
+			expect(logger.info.mock.calls[0][0]).toMatchObject(commonTrimmedMeta);
 		});
 
 		it('should create the correct logger when fire the success method', () => {
 			const event = loggerEvent(commonMeta);
-			event.success({ d: 'some data' });
+			event.success({ d: 'some data', e: 'some other data' });
 			expect(logger.info.mock.calls).toHaveLength(2);
 			expect(logger.info.mock.calls[1][0]).toMatchObject({
-				...commonMeta,
+				...commonTrimmedMeta,
 				result: 'success',
-				data: { d: 'some data' },
+				data: { d: 'some data', e: 'some other data' },
 			});
 		});
 
@@ -40,7 +54,7 @@ describe('n-event-logger', () => {
 			event.failure({ message: 'some error message' });
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls[0][0]).toMatchObject({
-				...commonMeta,
+				...commonTrimmedMeta,
 				result: 'failure',
 				message: 'some error message',
 			});
@@ -51,7 +65,7 @@ describe('n-event-logger', () => {
 			event.action('someAction').start();
 			expect(logger.info.mock.calls).toHaveLength(2);
 			expect(logger.info.mock.calls[1][0]).toMatchObject({
-				...commonMeta,
+				...commonTrimmedMeta,
 				action: 'someAction',
 			});
 		});
@@ -61,7 +75,7 @@ describe('n-event-logger', () => {
 			event.action('someAction').success({ returnData: 'someReturnData' });
 			expect(logger.info.mock.calls).toHaveLength(2);
 			expect(logger.info.mock.calls[1][0]).toMatchObject({
-				...commonMeta,
+				...commonTrimmedMeta,
 				action: 'someAction',
 				result: 'success',
 				data: { returnData: 'someReturnData' },
@@ -75,7 +89,7 @@ describe('n-event-logger', () => {
 				.failure({ message: 'some action error message' });
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls[0][0]).toMatchObject({
-				...commonMeta,
+				...commonTrimmedMeta,
 				action: 'someAction',
 				result: 'failure',
 				message: 'some action error message',
@@ -90,7 +104,7 @@ describe('n-event-logger', () => {
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls).toHaveLength(0);
 			expect(logger.error.mock.calls[0][0]).toMatchObject({
-				...commonMeta,
+				...commonTrimmedMeta,
 				action: 'someAction',
 				result: 'failure',
 				message: 'some action error message',
