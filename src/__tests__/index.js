@@ -66,10 +66,38 @@ describe('n-event-logger', () => {
 			const event = loggerEvent(commonMeta);
 			event.failure({ message: 'some error message' });
 			expect(logger.info.mock.calls).toHaveLength(1);
+			expect(logger.error.mock.calls[0][0]).toMatchObject({
+				...commonTrimmedMeta,
+				result: 'unhandled exception',
+				message: 'some error message',
+			});
+		});
+
+		it('failure method should log system Error correctly', () => {
+			const event = loggerEvent(commonMeta);
+			event.failure(new Error('some error message'));
+			expect(logger.info.mock.calls).toHaveLength(1);
+			expect(logger.error.mock.calls[0][0]).toMatchObject({
+				...commonTrimmedMeta,
+				result: 'system error',
+				message: 'some error message',
+			});
+			expect(logger.error.mock.calls[0][0]).toHaveProperty('stack');
+		});
+
+		it('failure method should log fetch response Error correctly', () => {
+			// TODO
+		});
+
+		it('failure method should log custom Error correctly', () => {
+			const event = loggerEvent(commonMeta);
+			event.failure({ status: 400, reason: 'not found' });
+			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls[0][0]).toMatchObject({
 				...commonTrimmedMeta,
 				result: 'failure',
-				message: 'some error message',
+				status: 400,
+				reason: 'not found',
 			});
 		});
 
@@ -99,13 +127,13 @@ describe('n-event-logger', () => {
 			const event = loggerEvent(commonMeta);
 			event
 				.action('someAction')
-				.failure({ message: 'some action error message' });
+				.failure({ status: 400, reason: 'some action error message' });
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls[0][0]).toMatchObject({
 				...commonTrimmedMeta,
 				action: 'someAction',
 				result: 'failure',
-				message: 'some action error message',
+				reason: 'some action error message',
 			});
 		});
 
@@ -113,14 +141,14 @@ describe('n-event-logger', () => {
 			const event = loggerEvent(commonMeta);
 			event
 				.action('someAction')
-				.failure({ message: 'some action error message', status: 500 });
+				.failure({ reason: 'some action error message', status: 500 });
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls).toHaveLength(0);
 			expect(logger.error.mock.calls[0][0]).toMatchObject({
 				...commonTrimmedMeta,
 				action: 'someAction',
 				result: 'failure',
-				message: 'some action error message',
+				reason: 'some action error message',
 			});
 		});
 	});
@@ -145,7 +173,7 @@ describe('n-event-logger', () => {
 			});
 		});
 
-		it('reports callFunction error correctly', async () => {
+		it('reports system error in callFunction correctly', async () => {
 			const callFunction = jest.fn(() => Promise.reject(Error('bar')));
 			const enhanced = (params, meta) =>
 				withLogger(meta)(callFunction)(params, meta);
@@ -163,12 +191,12 @@ describe('n-event-logger', () => {
 					...params,
 					action: 'mockConstructor',
 				});
-				expect(logger.warn.mock.calls).toHaveLength(1);
-				expect(logger.warn.mock.calls[0][0]).toMatchObject({
+				expect(logger.error.mock.calls).toHaveLength(1);
+				expect(logger.error.mock.calls[0][0]).toMatchObject({
 					...meta,
 					...params,
 					action: 'mockConstructor',
-					result: 'failure',
+					result: 'system error',
 				});
 			}
 		});
