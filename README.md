@@ -9,6 +9,7 @@ log all your API service calls and function calls with a single line of code
     * [log your operation in structure with loggerEvent](#log-your-operation-in-structure-with-loggerevent)
     * [auto log non-api-service function with withLogger enhancer](#auto-log-non-api-service-function-with-withlogger-enhancer)
     * [track some non-api-service function on the fly](#track-some-non-api-service-function-on-the-fly)
+    * [test stub](#test-stub)
 - [development](#development)
 - [todos](#todos)
 
@@ -280,6 +281,26 @@ const someOperationFunction = async (req, res, next) => {
         next(e);
     }
 }
+```
+
+### test stub
+
+```javascript
+import * as nEventLogger from '@financial-times/n-event-logger';
+
+//example using sinon sandbox, will look into provide testStub as a module based on sinon/jest
+const stubLoggerEvent = meta => ({
+    // add more stubs to methods if you want
+    start: () => null,
+    success: () => null,
+    failure: () => null,
+    action: () => stubLoggerEvent(meta)
+});
+sandbox.stub(nEventLogger, 'loggerEvent').callsFake(stubLoggerEvent);
+sandbox.stub(nEventLogger, 'withLogger').callsFake(
+    meta => callFunction => args => callFunction(args, meta)
+);
+sandbox.stub(nEventLogger, 'withServiceLogger').callsFake(service => service);
 ```
 
 ## development
