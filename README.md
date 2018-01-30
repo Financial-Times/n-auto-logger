@@ -286,3 +286,7 @@ const someOperationFunction = async (req, res, next) => {
 * `make install`
 * `yarn test --watch` to automatically run test on changing src
 * `yarn watch` to automatically correct code format on saving src
+
+## todos
+* middleware/controller one-line enhancer
+* consider integrating `.addContext()` from `n-logger`
