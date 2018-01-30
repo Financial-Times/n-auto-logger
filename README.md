@@ -2,7 +2,7 @@
 log all your API service calls and function calls with a single line of code
 
 
-### brief
+## brief
 ```javascript
 import { withLogger } from '@financial-times/n-event-logger';
 
@@ -16,6 +16,8 @@ export default withServiceLogger{
     apiServiceCallB,
 };
 
+/* ... */
+
 await APIService.apiServiceCallA(params, meta);
 await APIService.apiServiceCallB(params, meta);
 
@@ -23,11 +25,7 @@ await APIService.apiServiceCallB(params, meta);
 ```javascript
 import { eventLogger } from '@financial-times/n-event-logger';
 
-const meta = {
-    transactionId,
-    userId,
-    operation,
-};
+const meta = { transactionId, userId, operation };
 
 const event = eventLogger(meta);
 
@@ -46,6 +44,24 @@ try {
 // set key names of fields to be muted in .env to reduce log for development
 LOGGER_MUTE_FIELDS=transactionId, userId
 ```
+
+## Table of Contents
+- [install](#install)
+- [usage](#usage)
+    * [enhance a single API service call](#enhance-a-single-api-service-call)
+    * [enhance a whole series of API service call](#enhance-a-whole-series-of-api-service-call)
+    * [log your operation in structure with loggerEvent](#log-your-operation-in-structure-with-loggerevent)
+    * [auto log non-api-service function with withLogger enhancer](#auto-log-non-api-service-function-with-withlogger-enhancer)
+    * [track some non-api-service function on the fly](#track-some-non-api-service-function-on-the-fly)
+- [development](#development)
+    
+
+## install
+```shell
+npm install @financial-times/n-event-logger
+```
+
+## usage
 
 ### enhance a single API service call
 
@@ -145,7 +161,7 @@ const someOperationFunction = async (req, res, next) => {
 }
 ```
 
-### further streamline structuring your log
+### log your operation in structure with loggerEvent
 
 ```javascript
 /*-- middleware/controller.js --*/
@@ -265,3 +281,8 @@ const someOperationFunction = async (req, res, next) => {
     }
 }
 ```
+
+## development
+* `make install`
+* `yarn test --watch` to automatically run test on changing src
+* `yarn watch` to automatically correct code format on saving src
