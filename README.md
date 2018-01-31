@@ -1,8 +1,11 @@
 # n-event-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-event-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-event-logger)
 log all your API service calls and function calls with a single line of code
 
-- [brief](#install)
+- [quickstart](#quickstart)
 - [install](#install)
+- [prerequisite](#prerequisite)
+    * [function args format standard](#function-args-format-standard)
+    * [exception/error format standard](#exception/error-format-standard)
 - [usage](#usage)
     * [enhance a single API service call](#enhance-a-single-api-service-call)
     * [enhance a whole series of API service call](#enhance-a-whole-series-of-api-service-call)
@@ -14,7 +17,7 @@ log all your API service calls and function calls with a single line of code
 - [todos](#todos)
 
 
-## brief
+## quickstart
 ```javascript
 import { withLogger } from '@financial-times/n-event-logger';
 
@@ -55,12 +58,18 @@ try {
 ```javascript
 // set key names of fields to be muted in .env to reduce log for development
 LOGGER_MUTE_FIELDS=transactionId, userId
-``` 
+```
 
 ## install
 ```shell
 npm install @financial-times/n-event-logger
 ```
+
+## prerequisite
+
+### function args format standard
+
+### exception/error format standard
 
 ## usage
 
