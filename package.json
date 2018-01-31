@@ -31,7 +31,7 @@
     "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-prettier": "^2.5.0",
     "jest": "^22.1.4",
-    "jest-fetch-mock": "^1.4.1",
+    "node-fetch": "^1.7.3",
     "nodemon": "^1.14.11",
     "prettier": "^1.10.2"
   },
