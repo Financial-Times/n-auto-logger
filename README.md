@@ -2,6 +2,7 @@
 log all your API service calls and function calls with a single line of code
 
 - [quickstart](#quickstart)
+- [before/after](#before/after)
 - [install](#install)
 - [prerequisite](#prerequisite)
     * [function args format standard](#function-args-format-standard)
@@ -20,7 +21,43 @@ log all your API service calls and function calls with a single line of code
 ## quickstart
 ```javascript
 import { withLogger, withServiceLogger, eventLogger } from '@financial-times/n-event-logger';
+// enhancer function names might be changed to the following after alpha
+import { autoLog, autoLogAll, eventLogger } from '@financial-times/n-event-logger';
 ```
+auto log different status of a function call (commonly an action under an operation)
+```javascript
+const data = await withLogger(yourCallFunction)(params, meta);
+const result = withLogger(someOtherFunction)(params, meta);
+```
+enhance all methods in api service module ensure that it would be logged wherever used
+```javascript
+/*-- some-api-service --*/
+export default withServiceLogger{ CallA, CallB };
+
+/*-- some-controller-or-middleware --*/
+import APIService from 'some-api-service';
+
+await APIService.CallA(params, meta);
+await APIService.CallB(params, meta);
+```
+slightly more strcutured operation/action log
+```javascript
+const meta = { transactionId, userId, operation };
+const event = eventLogger(meta);
+
+try {
+    event.action('someAction').success();
+    event.success();
+} catch(e) {
+    event.failure(e);
+}
+
+```
+set key names of fields to be muted in .env to reduce log for development
+```javascript
+LOGGER_MUTE_FIELDS=transactionId, userId
+```
+## before/after
 ```javascript
 // before
 try {
@@ -31,21 +68,8 @@ try {
     // some error handling and parsing...
     logger.info(meta, { action: 'yourCallFunction' }, params, { result: 'failure' }, parsedError);
 }
-// after
+// after: 7+ lines (depends on error parsing) => 1 line
 const data = await withLogger(yourCallFunction)(params, meta);
-```
-```javascript
-// enhance a group of methods in one line
-export default withServiceLogger{
-    apiServiceCallA,
-    apiServiceCallB,
-};
-
-/* ... */
-
-await APIService.apiServiceCallA(params, meta);
-await APIService.apiServiceCallB(params, meta);
-
 ```
 ```javascript
 const meta = { transactionId, userId, operation };
@@ -60,9 +84,8 @@ try {
     logger.error(meta, { result: 'failure' }, parsedError);
 }
 
-// after
+// after: some less key strokes
 const event = eventLogger(meta);
-
 try {
     event.action('someAction').success();
     event.success();
@@ -71,11 +94,6 @@ try {
 }
 
 ```
-```javascript
-// set key names of fields to be muted in .env to reduce log for development
-LOGGER_MUTE_FIELDS=transactionId, userId
-```
-
 ## install
 ```shell
 npm install @financial-times/n-event-logger
