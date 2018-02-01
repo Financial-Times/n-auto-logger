@@ -1,6 +1,6 @@
 module.exports = {
 	files: {
-		allow: ['.gitattributes', 'yarn.lock', '**/__snapshots__/*'],
+		allow: ['.gitattributes', 'yarn.lock', '.*\\.(snap)'],
 		allowOverrides: [],
 	},
 	strings: {
