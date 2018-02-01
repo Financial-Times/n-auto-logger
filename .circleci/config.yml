@@ -16,6 +16,11 @@ references:
         only: /.*/
 
 jobs:
+  # jobs.build is here just as a temporary fix to mute scheduled build
+  build:
+    <<: *run-test-on
+    docker:
+      - image: circleci/node:boron
   test-on-boron:
     <<: *run-test-on
     docker:
