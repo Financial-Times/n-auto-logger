@@ -243,7 +243,6 @@ describe('n-event-logger', () => {
 			});
 		});
 
-		// TODO: add support to enhance non-async callFunction without using await
 		it('should work without async await for non-async function', () => {
 			const callFunction = () => null;
 			const enhanced = (params, meta) =>
@@ -252,6 +251,20 @@ describe('n-event-logger', () => {
 			enhanced(params);
 			expect(logger.info.mock.calls[1][0]).toMatchObject({
 				...params,
+				action: 'callFunction',
+				result: 'success',
+			});
+		});
+
+		it('should supports enhance function directly with extra meta appended in args', () => {
+			const callFunction = () => null;
+			const enhanced = (params, meta) => withLogger(callFunction)(params, meta);
+			const params = { a: 'test' };
+			const meta = { b: 'k' };
+			enhanced(params, meta);
+			expect(logger.info.mock.calls[1][0]).toMatchObject({
+				...params,
+				...meta,
 				action: 'callFunction',
 				result: 'success',
 			});

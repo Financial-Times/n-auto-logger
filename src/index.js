@@ -31,7 +31,7 @@ export const loggerEvent = event => {
 	return eventLogger;
 };
 
-export const withLogger = (meta = {}) => callFunction => async params => {
+const autoLogger = async (callFunction, params, meta = {}) => {
 	const event = loggerEvent({
 		...meta,
 		action: meta.action || callFunction.name,
@@ -54,6 +54,17 @@ export const withLogger = (meta = {}) => callFunction => async params => {
 		return Promise.reject(e);
 	}
 };
+
+export const metaFirstAutoLogger = meta => callFunction => params =>
+	autoLogger(callFunction, params, meta);
+
+export const funcFirstAutoLogger = callFunction => async (params, meta) =>
+	autoLogger(callFunction, params, meta);
+
+export const withLogger = metaOrFunc =>
+	typeof metaOrFunc === 'function'
+		? funcFirstAutoLogger(metaOrFunc)
+		: metaFirstAutoLogger(metaOrFunc);
 
 // TODO: confirm performance impact when using individual method over decorate them seperately
 export const withServiceLogger = helperStandardService => {
