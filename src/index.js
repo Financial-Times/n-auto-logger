@@ -55,10 +55,10 @@ const autoLogger = async (callFunction, params, meta = {}) => {
 	}
 };
 
-export const metaFirstAutoLogger = meta => callFunction => params =>
+const metaFirstAutoLogger = meta => callFunction => params =>
 	autoLogger(callFunction, params, meta);
 
-export const funcFirstAutoLogger = callFunction => async (params, meta) =>
+const funcFirstAutoLogger = callFunction => async (params, meta) =>
 	autoLogger(callFunction, params, meta);
 
 export const withLogger = metaOrFunc =>

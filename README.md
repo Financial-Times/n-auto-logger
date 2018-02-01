@@ -1,4 +1,4 @@
-# n-event-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-event-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-event-logger)
+# n-event-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-event-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-event-logger)[![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-event-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-event-logger?branch=master)
 log all your API service calls and function calls with a single line of code
 
 - [quickstart](#quickstart)
@@ -19,13 +19,23 @@ log all your API service calls and function calls with a single line of code
 
 ## quickstart
 ```javascript
-import { withLogger } from '@financial-times/n-event-logger';
-
-await withLogger(meta)(yourCallFunction)(params, meta);
+import { withLogger, withServiceLogger, eventLogger } from '@financial-times/n-event-logger';
 ```
 ```javascript
-import { withServiceLogger } from '@financial-times/n-event-logger';
-
+// before
+try {
+    logger.info(meta, { action: 'yourCallFunction' }, params);
+    const data = await yourCallFunction(params, metaSubset);
+    logger.info(meta, { action: 'yourCallFunction' }, params, { result: 'success' });
+} catch(e) {
+    // some error handling and parsing...
+    logger.info(meta, { action: 'yourCallFunction' }, params, { result: 'failure' }, parsedError);
+}
+// after
+const data = await withLogger(yourCallFunction)(params, meta);
+```
+```javascript
+// enhance a group of methods in one line
 export default withServiceLogger{
     apiServiceCallA,
     apiServiceCallB,
@@ -38,20 +48,26 @@ await APIService.apiServiceCallB(params, meta);
 
 ```
 ```javascript
-import { eventLogger } from '@financial-times/n-event-logger';
-
 const meta = { transactionId, userId, operation };
 
+// before
+logger.info(meta);
+try {
+    logger.info(meta, { action: 'someAction', result: 'success' });
+    logger.info(meta, { result: 'success' });
+} catch(e) {
+    // some error hanldling and parsing
+    logger.error(meta, { result: 'failure' }, parsedError);
+}
+
+// after
 const event = eventLogger(meta);
 
 try {
     event.action('someAction').success();
-    /* ... */
     event.success();
-    /* ... */
 } catch(e) {
     event.failure(e);
-    /* ... */
 }
 
 ```
@@ -69,17 +85,22 @@ npm install @financial-times/n-event-logger
 
 ### function args format standard
 
+One opinionated pre-requisite is to have the callFunction input format as (params, meta) so that the callFunction can be invoked correctly with extra meta for logger
+
 ### exception/error format standard
+
+out-of-box support to recognise the following types of errors
+* Fetch Response Error
+* Fetch (Network) Error
+* Node Native Error Objects
+* formatted errors with status code (more robust support on the way)
+* unformatted exception
 
 ## usage
 
 ### enhance a single API service call
 
 ```javascript
-/*
-    One opinionated pre-requisite is to have the callFunction input format as (params, meta) so that the callFunction can be invoked correctly with extra meta for logger
- */
-
 /*-- api-service.js --*/
 import { withLogger } from '@financial-times/n-event-logger';
 
@@ -98,7 +119,7 @@ export const callSomeAPIService = (params, meta) => {
 }
 
 // this would record the name of the function 'callSomeAPIService' as action in the logger automatically
-export const enhancedCallSomeAPIService = (params, meta) => withLogger(meta)(callSomeAPIService)(params, meta);
+export const enhancedCallSomeAPIService = (params, meta) => withLogger(callSomeAPIService)(params, meta);
 
 /*
     currently async/await is needed for the logger to work correctly, update coming soon
@@ -307,7 +328,7 @@ const stubLoggerEvent = meta => ({
 });
 sandbox.stub(nEventLogger, 'loggerEvent').callsFake(stubLoggerEvent);
 sandbox.stub(nEventLogger, 'withLogger').callsFake(
-    meta => callFunction => args => callFunction(args, meta)
+    callFunction => (params, meta) => callFunction(params, meta)
 );
 sandbox.stub(nEventLogger, 'withServiceLogger').callsFake(service => service);
 ```
