@@ -244,18 +244,18 @@ describe('n-event-logger', () => {
 		});
 
 		// TODO: add support to enhance non-async callFunction without using await
-		// it('should work without async await for non-async function', () => {
-		// 	const callFunction = () => null;
-		// 	const enhanced = (params, meta) =>
-		// 		withLogger(meta)(callFunction)(params, meta);
-		// 	const params = { test: 'a' };
-		// 	enhanced(params);
-		// 	expect(logger.info.mock.calls[1][0]).toMatchObject({
-		// 		...params,
-		// 		action: 'callFunction',
-		// 		result: 'success',
-		// 	});
-		// });
+		it('should work without async await for non-async function', () => {
+			const callFunction = () => null;
+			const enhanced = (params, meta) =>
+				withLogger(meta)(callFunction)(params, meta);
+			const params = { test: 'a' };
+			enhanced(params);
+			expect(logger.info.mock.calls[1][0]).toMatchObject({
+				...params,
+				action: 'callFunction',
+				result: 'success',
+			});
+		});
 	});
 
 	describe('withServiceLogger', () => {

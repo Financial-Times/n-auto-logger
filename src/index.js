@@ -1,5 +1,10 @@
 import logger from '@financial-times/n-logger';
-import { trimObject, removeObjectKeys, fieldStringToArray } from './utils';
+import {
+	trimObject,
+	removeObjectKeys,
+	fieldStringToArray,
+	isPromise,
+} from './utils';
 import failureLogger from './failure';
 
 // TODO: support trim nested object leaves?
@@ -20,7 +25,6 @@ const createEventLogger = context => {
 	};
 };
 
-// TODO: add support to enhance non-async callFunction without using await
 export const loggerEvent = event => {
 	const eventLogger = createEventLogger(event);
 	eventLogger.start();
@@ -35,7 +39,14 @@ export const withLogger = (meta = {}) => callFunction => async params => {
 	});
 
 	try {
-		const data = await callFunction(params, meta);
+		const call = callFunction(params, meta);
+		const promiseCall = isPromise(call);
+		if (!promiseCall) {
+			event.success();
+			const data = call;
+			return data;
+		}
+		const data = await call;
 		event.success();
 		return data;
 	} catch (e) {

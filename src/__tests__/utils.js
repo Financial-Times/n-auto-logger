@@ -1,4 +1,4 @@
-import { emptyCheck, trimObject, removeObjectKeys } from '../utils';
+import { emptyCheck, trimObject, removeObjectKeys, isPromise } from '../utils';
 
 describe('emptyCheck', () => {
 	it('should return true if value is undefined', () => {
@@ -78,5 +78,41 @@ describe('removeObjectKeys', () => {
 		const removeKeyList = '';
 		const wrongInput = () => removeObjectKeys(obj)(removeKeyList);
 		expect(wrongInput).toThrow();
+	});
+});
+
+describe('isPromise', () => {
+	it('return true if the passing value is a Promise', () => {
+		const a = Promise.resolve('test');
+		const result = isPromise(a);
+		expect(result).toBe(true);
+	});
+
+	it('return true if the passing value returns a Promise', async () => {
+		const a = jest.fn(() => Promise.resolve('test'));
+		const call = a();
+		const result = isPromise(call);
+		expect(result).toBe(true);
+		expect(call).not.toBe('test');
+		expect(await call).toBe('test');
+		expect(a.mock.calls).toHaveLength(1);
+	});
+
+	it('return true if the passing value is an async function', async () => {
+		const a = jest.fn(async () => 'test');
+		const call = a();
+		const result = isPromise(call);
+		expect(result).toBe(true);
+		expect(call).not.toBe('test');
+		expect(await call).toBe('test');
+		expect(a.mock.calls).toHaveLength(1);
+	});
+
+	it('return false if the passing value is a sync function', () => {
+		const a = jest.fn(() => 'test');
+		const call = a();
+		const result = isPromise(call);
+		expect(result).toBe(false);
+		expect(call).toBe('test');
 	});
 });
