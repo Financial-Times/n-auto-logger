@@ -1,5 +1,4 @@
 import logger from '@financial-times/n-logger';
-import fetch from 'node-fetch';
 import { loggerEvent, withLogger, withServiceLogger } from '../index';
 
 jest.mock('@financial-times/n-logger');
@@ -69,7 +68,8 @@ describe('n-event-logger', () => {
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.error.mock.calls[0][0]).toMatchObject({
 				...commonTrimmedMeta,
-				result: 'exception',
+				result: 'failure',
+				type: 'UNFORMATTED_EXCEPTION',
 				message: 'some error message',
 			});
 		});
@@ -80,28 +80,11 @@ describe('n-event-logger', () => {
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.error.mock.calls[0][0]).toMatchObject({
 				...commonTrimmedMeta,
-				result: 'system error',
+				result: 'failure',
+				type: 'NODE_SYSTEM_ERROR',
 				message: 'some error message',
 			});
 			expect(logger.error.mock.calls[0][0]).toHaveProperty('stack');
-		});
-
-		it('failure method should log fetch response Error correctly', async () => {
-			const event = loggerEvent(commonMeta);
-			try {
-				const response = await fetch('http://www.google.com/404');
-				if (!response.ok) {
-					throw response;
-				}
-			} catch (e) {
-				await event.failure(e);
-				expect(logger.info.mock.calls).toHaveLength(1);
-				expect(logger.warn.mock.calls[0][0]).toMatchObject({
-					...commonTrimmedMeta,
-					result: 'failure',
-					status: 404,
-				});
-			}
 		});
 
 		it('failure method should log custom Error correctly', () => {
@@ -211,7 +194,8 @@ describe('n-event-logger', () => {
 					...meta,
 					...params,
 					action: 'mockConstructor',
-					result: 'system error',
+					result: 'failure',
+					type: 'NODE_SYSTEM_ERROR',
 				});
 			}
 		});

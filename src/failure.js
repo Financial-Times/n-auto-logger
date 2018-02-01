@@ -1,56 +1,61 @@
 import logger from '@financial-times/n-logger';
+import fetch from 'node-fetch';
 import { trimObject } from './utils';
+import {
+	formatFetchResponseError,
+	formatFetchNetworkError,
+} from './error-formatter';
 
 // TODO: consider logics to decide default logger level based on status
-// TODO: consider makes it more casual for fire failure log for action
-const failureHandler = trimmedEvent => async e => {
-	if (
-		Object.prototype.hasOwnProperty.call(e, 'headers') &&
-		Object.prototype.hasOwnProperty.call(e, 'status') &&
-		Object.prototype.hasOwnProperty.call(e, 'ok') &&
-		!e.ok
-	) {
-		// in case of a fetch response error
-		// TODO: improve fetch response object identification
-		// TODO: handle contentType text/html differently
-		// TODO: extract this part to n-error-hanlder to separate error handling from logger
+// 	use warn for errors wouldn't be cause the by the codebase, error for those possibly are
+// TODO: consider makes it easier to fire action failure log
+const failureLogger = (context = {}) => async e => {
+	// in case of a fetch response error
+	if (e instanceof fetch.Response) {
 		const response = e;
-		const { status, headers } = response;
-		const contentType = headers.get('content-type');
-		const parseMethod =
-			contentType && contentType.includes('application/json') ? 'json' : 'text';
-		const loggerLevel = status >= 500 ? 'error' : 'warn';
-		const error = await response[parseMethod]();
-		logger[loggerLevel](
+		const loggerLevel = response.status >= 500 ? 'error' : 'warn';
+		const formattedError = await formatFetchResponseError(response);
+		return logger[loggerLevel](
 			trimObject({
-				...trimmedEvent,
+				...context,
 				result: 'failure',
-				status,
-				error,
+				...formattedError,
 			}),
 		);
-	} else if (Object.prototype.hasOwnProperty.call(e, 'status')) {
-		// in case of custom error objects complying with the standards
-		// TODO: consider integrate the standard error object classs
-		const { status, reason, data } = e;
-		return logger[status >= 500 ? 'error' : 'warn'](
+	}
+	// in case of fetch error, typically network error
+	if (e instanceof fetch.FetchError) {
+		const formattedError = formatFetchNetworkError(e);
+		return logger.error(
 			trimObject({
-				...trimmedEvent,
+				...context,
 				result: 'failure',
-				status,
-				reason,
-				data,
+				...formattedError,
 			}),
 		);
-	} else if (e instanceof Error) {
-		// in case of Node system standard error
-		// this includes Network error threw by fetch
-		// error codes: https://nodejs.org/api/errors.html#nodejs-error-codes
+	}
+	// in case of n-event-logger complied formatted error standard
+	// TODO: define the formatted error standard as n-error-standard
+	// TODO: how to support various different format of formatted errors in different apps
+	if (Object.prototype.hasOwnProperty.call(e, 'status')) {
+		return logger[e.status >= 500 ? 'error' : 'warn'](
+			trimObject({
+				...context,
+				result: 'failure',
+				type: 'FORMATTED_EXCEPTION',
+				...e,
+			}),
+		);
+	}
+	// in case of Node system standard error
+	// error codes: https://nodejs.org/api/errors.html#nodejs-error-codes
+	if (e instanceof Error) {
 		const { code, message, stack } = e;
 		return logger.error(
 			trimObject({
-				...trimmedEvent,
-				result: 'system error',
+				...context,
+				result: 'failure',
+				type: 'NODE_SYSTEM_ERROR',
 				code,
 				message,
 				stack,
@@ -60,11 +65,12 @@ const failureHandler = trimmedEvent => async e => {
 	// in case of other exceptions
 	return logger.error(
 		trimObject({
-			...trimmedEvent,
-			result: 'exception',
+			...context,
+			result: 'failure',
+			type: 'UNFORMATTED_EXCEPTION',
 			...e,
 		}),
 	);
 };
 
-export default failureHandler;
+export default failureLogger;

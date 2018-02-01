@@ -15,7 +15,8 @@
     "prepush": "make verify -j3"
   },
   "dependencies": {
-    "@financial-times/n-logger": "^5.5.11"
+    "@financial-times/n-logger": "^5.5.11",
+    "node-fetch": "^2.0.0-alpha.9"
   },
   "devDependencies": {
     "@financial-times/n-gage": "^1.19.3",
@@ -31,7 +32,7 @@
     "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-prettier": "^2.5.0",
     "jest": "^22.1.4",
-    "node-fetch": "^1.7.3",
+    "nock": "^9.1.6",
     "nodemon": "^1.14.11",
     "prettier": "^1.10.2"
   },

@@ -1,26 +1,25 @@
 import logger from '@financial-times/n-logger';
 import { trimObject, removeObjectKeys, fieldStringToArray } from './utils';
-import failureHandler from './failure';
+import failureLogger from './failure';
 
-// TODO: testing nested data fields
-const createEventLogger = event => {
+// TODO: support trim nested object leaves?
+// N-LOGGER would flatten nested object and logout their leave values
+const createEventLogger = context => {
 	const { LOGGER_MUTE_FIELDS } = process.env;
-	const trimmedEvent = LOGGER_MUTE_FIELDS
-		? removeObjectKeys(trimObject(event))(
+	const event = LOGGER_MUTE_FIELDS
+		? removeObjectKeys(trimObject(context))(
 				fieldStringToArray(LOGGER_MUTE_FIELDS),
 			)
-		: trimObject(event);
+		: trimObject(context);
 	return {
-		start: () => logger.info(trimmedEvent),
+		start: () => logger.info(event),
 		success: data =>
-			logger.info(trimObject({ ...trimmedEvent, result: 'success', data })),
-		failure: e => failureHandler(trimmedEvent)(e),
-		action: action => createEventLogger({ ...trimmedEvent, action }),
+			logger.info(trimObject({ ...event, result: 'success', data })),
+		failure: exception => failureLogger(event)(exception),
+		action: action => createEventLogger({ ...event, action }),
 	};
 };
 
-// TODO: failure input to be compatible with Error format standard
-// TODO: use callback function to selectively log result data
 // TODO: add support to enhance non-async callFunction without using await
 export const loggerEvent = event => {
 	const eventLogger = createEventLogger(event);
