@@ -1,4 +1,4 @@
-# n-event-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-event-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-event-logger)[![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-event-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-event-logger?branch=master)
+# n-event-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-event-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-event-logger) [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-event-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-event-logger?branch=master)
 log all your API service calls and function calls with a single line of code
 
 - [quickstart](#quickstart)
