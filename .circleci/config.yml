@@ -16,11 +16,14 @@ references:
         only: /.*/
 
 jobs:
-  # jobs.build is here just as a temporary fix to mute scheduled build
+  # jobs.build is here just as a temporary fix to mute scheduled build and update test coverage
   build:
-    <<: *run-test-on
     docker:
       - image: circleci/node:boron
+    steps:
+      - checkout
+      - run: make install test-cover
+      - run: cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
   test-on-boron:
     <<: *run-test-on
     docker:
