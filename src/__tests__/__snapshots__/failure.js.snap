@@ -2,55 +2,55 @@
 
 exports[`failureLogger log fetch network error correctly 1`] = `
 Object {
+  "category": "FETCH_NETWORK_ERROR",
   "code": "ENOTFOUND",
   "message": "request to https://unknown/ failed, reason: getaddrinfo ENOTFOUND unknown unknown:443",
   "result": "failure",
-  "type": "FETCH_NETWORK_ERROR",
 }
 `;
 
 exports[`failureLogger log fetch response error correctly based on status 1`] = `
 Object {
+  "category": "FETCH_RESPONSE_ERROR",
   "content": "403 Forbidden",
   "contentType": "text/plain; charset=utf-8",
   "result": "failure",
   "status": 403,
-  "type": "FETCH_RESPONSE_ERROR",
 }
 `;
 
 exports[`failureLogger log fetch response error correctly based on status 2`] = `
 Object {
+  "category": "FETCH_RESPONSE_ERROR",
   "content": "500 Internal Server Error",
   "contentType": "text/plain; charset=utf-8",
   "result": "failure",
   "status": 500,
-  "type": "FETCH_RESPONSE_ERROR",
 }
 `;
 
 exports[`failureLogger log formatted exception based on its status correctly 1`] = `
 Object {
+  "category": "FORMATTED_EXCEPTION",
   "message": "some message to describe the case",
   "result": "failure",
   "status": 500,
-  "type": "FORMATTED_EXCEPTION",
 }
 `;
 
 exports[`failureLogger log formatted exception based on its status correctly 2`] = `
 Object {
+  "category": "FORMATTED_EXCEPTION",
   "message": "some message to describe the case",
   "result": "failure",
   "status": 404,
-  "type": "FORMATTED_EXCEPTION",
 }
 `;
 
 exports[`failureLogger log unformatted exception correctly 1`] = `
 Object {
+  "category": "UNFORMATTED_EXCEPTION",
   "message": "aha",
   "result": "failure",
-  "type": "UNFORMATTED_EXCEPTION",
 }
 `;

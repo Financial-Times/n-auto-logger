@@ -42,7 +42,7 @@ const failureLogger = (context = {}) => async e => {
 			trimObject({
 				...context,
 				result: 'failure',
-				type: 'FORMATTED_EXCEPTION',
+				category: 'FORMATTED_EXCEPTION',
 				...e,
 			}),
 		);
@@ -55,7 +55,7 @@ const failureLogger = (context = {}) => async e => {
 			trimObject({
 				...context,
 				result: 'failure',
-				type: 'NODE_SYSTEM_ERROR',
+				category: 'NODE_SYSTEM_ERROR',
 				code,
 				message,
 				stack,
@@ -67,7 +67,7 @@ const failureLogger = (context = {}) => async e => {
 		trimObject({
 			...context,
 			result: 'failure',
-			type: 'UNFORMATTED_EXCEPTION',
+			category: 'UNFORMATTED_EXCEPTION',
 			...e,
 		}),
 	);

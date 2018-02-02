@@ -69,7 +69,7 @@ describe('n-event-logger', () => {
 			expect(logger.error.mock.calls[0][0]).toMatchObject({
 				...commonTrimmedMeta,
 				result: 'failure',
-				type: 'UNFORMATTED_EXCEPTION',
+				category: 'UNFORMATTED_EXCEPTION',
 				message: 'some error message',
 			});
 		});
@@ -81,7 +81,7 @@ describe('n-event-logger', () => {
 			expect(logger.error.mock.calls[0][0]).toMatchObject({
 				...commonTrimmedMeta,
 				result: 'failure',
-				type: 'NODE_SYSTEM_ERROR',
+				category: 'NODE_SYSTEM_ERROR',
 				message: 'some error message',
 			});
 			expect(logger.error.mock.calls[0][0]).toHaveProperty('stack');
@@ -195,7 +195,7 @@ describe('n-event-logger', () => {
 					...params,
 					action: 'mockConstructor',
 					result: 'failure',
-					type: 'NODE_SYSTEM_ERROR',
+					category: 'NODE_SYSTEM_ERROR',
 				});
 			}
 		});

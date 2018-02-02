@@ -4,7 +4,7 @@
 export const formatFetchResponseError = async response => {
 	if (response.ok) {
 		return {
-			type: 'FETCH_RESPONSE_OK',
+			category: 'FETCH_RESPONSE_OK',
 			status: response.status,
 			message: "it shouldn't be caught as exception, please check the code",
 		};
@@ -18,7 +18,7 @@ export const formatFetchResponseError = async response => {
 		contentType && contentType.includes('application/json') ? 'json' : 'text';
 	const content = await response[parseMethod]();
 	return {
-		type: 'FETCH_RESPONSE_ERROR',
+		category: 'FETCH_RESPONSE_ERROR',
 		status,
 		contentType,
 		content,
@@ -26,7 +26,7 @@ export const formatFetchResponseError = async response => {
 };
 
 export const formatFetchNetworkError = e => ({
-	type: 'FETCH_NETWORK_ERROR',
+	category: 'FETCH_NETWORK_ERROR',
 	message: e.message,
 	code: e.code,
 });

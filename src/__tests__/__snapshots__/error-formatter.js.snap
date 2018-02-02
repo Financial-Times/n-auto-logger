@@ -2,14 +2,15 @@
 
 exports[`formatFetchNetworkError format network error correctly 1`] = `
 Object {
+  "category": "FETCH_NETWORK_ERROR",
   "code": "UNABLE_TO_VERIFY_LEAF_SIGNATURE",
   "message": "request to https://mock.com/ failed, reason: unable to verify the first certificate",
-  "type": "FETCH_NETWORK_ERROR",
 }
 `;
 
 exports[`formatFetchResponseError format error in text/html contentType correctly 1`] = `
 Object {
+  "category": "FETCH_RESPONSE_ERROR",
   "content": "<!DOCTYPE html>
 <html lang=en>
   <meta charset=utf-8>
@@ -24,23 +25,22 @@ Object {
 ",
   "contentType": "text/html; charset=UTF-8",
   "status": 404,
-  "type": "FETCH_RESPONSE_ERROR",
 }
 `;
 
 exports[`formatFetchResponseError format error in text/plain contentType correctly 1`] = `
 Object {
+  "category": "FETCH_RESPONSE_ERROR",
   "content": "403 Forbidden",
   "contentType": "text/plain; charset=utf-8",
   "status": 403,
-  "type": "FETCH_RESPONSE_ERROR",
 }
 `;
 
 exports[`formatFetchResponseError reports wrong response being threw to catch if response is ok 1`] = `
 Object {
+  "category": "FETCH_RESPONSE_OK",
   "message": "it shouldn't be caught as exception, please check the code",
   "status": 200,
-  "type": "FETCH_RESPONSE_OK",
 }
 `;

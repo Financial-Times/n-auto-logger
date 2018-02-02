@@ -81,7 +81,7 @@ describe('failureLogger', () => {
 			expect(logger.error.mock.calls[0][0]).toMatchObject({
 				message: 'some error message',
 				result: 'failure',
-				type: 'NODE_SYSTEM_ERROR',
+				category: 'NODE_SYSTEM_ERROR',
 			});
 		}
 	});

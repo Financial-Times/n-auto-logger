@@ -42,7 +42,7 @@ describe('formatFetchResponseError', () => {
 			const formatted = await formatFetchResponseError(e);
 			expect(formatted).toMatchObject({
 				contentType: 'application/json; charset=utf-8',
-				type: 'FETCH_RESPONSE_ERROR',
+				category: 'FETCH_RESPONSE_ERROR',
 			});
 			expect(formatted.content).toHaveProperty('documentation_url');
 			expect(formatted.content).toHaveProperty('message');
