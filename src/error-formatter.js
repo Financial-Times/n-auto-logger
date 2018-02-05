@@ -15,9 +15,9 @@ export function LoggerStandardError(fields) {
 export const formatFetchResponseError = async response => {
 	if (response.ok) {
 		return LoggerStandardError({
-			category: 'FETCH_RESPONSE_OK',
 			status: response.status,
-			message: "it shouldn't be caught as exception, please check the code",
+			message:
+				"FETCH_RESPONSE_OK - it shouldn't be caught as exception, please check the code",
 		});
 	}
 
@@ -27,7 +27,6 @@ export const formatFetchResponseError = async response => {
 		contentType && contentType.includes('application/json') ? 'json' : 'text';
 	const message = await response[parseMethod]();
 	return LoggerStandardError({
-		category: 'FETCH_RESPONSE_ERROR',
 		status,
 		contentType,
 		message,
@@ -36,7 +35,6 @@ export const formatFetchResponseError = async response => {
 
 export const formatFetchNetworkError = e =>
 	LoggerStandardError({
-		category: 'FETCH_NETWORK_ERROR',
 		message: e.message,
 		code: e.code,
 	});

@@ -24,6 +24,7 @@ const failureLogger = (context = {}) => async e => {
 		return logger[loggerLevel]({
 			...context,
 			result: 'failure',
+			category: 'FETCH_RESPONSE_ERROR',
 			...formattedError,
 		});
 	}
@@ -33,6 +34,7 @@ const failureLogger = (context = {}) => async e => {
 		return logger.error({
 			...context,
 			result: 'failure',
+			category: 'FETCH_NETWORK_ERROR',
 			...formattedError,
 		});
 	}
@@ -50,7 +52,6 @@ const failureLogger = (context = {}) => async e => {
 		});
 	}
 	// in case of n-event-logger standard error standard
-	// TODO: define the formatted error standard as n-error-standard
 	if (e instanceof LoggerStandardError) {
 		return logger[e.status >= 500 ? 'error' : 'warn']({
 			...context,

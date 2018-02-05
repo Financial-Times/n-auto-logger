@@ -5,6 +5,7 @@ import {
 	formatFetchNetworkError,
 } from '../error-formatter';
 
+// TODO: mock for fetch here
 describe('formatFetchResponseError', () => {
 	it('format error in text/html contentType correctly', async () => {
 		try {
@@ -42,7 +43,6 @@ describe('formatFetchResponseError', () => {
 			const formatted = await formatFetchResponseError(e);
 			expect(formatted).toMatchObject({
 				contentType: 'application/json; charset=utf-8',
-				category: 'FETCH_RESPONSE_ERROR',
 			});
 			expect(formatted.message).toHaveProperty('documentation_url');
 			expect(formatted.message).toHaveProperty('message');

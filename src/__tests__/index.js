@@ -69,7 +69,7 @@ describe('n-event-logger', () => {
 			expect(logger.warn.mock.calls[0][0]).toMatchObject({
 				...commonTrimmedMeta,
 				result: 'failure',
-				// category: 'UNFORMATTED_EXCEPTION',
+				category: 'UNFORMATTED_EXCEPTION',
 				message: 'some error message',
 			});
 		});
