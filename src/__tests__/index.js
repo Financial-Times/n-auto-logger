@@ -66,10 +66,10 @@ describe('n-event-logger', () => {
 			const event = loggerEvent(commonMeta);
 			event.failure({ message: 'some error message' });
 			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.error.mock.calls[0][0]).toMatchObject({
+			expect(logger.warn.mock.calls[0][0]).toMatchObject({
 				...commonTrimmedMeta,
 				result: 'failure',
-				category: 'UNFORMATTED_EXCEPTION',
+				// category: 'UNFORMATTED_EXCEPTION',
 				message: 'some error message',
 			});
 		});
@@ -132,6 +132,17 @@ describe('n-event-logger', () => {
 				action: 'someAction',
 				result: 'failure',
 				reason: 'some action error message',
+			});
+		});
+
+		it('should supports action fire failure log with empty error object', () => {
+			const event = loggerEvent(commonMeta);
+			event.action('someAction').failure();
+			expect(logger.info.mock.calls).toHaveLength(1);
+			expect(logger.warn.mock.calls[0][0]).toMatchObject({
+				...commonTrimmedMeta,
+				action: 'someAction',
+				result: 'failure',
 			});
 		});
 

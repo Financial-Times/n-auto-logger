@@ -44,8 +44,8 @@ describe('formatFetchResponseError', () => {
 				contentType: 'application/json; charset=utf-8',
 				category: 'FETCH_RESPONSE_ERROR',
 			});
-			expect(formatted.content).toHaveProperty('documentation_url');
-			expect(formatted.content).toHaveProperty('message');
+			expect(formatted.message).toHaveProperty('documentation_url');
+			expect(formatted.message).toHaveProperty('message');
 		}
 	});
 

@@ -11,4 +11,4 @@ dist/
 
 # dot files
 .DS_Store
-.env
+*.env*

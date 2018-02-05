@@ -12,8 +12,8 @@ Object {
 exports[`failureLogger log fetch response error correctly based on status 1`] = `
 Object {
   "category": "FETCH_RESPONSE_ERROR",
-  "content": "403 Forbidden",
   "contentType": "text/plain; charset=utf-8",
+  "message": "403 Forbidden",
   "result": "failure",
   "status": 403,
 }
@@ -22,8 +22,8 @@ Object {
 exports[`failureLogger log fetch response error correctly based on status 2`] = `
 Object {
   "category": "FETCH_RESPONSE_ERROR",
-  "content": "500 Internal Server Error",
   "contentType": "text/plain; charset=utf-8",
+  "message": "500 Internal Server Error",
   "result": "failure",
   "status": 500,
 }
@@ -51,6 +51,14 @@ exports[`failureLogger log unformatted exception correctly 1`] = `
 Object {
   "category": "UNFORMATTED_EXCEPTION",
   "message": "aha",
+  "result": "failure",
+}
+`;
+
+exports[`failureLogger log without an error object input correctly 1`] = `
+Object {
+  "action": "someAction",
+  "operation": "someOperation",
   "result": "failure",
 }
 `;

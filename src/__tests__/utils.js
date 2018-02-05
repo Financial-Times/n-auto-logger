@@ -56,6 +56,12 @@ describe('trimObject', () => {
 		const trimmed = trimObject(args);
 		expect(trimmed).toMatchObject({ b: 'test' });
 	});
+
+	it('should sustain the constructor prototype', () => {
+		const test = new Error();
+		const trimmed = trimObject(test);
+		expect(trimmed instanceof Error).toBe(true);
+	});
 });
 
 describe('removeObjectKeys', () => {

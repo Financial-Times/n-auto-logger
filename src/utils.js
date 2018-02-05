@@ -10,7 +10,7 @@ export const emptyCheck = value => {
 };
 
 export const trimObject = obj => {
-	const output = {};
+	const output = Object.create(obj);
 	Object.keys(obj).forEach(key => {
 		const emtpy = emptyCheck(obj[key]);
 		if (!emtpy) {

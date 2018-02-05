@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`formatFetchNetworkError format network error correctly 1`] = `
-Object {
+LoggerStandardError {
   "category": "FETCH_NETWORK_ERROR",
   "code": "UNABLE_TO_VERIFY_LEAF_SIGNATURE",
   "message": "request to https://mock.com/ failed, reason: unable to verify the first certificate",
@@ -9,9 +9,10 @@ Object {
 `;
 
 exports[`formatFetchResponseError format error in text/html contentType correctly 1`] = `
-Object {
+LoggerStandardError {
   "category": "FETCH_RESPONSE_ERROR",
-  "content": "<!DOCTYPE html>
+  "contentType": "text/html; charset=UTF-8",
+  "message": "<!DOCTYPE html>
 <html lang=en>
   <meta charset=utf-8>
   <meta name=viewport content=\\"initial-scale=1, minimum-scale=1, width=device-width\\">
@@ -23,22 +24,21 @@ Object {
   <p><b>404.</b> <ins>That’s an error.</ins>
   <p>The requested URL <code>/404</code> was not found on this server.  <ins>That’s all we know.</ins>
 ",
-  "contentType": "text/html; charset=UTF-8",
   "status": 404,
 }
 `;
 
 exports[`formatFetchResponseError format error in text/plain contentType correctly 1`] = `
-Object {
+LoggerStandardError {
   "category": "FETCH_RESPONSE_ERROR",
-  "content": "403 Forbidden",
   "contentType": "text/plain; charset=utf-8",
+  "message": "403 Forbidden",
   "status": 403,
 }
 `;
 
 exports[`formatFetchResponseError reports wrong response being threw to catch if response is ok 1`] = `
-Object {
+LoggerStandardError {
   "category": "FETCH_RESPONSE_OK",
   "message": "it shouldn't be caught as exception, please check the code",
   "status": 200,

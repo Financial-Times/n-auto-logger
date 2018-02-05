@@ -1,12 +1,23 @@
 import logger from '@financial-times/n-logger';
 import fetch from 'node-fetch';
 import failureLogger from '../failure';
+import { LoggerStandardError } from '../error-formatter';
 
 jest.mock('@financial-times/n-logger');
 
 describe('failureLogger', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
+	});
+
+	it('log without an error object input correctly', async () => {
+		const context = {
+			operation: 'someOperation',
+			action: 'someAction',
+		};
+		await failureLogger(context)();
+		expect(logger.warn.mock.calls).toHaveLength(1);
+		expect(logger.warn.mock.calls[0][0]).toMatchSnapshot();
 	});
 
 	it('log fetch response error correctly based on status', async () => {
@@ -46,10 +57,10 @@ describe('failureLogger', () => {
 
 	it('log formatted exception based on its status correctly', async () => {
 		try {
-			const formattedError = {
+			const formattedError = LoggerStandardError({
 				status: 500,
 				message: 'some message to describe the case',
-			};
+			});
 			throw formattedError;
 		} catch (e) {
 			await failureLogger()(e);
@@ -58,10 +69,10 @@ describe('failureLogger', () => {
 		}
 
 		try {
-			const formattedError = {
+			const formattedError = LoggerStandardError({
 				status: 404,
 				message: 'some message to describe the case',
-			};
+			});
 			throw formattedError;
 		} catch (e) {
 			await failureLogger()(e);
@@ -72,11 +83,14 @@ describe('failureLogger', () => {
 	});
 
 	it('log node system error correctly', async () => {
+		const event = {
+			operation: 'someOperation',
+		};
 		try {
 			const systemError = new Error('some error message');
 			throw systemError;
 		} catch (e) {
-			await failureLogger()(e);
+			await failureLogger(event)(e);
 			expect(logger.error.mock.calls).toHaveLength(1);
 			expect(logger.error.mock.calls[0][0]).toMatchObject({
 				message: 'some error message',
@@ -94,8 +108,8 @@ describe('failureLogger', () => {
 			throw unformattedException;
 		} catch (e) {
 			await failureLogger()(e);
-			expect(logger.error.mock.calls).toHaveLength(1);
-			expect(logger.error.mock.calls[0][0]).toMatchSnapshot();
+			expect(logger.warn.mock.calls).toHaveLength(1);
+			expect(logger.warn.mock.calls[0][0]).toMatchSnapshot();
 		}
 	});
 });
