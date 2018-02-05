@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`formatFetchNetworkError format network error correctly 1`] = `
-LoggerStandardError {
+Object {
   "code": "UNABLE_TO_VERIFY_LEAF_SIGNATURE",
   "message": "request to https://mock.com/ failed, reason: unable to verify the first certificate",
 }
 `;
 
 exports[`formatFetchResponseError format error in text/html contentType correctly 1`] = `
-LoggerStandardError {
+Object {
   "contentType": "text/html; charset=UTF-8",
   "message": "<!DOCTYPE html>
 <html lang=en>
@@ -27,7 +27,7 @@ LoggerStandardError {
 `;
 
 exports[`formatFetchResponseError format error in text/plain contentType correctly 1`] = `
-LoggerStandardError {
+Object {
   "contentType": "text/plain; charset=utf-8",
   "message": "403 Forbidden",
   "status": 403,
@@ -35,7 +35,7 @@ LoggerStandardError {
 `;
 
 exports[`formatFetchResponseError reports wrong response being threw to catch if response is ok 1`] = `
-LoggerStandardError {
+Object {
   "message": "FETCH_RESPONSE_OK - it shouldn't be caught as exception, please check the code",
   "status": 200,
 }

@@ -3,7 +3,6 @@ import fetch from 'node-fetch';
 import {
 	formatFetchResponseError,
 	formatFetchNetworkError,
-	LoggerStandardError,
 } from './error-formatter';
 
 // TODO: consider logics to decide default logger level based on status
@@ -51,21 +50,12 @@ const failureLogger = (context = {}) => async e => {
 			stack,
 		});
 	}
-	// in case of n-event-logger standard error standard
-	if (e instanceof LoggerStandardError) {
+	// in case of exception in any format of object not prototyped by Error
+	if (e instanceof Object) {
 		return logger[e.status >= 500 ? 'error' : 'warn']({
 			...context,
 			result: 'failure',
-			category: 'FORMATTED_EXCEPTION',
-			...e,
-		});
-	}
-	// in case of unformatted exception in any format of object
-	if (typeof e === 'object') {
-		return logger[e.status >= 500 ? 'error' : 'warn']({
-			...context,
-			result: 'failure',
-			category: 'UNFORMATTED_EXCEPTION',
+			category: 'EXCEPTION',
 			...e,
 		});
 	}

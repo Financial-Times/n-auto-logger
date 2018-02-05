@@ -1,7 +1,6 @@
 import logger from '@financial-times/n-logger';
 import fetch from 'node-fetch';
 import failureLogger from '../failure';
-import { LoggerStandardError } from '../error-formatter';
 
 jest.mock('@financial-times/n-logger');
 
@@ -55,12 +54,12 @@ describe('failureLogger', () => {
 		}
 	});
 
-	it('log formatted exception based on its status correctly', async () => {
+	it('log exception based on its status correctly', async () => {
 		try {
-			const formattedError = LoggerStandardError({
+			const formattedError = {
 				status: 500,
 				message: 'some message to describe the case',
-			});
+			};
 			throw formattedError;
 		} catch (e) {
 			await failureLogger()(e);
@@ -69,10 +68,10 @@ describe('failureLogger', () => {
 		}
 
 		try {
-			const formattedError = LoggerStandardError({
+			const formattedError = {
 				status: 404,
 				message: 'some message to describe the case',
-			});
+			};
 			throw formattedError;
 		} catch (e) {
 			await failureLogger()(e);

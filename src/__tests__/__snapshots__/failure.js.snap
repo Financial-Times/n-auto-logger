@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`failureLogger log exception based on its status correctly 1`] = `
+Object {
+  "category": "EXCEPTION",
+  "message": "some message to describe the case",
+  "result": "failure",
+  "status": 500,
+}
+`;
+
+exports[`failureLogger log exception based on its status correctly 2`] = `
+Object {
+  "category": "EXCEPTION",
+  "message": "some message to describe the case",
+  "result": "failure",
+  "status": 404,
+}
+`;
+
 exports[`failureLogger log fetch network error correctly 1`] = `
 Object {
   "category": "FETCH_NETWORK_ERROR",
@@ -29,27 +47,9 @@ Object {
 }
 `;
 
-exports[`failureLogger log formatted exception based on its status correctly 1`] = `
-Object {
-  "category": "FORMATTED_EXCEPTION",
-  "message": "some message to describe the case",
-  "result": "failure",
-  "status": 500,
-}
-`;
-
-exports[`failureLogger log formatted exception based on its status correctly 2`] = `
-Object {
-  "category": "FORMATTED_EXCEPTION",
-  "message": "some message to describe the case",
-  "result": "failure",
-  "status": 404,
-}
-`;
-
 exports[`failureLogger log unformatted exception correctly 1`] = `
 Object {
-  "category": "UNFORMATTED_EXCEPTION",
+  "category": "EXCEPTION",
   "message": "aha",
   "result": "failure",
 }

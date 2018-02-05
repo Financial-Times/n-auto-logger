@@ -4,7 +4,7 @@ log all your API service calls and function calls with a single line of code
 - [quickstart](#quickstart)
 - [before/after](#before/after)
 - [install](#install)
-- [prerequisite](#prerequisite)
+- [gotcha](#gotcha)
     * [function args format standard](#function-args-format-standard)
     * [exception/error format standard](#exception/error-format-standard)
 - [usage](#usage)
@@ -40,7 +40,7 @@ import APIService from 'some-api-service';
 await APIService.CallA(params, meta);
 await APIService.CallB(params, meta);
 ```
-slightly more strcutured operation/action log
+more strcutured operation/action log
 ```javascript
 const meta = { transactionId, userId, operation };
 const event = eventLogger(meta);
@@ -99,20 +99,20 @@ try {
 npm install @financial-times/n-event-logger
 ```
 
-## prerequisite
+## gotcha
 
 ### function args format standard
 
 One opinionated pre-requisite is to have the callFunction input format as (params, meta) so that the callFunction can be invoked correctly with extra meta for logger
 
-### exception/error format standard
+### exception/error
 
-out-of-box support to recognise the following types of errors
+out-of-box parse support for the following standard types of errors
 * Fetch Response Error
 * Fetch (Network) Error
 * Node Native Error Objects
-* formatted errors with status code (more robust support on the way)
-* unformatted exception
+
+> if your custom Error types are extended from native Error class, the logger might not be able to pick up custom information fields well, just use an object not constructed by Error
 
 ## usage
 
