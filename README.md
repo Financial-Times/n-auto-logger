@@ -359,3 +359,4 @@ sandbox.stub(nEventLogger, 'withServiceLogger').callsFake(service => service);
 ## todos
 * middleware/controller one-line enhancer
 * consider integrating `.addContext()` from `n-logger`
+* consider add a LoggerStandardError constructor that supports error.stack
