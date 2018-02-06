@@ -54,6 +54,24 @@ describe('failureLogger', () => {
 		}
 	});
 
+	it('log node system error correctly', async () => {
+		const event = {
+			operation: 'someOperation',
+		};
+		try {
+			const systemError = new Error('some error message');
+			throw systemError;
+		} catch (e) {
+			await failureLogger(event)(e);
+			expect(logger.error.mock.calls).toHaveLength(1);
+			expect(logger.error.mock.calls[0][0]).toMatchObject({
+				message: 'some error message',
+				result: 'failure',
+				category: 'NODE_SYSTEM_ERROR',
+			});
+		}
+	});
+
 	it('log exception based on its status correctly', async () => {
 		try {
 			const formattedError = {
@@ -81,34 +99,9 @@ describe('failureLogger', () => {
 		}
 	});
 
-	it('log node system error correctly', async () => {
-		const event = {
-			operation: 'someOperation',
-		};
-		try {
-			const systemError = new Error('some error message');
-			throw systemError;
-		} catch (e) {
-			await failureLogger(event)(e);
-			expect(logger.error.mock.calls).toHaveLength(1);
-			expect(logger.error.mock.calls[0][0]).toMatchObject({
-				message: 'some error message',
-				result: 'failure',
-				category: 'NODE_SYSTEM_ERROR',
-			});
-		}
-	});
-
-	it('log unformatted exception correctly', async () => {
-		try {
-			const unformattedException = {
-				message: 'aha',
-			};
-			throw unformattedException;
-		} catch (e) {
-			await failureLogger()(e);
-			expect(logger.warn.mock.calls).toHaveLength(1);
-			expect(logger.warn.mock.calls[0][0]).toMatchSnapshot();
-		}
+	it('log other exceptions not described as object correctly', async () => {
+		await failureLogger()('some error message');
+		expect(logger.warn.mock.calls).toHaveLength(1);
+		expect(logger.warn.mock.calls[0][0]).toMatchSnapshot();
 	});
 });

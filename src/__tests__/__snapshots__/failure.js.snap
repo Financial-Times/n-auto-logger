@@ -47,10 +47,9 @@ Object {
 }
 `;
 
-exports[`failureLogger log unformatted exception correctly 1`] = `
+exports[`failureLogger log other exceptions not described as object correctly 1`] = `
 Object {
-  "category": "EXCEPTION",
-  "message": "aha",
+  "message": "some error message",
   "result": "failure",
 }
 `;

@@ -83,7 +83,7 @@ describe('removeObjectKeys', () => {
 		const obj = { a: 1, b: 2, c: 'test', 'more-complex': 'test' };
 		const removeKeyList = '';
 		const wrongInput = () => removeObjectKeys(obj)(removeKeyList);
-		expect(wrongInput).toThrow();
+		expect(wrongInput).toThrowErrorMatchingSnapshot();
 	});
 });
 

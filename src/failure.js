@@ -4,12 +4,13 @@ import {
 	formatFetchResponseError,
 	formatFetchNetworkError,
 } from './error-formatter';
+import { trimObject } from './utils';
 
 // TODO: consider logics to decide default logger level based on status
 // 	use warn for errors wouldn't be cause the by the codebase, error for those possibly are
 const failureLogger = (context = {}) => async e => {
 	// in case of failure without a specified error, e.g. .action('someAction').failure()
-	if (typeof e === 'undefined') {
+	if (typeof e === 'undefined' || e === null) {
 		return logger.warn({
 			...context,
 			result: 'failure',
@@ -56,13 +57,14 @@ const failureLogger = (context = {}) => async e => {
 			...context,
 			result: 'failure',
 			category: 'EXCEPTION',
-			...e,
+			...trimObject(e),
 		});
 	}
 	// in case of other exceptions
-	return logger.error({
+	return logger.warn({
 		...context,
 		result: 'failure',
+		message: e,
 	});
 };
 
