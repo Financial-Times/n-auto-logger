@@ -11,7 +11,7 @@ log all your API service calls and function calls with a single line of code
     * [enhance a single API service call](#enhance-a-single-api-service-call)
     * [enhance a whole series of API service call](#enhance-a-whole-series-of-api-service-call)
     * [log your operation in structure with loggerEvent](#log-your-operation-in-structure-with-loggerevent)
-    * [auto log non-api-service function with withLogger enhancer](#auto-log-non-api-service-function-with-withlogger-enhancer)
+    * [auto log non-api-service function with autoLog enhancer](#auto-log-non-api-service-function-with-autoLog-enhancer)
     * [track some non-api-service function on the fly](#track-some-non-api-service-function-on-the-fly)
     * [test stub](#test-stub)
 - [development](#development)
@@ -20,19 +20,17 @@ log all your API service calls and function calls with a single line of code
 
 ## quickstart
 ```javascript
-import { withLogger, withServiceLogger, eventLogger } from '@financial-times/n-auto-logger';
-// enhancer function names might be changed to the following after alpha
-import { autoLog, autoLogAll, eventLogger } from '@financial-times/n-auto-logger';
+import { autoLog, serviceAutoLog, eventLogger } from '@financial-times/n-auto-logger';
 ```
 auto log different status of a function call (commonly an action under an operation)
 ```javascript
-const data = await withLogger(yourCallFunction)(params, meta);
-const result = withLogger(someOtherFunction)(params, meta);
+const data = await autoLog(yourCallFunction)(params, meta);
+const result = autoLog(someOtherFunction)(params, meta);
 ```
 enhance all methods in api service module ensure that it would be logged wherever used
 ```javascript
 /*-- some-api-service --*/
-export default withServiceLogger{ CallA, CallB };
+export default serviceAutoLog{ CallA, CallB };
 
 /*-- some-controller-or-middleware --*/
 import APIService from 'some-api-service';
@@ -69,7 +67,7 @@ try {
     logger.info(meta, { action: 'yourCallFunction' }, params, { result: 'failure' }, parsedError);
 }
 // after: 7+ lines (depends on error parsing) => 1 line
-const data = await withLogger(yourCallFunction)(params, meta);
+const data = await autoLog(yourCallFunction)(params, meta);
 ```
 ```javascript
 const meta = { transactionId, userId, operation };
@@ -120,7 +118,7 @@ out-of-box parse support for the following standard types of errors
 
 ```javascript
 /*-- api-service.js --*/
-import { withLogger } from '@financial-times/n-auto-logger';
+import { autoLog } from '@financial-times/n-auto-logger';
 
 export const callSomeAPIService = (params, meta) => {
     const options = {
@@ -137,7 +135,7 @@ export const callSomeAPIService = (params, meta) => {
 }
 
 // this would record the name of the function 'callSomeAPIService' as action in the logger automatically
-export const enhancedCallSomeAPIService = (params, meta) => withLogger(callSomeAPIService)(params, meta);
+export const enhancedCallSomeAPIService = (params, meta) => autoLog(callSomeAPIService)(params, meta);
 
 /*
     currently async/await is needed for the logger to work correctly, update coming soon
@@ -180,13 +178,13 @@ depends on the error status code, it would log as warn for 4XX, and error for 5X
 
 ```javascript
 /*-- api-service.js --*/
-import { withServiceLogger } from '@financial-times/n-auto-logger';
+import { serviceAutoLog } from '@financial-times/n-auto-logger';
 
 export const apiServiceCallA = (params, meta) => {}
 export const apiServiceCallB = (params, meta) => {}
 
 // helper to enhance all API service call functions as object methods
-export default withServiceLogger{
+export default serviceAutoLog{
     apiServiceCallA,
     apiServiceCallB
 };
@@ -261,9 +259,9 @@ logs help you track down exactly which function call leads to the operation fail
 
 ---
 
-### auto log non-api-service function with withLogger enhancer
+### auto log non-api-service function with autoLog enhancer
 ```javascript
-import { loggerEvent, withLogger } from '@financial-times/n-auto-logger';
+import { loggerEvent, autoLog } from '@financial-times/n-auto-logger';
 
 const someFunction = (a, b) => {
     try {
@@ -289,7 +287,7 @@ const someOperationFunction = async (req, res, next) => {
         const b = await someAPIService.apiServiceCallB(params, meta);
         /* some other code... */
         // await is needed for the result status logger to work correctly
-        const c = await withLogger(meta)(someFunction)(a, b);
+        const c = await autoLog(meta)(someFunction)(a, b);
         event.success({ c });
         /* some other code... */
     } catch (e) {
@@ -345,10 +343,10 @@ const stubLoggerEvent = meta => ({
     action: () => stubLoggerEvent(meta)
 });
 sandbox.stub(nEventLogger, 'loggerEvent').callsFake(stubLoggerEvent);
-sandbox.stub(nEventLogger, 'withLogger').callsFake(
+sandbox.stub(nEventLogger, 'autoLog').callsFake(
     callFunction => (params, meta) => callFunction(params, meta)
 );
-sandbox.stub(nEventLogger, 'withServiceLogger').callsFake(service => service);
+sandbox.stub(nEventLogger, 'serviceAutoLog').callsFake(service => service);
 ```
 
 ## development

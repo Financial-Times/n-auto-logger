@@ -1,5 +1,5 @@
 import logger from '@financial-times/n-logger';
-import { loggerEvent, withLogger, withServiceLogger } from '../index';
+import { loggerEvent, autoLog, serviceAutoLog } from '../index';
 
 jest.mock('@financial-times/n-logger');
 
@@ -162,11 +162,11 @@ describe('n-auto-logger', () => {
 		});
 	});
 
-	describe('withLogger', () => {
+	describe('autoLog', () => {
 		it('decorates the callFunction correctly', async () => {
 			const callFunction = jest.fn(() => Promise.resolve('foo'));
 			const enhanced = (params, meta) =>
-				withLogger(meta)(callFunction)(params, meta);
+				autoLog(meta)(callFunction)(params, meta);
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
 			const result = await enhanced(params, meta);
@@ -185,7 +185,7 @@ describe('n-auto-logger', () => {
 		it('reports system error in callFunction correctly', async () => {
 			const callFunction = jest.fn(() => Promise.reject(Error('bar')));
 			const enhanced = (params, meta) =>
-				withLogger(meta)(callFunction)(params, meta);
+				autoLog(meta)(callFunction)(params, meta);
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
 			try {
@@ -214,7 +214,7 @@ describe('n-auto-logger', () => {
 		it('logs callFunction name as action name', async () => {
 			const callFunction = () => null;
 			const enhanced = (params, meta) =>
-				withLogger(meta)(callFunction)(params, meta);
+				autoLog(meta)(callFunction)(params, meta);
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
 			await enhanced(params, meta);
@@ -229,7 +229,7 @@ describe('n-auto-logger', () => {
 		it('supports action name override', async () => {
 			const callFunction = jest.fn(() => Promise.resolve('foo'));
 			const enhanced = (params, meta) =>
-				withLogger(meta)(callFunction)(params, meta);
+				autoLog(meta)(callFunction)(params, meta);
 			const params = { test: 'a' };
 			const meta = { meta: 'b', action: 'callFunction' };
 			await enhanced(params, meta);
@@ -244,7 +244,7 @@ describe('n-auto-logger', () => {
 		it('should NOT fail given empty meta', async () => {
 			const callFunction = () => null;
 			const enhanced = (params, meta) =>
-				withLogger(meta)(callFunction)(params, meta);
+				autoLog(meta)(callFunction)(params, meta);
 			const params = { test: 'a' };
 			await enhanced(params);
 			expect(logger.info.mock.calls[1][0]).toMatchObject({
@@ -257,7 +257,7 @@ describe('n-auto-logger', () => {
 		it('should work without async await for non-async function', () => {
 			const callFunction = () => null;
 			const enhanced = (params, meta) =>
-				withLogger(meta)(callFunction)(params, meta);
+				autoLog(meta)(callFunction)(params, meta);
 			const params = { test: 'a' };
 			enhanced(params);
 			expect(logger.info.mock.calls[1][0]).toMatchObject({
@@ -269,7 +269,7 @@ describe('n-auto-logger', () => {
 
 		it('should supports enhance function directly with extra meta appended in args', () => {
 			const callFunction = () => null;
-			const enhanced = (params, meta) => withLogger(callFunction)(params, meta);
+			const enhanced = (params, meta) => autoLog(callFunction)(params, meta);
 			const params = { a: 'test' };
 			const meta = { b: 'k' };
 			enhanced(params, meta);
@@ -282,11 +282,11 @@ describe('n-auto-logger', () => {
 		});
 	});
 
-	describe('withServiceLogger', () => {
+	describe('serviceAutoLog', () => {
 		it('decorate each method correctly', async () => {
 			const callFunctionA = jest.fn();
 			const callFunctionB = jest.fn();
-			const enhancedService = withServiceLogger({
+			const enhancedService = serviceAutoLog({
 				callFunctionA,
 				callFunctionB,
 			});

@@ -63,17 +63,17 @@ const metaFirstAutoLogger = meta => callFunction => params =>
 const funcFirstAutoLogger = callFunction => async (params, meta) =>
 	autoLogger(callFunction, params, meta);
 
-export const withLogger = metaOrFunc =>
+export const autoLog = metaOrFunc =>
 	typeof metaOrFunc === 'function'
 		? funcFirstAutoLogger(metaOrFunc)
 		: metaFirstAutoLogger(metaOrFunc);
 
 // TODO: confirm performance impact when using individual method over decorate them seperately
-export const withServiceLogger = helperStandardService => {
+export const serviceAutoLog = helperStandardService => {
 	const enhanced = {};
 	Object.keys(helperStandardService).forEach(methodName => {
 		enhanced[methodName] = (params, meta) =>
-			withLogger(meta)(helperStandardService[methodName])(params, meta);
+			autoLog(meta)(helperStandardService[methodName])(params, meta);
 	});
 	return enhanced;
 };
