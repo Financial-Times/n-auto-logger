@@ -1,8 +1,8 @@
 {
-  "name": "@financial-times/n-event-logger",
+  "name": "@financial-times/n-auto-logger",
   "version": "0.0.1",
   "license": "MIT",
-  "repository": "https://github.com/Financial-Times/n-event-logger.git",
+  "repository": "https://github.com/Financial-Times/n-auto-logger.git",
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint src",

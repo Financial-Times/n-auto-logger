@@ -3,7 +3,7 @@ import { loggerEvent, withLogger, withServiceLogger } from '../index';
 
 jest.mock('@financial-times/n-logger');
 
-describe('n-event-logger', () => {
+describe('n-auto-logger', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});

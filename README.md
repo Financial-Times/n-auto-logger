@@ -1,4 +1,4 @@
-# n-event-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-event-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-event-logger) [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-event-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-event-logger?branch=master)
+# n-auto-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-auto-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-auto-logger) [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-auto-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-auto-logger?branch=master)
 log all your API service calls and function calls with a single line of code
 
 - [quickstart](#quickstart)
@@ -20,9 +20,9 @@ log all your API service calls and function calls with a single line of code
 
 ## quickstart
 ```javascript
-import { withLogger, withServiceLogger, eventLogger } from '@financial-times/n-event-logger';
+import { withLogger, withServiceLogger, eventLogger } from '@financial-times/n-auto-logger';
 // enhancer function names might be changed to the following after alpha
-import { autoLog, autoLogAll, eventLogger } from '@financial-times/n-event-logger';
+import { autoLog, autoLogAll, eventLogger } from '@financial-times/n-auto-logger';
 ```
 auto log different status of a function call (commonly an action under an operation)
 ```javascript
@@ -96,7 +96,7 @@ try {
 ```
 ## install
 ```shell
-npm install @financial-times/n-event-logger
+npm install @financial-times/n-auto-logger
 ```
 
 ## gotcha
@@ -120,7 +120,7 @@ out-of-box parse support for the following standard types of errors
 
 ```javascript
 /*-- api-service.js --*/
-import { withLogger } from '@financial-times/n-event-logger';
+import { withLogger } from '@financial-times/n-auto-logger';
 
 export const callSomeAPIService = (params, meta) => {
     const options = {
@@ -180,7 +180,7 @@ depends on the error status code, it would log as warn for 4XX, and error for 5X
 
 ```javascript
 /*-- api-service.js --*/
-import { withServiceLogger } from '@financial-times/n-event-logger';
+import { withServiceLogger } from '@financial-times/n-auto-logger';
 
 export const apiServiceCallA = (params, meta) => {}
 export const apiServiceCallB = (params, meta) => {}
@@ -214,7 +214,7 @@ const someOperationFunction = async (req, res, next) => {
 
 ```javascript
 /*-- middleware/controller.js --*/
-import { loggerEvent } from '@financial-times/n-event-logger';
+import { loggerEvent } from '@financial-times/n-auto-logger';
 import SomeAPIService from '../some-api-service';
 
 const someOperationFunction = async (req, res, next) => {
@@ -263,7 +263,7 @@ logs help you track down exactly which function call leads to the operation fail
 
 ### auto log non-api-service function with withLogger enhancer
 ```javascript
-import { loggerEvent, withLogger } from '@financial-times/n-event-logger';
+import { loggerEvent, withLogger } from '@financial-times/n-auto-logger';
 
 const someFunction = (a, b) => {
     try {
@@ -334,7 +334,7 @@ const someOperationFunction = async (req, res, next) => {
 ### test stub
 
 ```javascript
-import * as nEventLogger from '@financial-times/n-event-logger';
+import * as nEventLogger from '@financial-times/n-auto-logger';
 
 //example using sinon sandbox, will look into provide testStub as a module based on sinon/jest
 const stubLoggerEvent = meta => ({
