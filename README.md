@@ -62,8 +62,7 @@ npm install @financial-times/n-auto-logger
 * Fetch Response Error
 * Fetch (Network) Error
 * Node Native Error Objects
-
-> if you are parsing those errors to your customised object in error handling, `n-auto-logger` would pick up what's in the object automatically, but the object can't be an `instanceof Error`, otherwise extended fields would not be pickedup
+* Custom Object extends Native Error Object
 
 ### function signature format
 
@@ -167,5 +166,4 @@ try {
 * `yarn watch` to automatically correct code format on saving src
 
 ## todos
-* consider adding a LoggerStandardError constructor to extend Error for custom Error types
 * middleware/controller one-line enhancer
