@@ -20,9 +20,9 @@ import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n
 ```js
 // auto log a function of its start, success/failure state 
 // * function name recorded as `action` in log
-// * params, meta need to be two objects, key names in the object would be logged
+// * params, meta need to be Object, key names in the object would be logged
 const result = autoLog(someFunction)(params, meta); // use await if it is an async function
-const result = autoLog(meta)(someFunction)(params);
+const result = autoLog(meta)(someFunction)(params); // wrap all the input values with key names as a params Object
 ```
 
 ```js
@@ -143,7 +143,7 @@ try {
     // ...
     const dataA = await APIService.methodA(paramsA, meta);
     const dataB = await APIService.methodB(paramsB, meta);
-    const dataC = autoLog(someFunctionForDataAB)(dataA, dataB);
+    const dataC = autoLog(someFunctionForDataAB)({ dataA, dataB }, meta);
     if (dataC && dataC !== 'code block not in function') {
         event.action('someCheckAction').failure();
         throw someException;
