@@ -20,7 +20,8 @@ import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n
 ```js
 // auto log a function of its start, success/failure state 
 // (function name recorded as action in logger)
-const result = autoLog(someOtherFunction)(params, meta); // use await if it is an async function
+const result = autoLog(someFunction)(params, meta); // use await if it is an async function
+const result = autoLog(meta)(someFunction)(params);
 ```
 
 ```js
