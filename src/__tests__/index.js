@@ -1,5 +1,4 @@
-import logger from '@financial-times/n-logger';
-import { loggerEvent, autoLog, autoLogService } from '../index';
+import logger, { loggerEvent, autoLog, autoLogService } from '../index';
 
 jest.mock('@financial-times/n-logger');
 

@@ -75,3 +75,5 @@ export const autoLogService = helperStandardService => {
 	});
 	return enhanced;
 };
+
+export default logger;
