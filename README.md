@@ -19,7 +19,8 @@ import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n
 
 ```js
 // auto log a function of its start, success/failure state 
-// (function name recorded as action in logger)
+// * function name recorded as `action` in log
+// * params, meta need to be two objects, key names in the object would be logged
 const result = autoLog(someFunction)(params, meta); // use await if it is an async function
 const result = autoLog(meta)(someFunction)(params);
 ```
@@ -66,7 +67,8 @@ npm install @financial-times/n-auto-logger
 
 ### function args format
 
-If you want to use the shorthand `autoLog(someFunction)(params, meta)`, then the args of the function needs to be in exact the order of `(params, meta)`. Object destruction assignment is recommended for defining the function `({ paramA, paramB }, meta) => {}`.
+(params, meta) need to be objects, as the key name would be logged for each value. Object destruction assignment is recommended for defining the function `({ paramA, paramB }, { metaA, metaB }) => {}`.
+If you want to use the shorthand `autoLog(someFunction)(params, meta)`, then the args of the function needs to be in exact the order of `(params, meta)`.
 
 ### test stub
 
