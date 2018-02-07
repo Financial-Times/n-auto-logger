@@ -16,23 +16,19 @@ auto log (api) function calls with a single line of code
 ```js
 import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n-auto-logger';
 ```
-auto log different status of a function call (commonly an action under an operation)
-```js
-const data = await autoLog(yourCallFunction)(params, meta);
-const result = autoLog(someOtherFunction)(params, meta);
-```
-enhance all methods in api service module ensure that it would be logged wherever used
-```js
-/*-- some-api-service --*/
-export default autoLogService{ CallA, CallB };
 
-/*-- some-controller-or-middleware --*/
-import APIService from 'some-api-service';
-
-await APIService.CallA(params, meta);
-await APIService.CallB(params, meta);
+auto log a function of its start, success/failure state (function name recorded as action in logger)
+```js
+const result = autoLog(someOtherFunction)(params, meta); // use await if it is an async function
 ```
-more strcutured operation/action log
+
+auto log multiple functions wrapped in an object
+```js
+const APIService = autoLogService{ methodA, methodB, methodC };
+APIService.CallA(params, meta);
+```
+
+log operation and adhoc actions
 ```js
 const meta = { transactionId, userId, operation };
 const event = eventLogger(meta);
@@ -43,8 +39,8 @@ try {
 } catch(e) {
     event.failure(e);
 }
-
 ```
+
 set key names of fields to be muted in .env to reduce log for development
 ```js
 LOGGER_MUTE_FIELDS=transactionId, userId
@@ -63,21 +59,19 @@ One opinionated pre-requisite is to have the callFunction input format as (param
 
 ### exception/error
 
-out-of-box parse support for the following standard types of errors
+`n-auto-logger` would parse different forms of the following error objects to logger-suitable format
 * Fetch Response Error
 * Fetch (Network) Error
 * Node Native Error Objects
 
-> if your custom Error types are extended from native Error class, the logger might not be able to pick up custom information fields well, just use an object not constructed by Error
+> if you are parsing those errors to your customised object in error handling, `n-auto-logger` would pick up what's in the object automatically, but the object can't be an `instanceof Error`, otherwise extended fields would not be pickedup
 
 ### test stub
 
 ```js
 import * as nEventLogger from '@financial-times/n-auto-logger';
 
-//example using sinon sandbox, will look into provide testStub as a module based on sinon/jest
 const stubLoggerEvent = meta => ({
-    // add more stubs to methods if you want
     start: () => null,
     success: () => null,
     failure: () => null,
@@ -171,6 +165,5 @@ try {
 * `yarn watch` to automatically correct code format on saving src
 
 ## todos
+* consider adding a LoggerStandardError constructor to extend Error for custom Error types
 * middleware/controller one-line enhancer
-* consider integrating `.addContext()` from `n-logger`
-* consider add a LoggerStandardError constructor that supports error.stack
