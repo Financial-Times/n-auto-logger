@@ -4,8 +4,8 @@ auto log (api) function calls with a single line of code
 - [quickstart](#quickstart)
 - [install](#install)
 - [usage](#usage)
-    * [error parsing and format](#error-parsing-and-format)
     * [function signature format](#function-signature-format)
+    * [error parsing and format](#error-parsing-and-format)
     * [test stub](#test-stub)
 - [before/after](#beforeafter)
 - [development](#development)
@@ -20,10 +20,10 @@ import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n
 ```js
 // auto log a function of its start, success/failure state 
 // function name would be auto logged, e.g. `action=someFunction`
-// * if there's key name `action` in params/meta/args, its value would override the above
-// * params, meta or combined as args need to be Object so that values can be logged with key names
-const result = autoLog(someFunction)(params, meta); // use `await` if it is an async function
+// * if there's key name `action` in args/params/meta, its value would override the above
+// * args or params/meta need to be Object so that values can be logged with key names
 const result = autoLog(someFunction)(args); // combined `params` and `meta` in one object `args`
+const result = autoLog(someFunction)(params, meta); // if you care to seperate `params` and `meta`
 ```
 
 ```js
@@ -57,6 +57,26 @@ npm install @financial-times/n-auto-logger
 
 ## usage
 
+### function signature format
+
+Both `(args: Object) => {}` and `(params: Object, meta?: Object) => {}` would work, and destructing assignment is recommended `({ paramA, paramB }, { metaA, metaB }) => {}`.
+
+The package would throw Errors if function signature is incorrect for `autoLog`.
+
+> `(mandatory: Object, optional?: Object) => {}` is recommended in case you want to do params validation, while nullable params field/meta can be put in the second args.
+```
+const someFunction = (mandatory, optional) => {
+   try {
+      validate(mandatory); // throw error before continue for e.g. API call
+      // ...
+   } catch (e) {
+      // ...
+   }
+};
+
+autoLog(someFunction)(mandatory, optional);
+```
+
 ### error parsing and format
 
 `n-auto-logger` would parse different forms of the following error objects to logger-suitable format([detail](src/failure.js))
@@ -64,14 +84,6 @@ npm install @financial-times/n-auto-logger
 * Fetch (Network) Error
 * Node Native Error Objects
 * Custom Object extends Native Error Object
-
-### function signature format
-
-To ensure auto log works correctly, `function (params: Object, meta?: Object)` format is required for function signature so that values can be logged with corresponding key names. `function (args: Object)` is also acceptable, if you would like to omit `meta` or put `meta` and `params` in one `args` Object.
-
-Object destruction assignment is recommended `({ paramA, paramB }, { metaA, metaB }) => {}`.
-
-The package would throw Errors if function signature is incorrect for `autoLog`
 
 ### test stub
 
