@@ -224,7 +224,8 @@ describe('n-auto-logger', () => {
 				autoLog(callFunction)(params, meta);
 			} catch (e) {
 				expect(e).toBe(errorInstance);
-				expect(logger.error.mock.calls).toMatchSnapshot();
+				expect(logger.warn.mock.calls).toHaveLength(1);
+				expect(logger.warn.mock.calls).toMatchSnapshot();
 			}
 		});
 

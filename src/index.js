@@ -45,9 +45,9 @@ export const autoLog = callFunction => (params, meta, ...excessive) => {
 	}
 
 	const event = loggerEvent({
-		...meta,
 		action: callFunction.name,
 		...params,
+		...meta,
 	});
 
 	try {
@@ -60,7 +60,7 @@ export const autoLog = callFunction => (params, meta, ...excessive) => {
 				})
 				.catch(e => {
 					event.failure(e);
-					return Promise.reject(e);
+					throw e;
 				});
 		}
 		const data = call;
@@ -68,7 +68,7 @@ export const autoLog = callFunction => (params, meta, ...excessive) => {
 		return data;
 	} catch (e) {
 		event.failure(e);
-		return Promise.reject(e);
+		throw e;
 	}
 };
 
