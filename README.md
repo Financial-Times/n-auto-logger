@@ -77,14 +77,6 @@ const someFunction = (mandatory, optional) => {
 autoLog(someFunction)(mandatory, optional);
 ```
 
-### error parsing and format
-
-`n-auto-logger` would parse different forms of the following error objects to logger-suitable format([detail](src/failure.js))
-* Fetch Response Error
-* Fetch (Network) Error
-* Node Native Error Objects
-* Custom Object extends Native Error Object
-
 ### test stub
 
 ```js
@@ -92,6 +84,20 @@ import logger from '@financial-times/n-auto-logger';
 
 sandbox.stub(logger);
 ```
+
+## goodies
+
+### out-of-box error parsing support
+
+`n-auto-logger` would parse different forms of the following error objects to logger-suitable format automatically([detail](src/failure.js))
+* Fetch Response Error
+* Fetch (Network) Error
+* Node Native Error Objects
+* Custom Object extends Native Error Object
+
+### trim empty fields
+
+`n-auto-logger` would trim any empty fields in the input objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields.
 
 ## before/after
 ```js
