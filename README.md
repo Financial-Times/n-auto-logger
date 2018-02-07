@@ -4,10 +4,10 @@ auto log (api) function calls with a single line of code
 - [quickstart](#quickstart)
 - [install](#install)
 - [usage](#usage)
-    * [exception/error](#exception/error)
+    * [exception/error](#exception-error)
     * [function args format](#function-args-format)
     * [test stub](#test-stub)
-- [before/after](#before/after)
+- [before/after](#before-after)
 - [development](#development)
 - [todos](#todos)
 
