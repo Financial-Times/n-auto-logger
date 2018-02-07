@@ -41,8 +41,8 @@ try {
 }
 ```
 
-set key names of fields to be muted in .env to reduce log for development
 ```js
+// set key names of fields to be muted in .env to reduce log for development
 LOGGER_MUTE_FIELDS=transactionId, userId
 ```
 
@@ -85,8 +85,8 @@ sandbox.stub(nEventLogger, 'autoLogService').callsFake(service => service);
 ```
 
 ## before/after
-before
 ```js
+/* --- BEFORE --- */
 /* some-api-service.js */
 const methodA = async (params, meta) => {
     try {
@@ -131,8 +131,9 @@ try {
     next(e);
 }
 ```
-after
+
 ```js
+/* --- AFTER --- */
 /* some-api-service.js */
 export default autoLogService({ methodA, methodB });
 
