@@ -1,5 +1,5 @@
 import logger from '@financial-times/n-logger';
-import { loggerEvent, autoLog, serviceAutoLog } from '../index';
+import { loggerEvent, autoLog, autoLogService } from '../index';
 
 jest.mock('@financial-times/n-logger');
 
@@ -282,11 +282,11 @@ describe('n-auto-logger', () => {
 		});
 	});
 
-	describe('serviceAutoLog', () => {
+	describe('autoLogService', () => {
 		it('decorate each method correctly', async () => {
 			const callFunctionA = jest.fn();
 			const callFunctionB = jest.fn();
-			const enhancedService = serviceAutoLog({
+			const enhancedService = autoLogService({
 				callFunctionA,
 				callFunctionB,
 			});

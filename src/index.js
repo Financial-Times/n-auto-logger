@@ -67,7 +67,7 @@ export const autoLog = metaOrFunc =>
 		: metaFirstAutoLogger(metaOrFunc);
 
 // TODO: confirm performance impact when using individual method over decorate them seperately
-export const serviceAutoLog = helperStandardService => {
+export const autoLogService = helperStandardService => {
 	const enhanced = {};
 	Object.keys(helperStandardService).forEach(methodName => {
 		enhanced[methodName] = (params, meta) =>

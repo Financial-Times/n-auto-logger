@@ -20,7 +20,7 @@ log all your API service calls and function calls with a single line of code
 
 ## quickstart
 ```javascript
-import { autoLog, serviceAutoLog, eventLogger } from '@financial-times/n-auto-logger';
+import { autoLog, autoLogService, eventLogger } from '@financial-times/n-auto-logger';
 ```
 auto log different status of a function call (commonly an action under an operation)
 ```javascript
@@ -30,7 +30,7 @@ const result = autoLog(someOtherFunction)(params, meta);
 enhance all methods in api service module ensure that it would be logged wherever used
 ```javascript
 /*-- some-api-service --*/
-export default serviceAutoLog{ CallA, CallB };
+export default autoLogService{ CallA, CallB };
 
 /*-- some-controller-or-middleware --*/
 import APIService from 'some-api-service';
@@ -178,13 +178,13 @@ depends on the error status code, it would log as warn for 4XX, and error for 5X
 
 ```javascript
 /*-- api-service.js --*/
-import { serviceAutoLog } from '@financial-times/n-auto-logger';
+import { autoLogService } from '@financial-times/n-auto-logger';
 
 export const apiServiceCallA = (params, meta) => {}
 export const apiServiceCallB = (params, meta) => {}
 
 // helper to enhance all API service call functions as object methods
-export default serviceAutoLog{
+export default autoLogService{
     apiServiceCallA,
     apiServiceCallB
 };
@@ -346,7 +346,7 @@ sandbox.stub(nEventLogger, 'loggerEvent').callsFake(stubLoggerEvent);
 sandbox.stub(nEventLogger, 'autoLog').callsFake(
     callFunction => (params, meta) => callFunction(params, meta)
 );
-sandbox.stub(nEventLogger, 'serviceAutoLog').callsFake(service => service);
+sandbox.stub(nEventLogger, 'autoLogService').callsFake(service => service);
 ```
 
 ## development
