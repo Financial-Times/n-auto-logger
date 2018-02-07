@@ -162,122 +162,125 @@ describe('n-auto-logger', () => {
 	});
 
 	describe('autoLog', () => {
-		it('decorates the callFunction correctly', async () => {
+		it('should invoke autoLogged async callFunction correctly', async () => {
 			const callFunction = jest.fn(() => Promise.resolve('foo'));
-			const enhanced = (params, meta) =>
-				autoLog(meta)(callFunction)(params, meta);
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
-			const result = await enhanced(params, meta);
-			expect(callFunction.mock.calls).toHaveLength(1);
-			expect(callFunction.mock.calls[0]).toEqual([params, meta]);
-			expect(result).toBe('foo');
-			expect(logger.info.mock.calls).toHaveLength(2);
-			expect(logger.info.mock.calls[1][0]).toMatchObject({
-				...meta,
-				...params,
-				action: 'mockConstructor',
-				result: 'success',
-			});
+			const result = await autoLog(callFunction)(params, meta);
+			expect(callFunction.mock.calls).toMatchSnapshot();
+			const expectedResult = await callFunction(params, meta);
+			expect(result).toBe(expectedResult);
 		});
 
-		it('reports system error in callFunction correctly', async () => {
-			const callFunction = jest.fn(() => Promise.reject(Error('bar')));
-			const enhanced = (params, meta) =>
-				autoLog(meta)(callFunction)(params, meta);
+		it('should log async callFunction success correctly', async () => {
+			const callFunction = () => Promise.resolve('foo');
+			const params = { test: 'a' };
+			const meta = { meta: 'b' };
+			await autoLog(callFunction)(params, meta);
+			expect(logger.info.mock.calls).toMatchSnapshot();
+		});
+
+		it('should log async callFunction failure correctly and throw the original exception', async () => {
+			const errorInstance = { message: 'bar' };
+			const callFunction = async () => {
+				throw errorInstance;
+			};
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
 			try {
-				await enhanced(params, meta);
+				await autoLog(callFunction)(params, meta);
 			} catch (e) {
-				expect(callFunction.mock.calls).toHaveLength(1);
-				expect(callFunction.mock.calls[0]).toEqual([params, meta]);
-				expect(e).toBeInstanceOf(Error);
-				expect(logger.info.mock.calls).toHaveLength(1);
-				expect(logger.info.mock.calls[0][0]).toMatchObject({
-					...meta,
-					...params,
-					action: 'mockConstructor',
-				});
-				expect(logger.error.mock.calls).toHaveLength(1);
-				expect(logger.error.mock.calls[0][0]).toMatchObject({
-					...meta,
-					...params,
-					action: 'mockConstructor',
-					result: 'failure',
-					category: 'NODE_SYSTEM_ERROR',
-				});
+				expect(e).toBe(errorInstance);
+				expect(logger.warn.mock.calls).toMatchSnapshot();
+			}
+		});
+
+		it('should invoke non-async callFunction correctly', () => {
+			const callFunction = jest.fn(() => 'foo');
+			const params = { test: 'a' };
+			const meta = { meta: 'b' };
+			const result = autoLog(callFunction)(params, meta);
+			expect(callFunction.mock.calls).toMatchSnapshot();
+			const expectedResult = callFunction(params, meta);
+			expect(result).toBe(expectedResult);
+		});
+
+		it('should log non-async callFunction success correctly', () => {
+			const callFunction = () => 'foo';
+			const params = { test: 'a' };
+			const meta = { meta: 'b' };
+			autoLog(callFunction)(params, meta);
+			expect(logger.info.mock.calls).toMatchSnapshot();
+		});
+
+		it('should log non-async callFunction failure correctly and throw the original exception', () => {
+			const errorInstance = { message: 'bar' };
+			const callFunction = () => {
+				throw errorInstance;
+			};
+			const params = { test: 'a' };
+			const meta = { meta: 'b' };
+			try {
+				autoLog(callFunction)(params, meta);
+			} catch (e) {
+				expect(e).toBe(errorInstance);
+				expect(logger.error.mock.calls).toMatchSnapshot();
 			}
 		});
 
 		it('logs callFunction name as action name', async () => {
 			const callFunction = () => null;
-			const enhanced = (params, meta) =>
-				autoLog(meta)(callFunction)(params, meta);
-			const params = { test: 'a' };
-			const meta = { meta: 'b' };
-			await enhanced(params, meta);
+			autoLog(callFunction)();
 			expect(logger.info.mock.calls[1][0]).toMatchObject({
-				...meta,
-				...params,
 				action: 'callFunction',
 				result: 'success',
 			});
 		});
 
-		it('supports action name override', async () => {
-			const callFunction = jest.fn(() => Promise.resolve('foo'));
-			const enhanced = (params, meta) =>
-				autoLog(meta)(callFunction)(params, meta);
-			const params = { test: 'a' };
-			const meta = { meta: 'b', action: 'callFunction' };
-			await enhanced(params, meta);
-			expect(logger.info.mock.calls[1][0]).toMatchObject({
-				...meta,
-				...params,
-				action: 'callFunction',
-				result: 'success',
-			});
-		});
-
-		it('should NOT fail given empty meta', async () => {
+		it('should support lazy callFunction signature in one object or no meta', async () => {
 			const callFunction = () => null;
-			const enhanced = (params, meta) =>
-				autoLog(meta)(callFunction)(params, meta);
-			const params = { test: 'a' };
+			const enhanced = args => autoLog(callFunction)(args);
+			const params = { a: 'foo' };
+			const meta = { b: 'bar' };
+			const args = { ...params, ...meta };
+			await enhanced(args);
+			expect(logger.info.mock.calls[1][0]).toMatchObject({
+				...params,
+				...meta,
+				action: 'callFunction',
+				result: 'success',
+			});
 			await enhanced(params);
-			expect(logger.info.mock.calls[1][0]).toMatchObject({
+			expect(logger.info.mock.calls[3][0]).toMatchObject({
 				...params,
 				action: 'callFunction',
 				result: 'success',
 			});
 		});
 
-		it('should work without async await for non-async function', () => {
+		it("should throw error if there're more than 2 args", () => {
 			const callFunction = () => null;
-			const enhanced = (params, meta) =>
-				autoLog(meta)(callFunction)(params, meta);
-			const params = { test: 'a' };
-			enhanced(params);
-			expect(logger.info.mock.calls[1][0]).toMatchObject({
-				...params,
-				action: 'callFunction',
-				result: 'success',
-			});
-		});
-
-		it('should supports enhance function directly with extra meta appended in args', () => {
-			const callFunction = () => null;
-			const enhanced = (params, meta) => autoLog(callFunction)(params, meta);
 			const params = { a: 'test' };
 			const meta = { b: 'k' };
-			enhanced(params, meta);
-			expect(logger.info.mock.calls[1][0]).toMatchObject({
-				...params,
-				...meta,
-				action: 'callFunction',
-				result: 'success',
-			});
+			const random = 'test';
+			const execution = () => autoLog(callFunction)(params, meta, random);
+			expect(execution).toThrowErrorMatchingSnapshot();
+		});
+
+		it('should log error if input arg params is not an Object', () => {
+			const callFunction = () => null;
+			const params = 'test';
+			const meta = { b: 'k' };
+			const execution = () => autoLog(callFunction)(params, meta);
+			expect(execution).toThrowErrorMatchingSnapshot();
+		});
+
+		it('should log error if input arg meta is specified but not an Object', () => {
+			const callFunction = () => null;
+			const params = { a: 'foo' };
+			const meta = 'bar';
+			const execution = () => autoLog(callFunction)(params, meta);
+			expect(execution).toThrowErrorMatchingSnapshot();
 		});
 	});
 

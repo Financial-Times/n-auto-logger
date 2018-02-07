@@ -31,22 +31,39 @@ export const loggerEvent = event => {
 	return eventLogger;
 };
 
-const autoLogger = async (callFunction, params, meta = {}) => {
+export const autoLog = callFunction => (params, meta, ...excessive) => {
+	if (
+		excessive.length ||
+		(params !== undefined && typeof params !== 'object') ||
+		(meta !== undefined && typeof meta !== 'object')
+	) {
+		throw Error(
+			`check the args format of autoLogged function [${
+				callFunction.name
+			}], it needs to be (params: Object, meta: Object), documents: https://github.com/Financial-Times/n-auto-logger/blob/master/README.md#function-args-format`,
+		);
+	}
+
 	const event = loggerEvent({
 		...meta,
-		action: meta.action || callFunction.name,
+		action: callFunction.name,
 		...params,
 	});
 
 	try {
 		const call = callFunction(params, meta);
-		const promiseCall = isPromise(call);
-		if (!promiseCall) {
-			event.success();
-			const data = call;
-			return data;
+		if (isPromise(call)) {
+			return call
+				.then(data => {
+					event.success();
+					return data;
+				})
+				.catch(e => {
+					event.failure(e);
+					return Promise.reject(e);
+				});
 		}
-		const data = await call;
+		const data = call;
 		event.success();
 		return data;
 	} catch (e) {
@@ -55,23 +72,12 @@ const autoLogger = async (callFunction, params, meta = {}) => {
 	}
 };
 
-const metaFirstAutoLogger = meta => callFunction => params =>
-	autoLogger(callFunction, params, meta);
-
-const funcFirstAutoLogger = callFunction => async (params, meta) =>
-	autoLogger(callFunction, params, meta);
-
-export const autoLog = metaOrFunc =>
-	typeof metaOrFunc === 'function'
-		? funcFirstAutoLogger(metaOrFunc)
-		: metaFirstAutoLogger(metaOrFunc);
-
 // TODO: confirm performance impact when using individual method over decorate them seperately
 export const autoLogService = helperStandardService => {
 	const enhanced = {};
 	Object.keys(helperStandardService).forEach(methodName => {
 		enhanced[methodName] = (params, meta) =>
-			autoLog(meta)(helperStandardService[methodName])(params, meta);
+			autoLog(helperStandardService[methodName])(params, meta);
 	});
 	return enhanced;
 };
