@@ -2,12 +2,12 @@
 auto log (api) function calls with a single line of code
 
 - [quickstart](#quickstart)
-- [before/after](#before/after)
 - [install](#install)
 - [usage](#usage)
     * [function args format standard](#function-args-format-standard)
     * [exception/error format standard](#exception/error-format-standard)
     * [test stub](#test-stub)
+- [before/after](#before/after)
 - [development](#development)
 - [todos](#todos)
 
@@ -49,6 +49,47 @@ set key names of fields to be muted in .env to reduce log for development
 ```js
 LOGGER_MUTE_FIELDS=transactionId, userId
 ```
+
+## install
+```shell
+npm install @financial-times/n-auto-logger
+```
+
+## usage
+
+### function args format standard
+
+One opinionated pre-requisite is to have the callFunction input format as (params, meta) so that the callFunction can be invoked correctly with extra meta for logger
+
+### exception/error
+
+out-of-box parse support for the following standard types of errors
+* Fetch Response Error
+* Fetch (Network) Error
+* Node Native Error Objects
+
+> if your custom Error types are extended from native Error class, the logger might not be able to pick up custom information fields well, just use an object not constructed by Error
+
+### test stub
+
+```js
+import * as nEventLogger from '@financial-times/n-auto-logger';
+
+//example using sinon sandbox, will look into provide testStub as a module based on sinon/jest
+const stubLoggerEvent = meta => ({
+    // add more stubs to methods if you want
+    start: () => null,
+    success: () => null,
+    failure: () => null,
+    action: () => stubLoggerEvent(meta)
+});
+sandbox.stub(nEventLogger, 'loggerEvent').callsFake(stubLoggerEvent);
+sandbox.stub(nEventLogger, 'autoLog').callsFake(
+    callFunction => (params, meta) => callFunction(params, meta)
+);
+sandbox.stub(nEventLogger, 'autoLogService').callsFake(service => service);
+```
+
 ## before/after
 before
 ```js
@@ -122,47 +163,6 @@ try {
     // ...
     next(e);
 }
-```
-
-
-## install
-```shell
-npm install @financial-times/n-auto-logger
-```
-
-## usage
-
-### function args format standard
-
-One opinionated pre-requisite is to have the callFunction input format as (params, meta) so that the callFunction can be invoked correctly with extra meta for logger
-
-### exception/error
-
-out-of-box parse support for the following standard types of errors
-* Fetch Response Error
-* Fetch (Network) Error
-* Node Native Error Objects
-
-> if your custom Error types are extended from native Error class, the logger might not be able to pick up custom information fields well, just use an object not constructed by Error
-
-### test stub
-
-```js
-import * as nEventLogger from '@financial-times/n-auto-logger';
-
-//example using sinon sandbox, will look into provide testStub as a module based on sinon/jest
-const stubLoggerEvent = meta => ({
-    // add more stubs to methods if you want
-    start: () => null,
-    success: () => null,
-    failure: () => null,
-    action: () => stubLoggerEvent(meta)
-});
-sandbox.stub(nEventLogger, 'loggerEvent').callsFake(stubLoggerEvent);
-sandbox.stub(nEventLogger, 'autoLog').callsFake(
-    callFunction => (params, meta) => callFunction(params, meta)
-);
-sandbox.stub(nEventLogger, 'autoLogService').callsFake(service => service);
 ```
 
 ## development
