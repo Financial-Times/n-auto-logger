@@ -21,6 +21,7 @@ import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n
 // auto log a function of its start, success/failure state 
 // function name would be auto logged, e.g. `action=someFunction`
 // * params, meta need to be Object so that values can be logged with key names
+// * if there's key name `action` in params/meta, its value would override the above
 const result = autoLog(someFunction)(params, meta); // use await if it is an async function
 ```
 
