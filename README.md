@@ -4,8 +4,8 @@ auto log (api) function calls with a single line of code
 - [quickstart](#quickstart)
 - [install](#install)
 - [usage](#usage)
-    * [function args format standard](#function-args-format-standard)
-    * [exception/error format standard](#exception/error-format-standard)
+    * [exception/error](#exception/error)
+    * [function args format](#function-args-format)
     * [test stub](#test-stub)
 - [before/after](#before/after)
 - [development](#development)
@@ -55,10 +55,6 @@ npm install @financial-times/n-auto-logger
 
 ## usage
 
-### function args format standard
-
-One opinionated pre-requisite is to have the callFunction input format as (params, meta) so that the callFunction can be invoked correctly with extra meta for logger
-
 ### exception/error
 
 `n-auto-logger` would parse different forms of the following error objects to logger-suitable format
@@ -67,6 +63,10 @@ One opinionated pre-requisite is to have the callFunction input format as (param
 * Node Native Error Objects
 
 > if you are parsing those errors to your customised object in error handling, `n-auto-logger` would pick up what's in the object automatically, but the object can't be an `instanceof Error`, otherwise extended fields would not be pickedup
+
+### function args format
+
+If you want to use the shorthand `autoLog(someFunction)(params, meta)`, then the args of the function needs to be in exact the order of `(params, meta)`. Object destruction assignment is recommended for defining the function `({ paramA, paramB }, meta) => {}`.
 
 ### test stub
 
