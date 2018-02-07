@@ -22,7 +22,6 @@ import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n
 // * function name recorded as `action` in log
 // * params, meta need to be Object, key names in the object would be logged
 const result = autoLog(someFunction)(params, meta); // use await if it is an async function
-const result = autoLog(meta)(someFunction)(params); // wrap all the input values with key names as a params Object
 ```
 
 ```js
