@@ -54,18 +54,35 @@ describe('failureLogger', () => {
 		const event = {
 			operation: 'someOperation',
 		};
-		try {
-			const systemError = new Error('some error message');
-			throw systemError;
-		} catch (e) {
-			await failureLogger(event)(e);
-			expect(logger.error.mock.calls).toHaveLength(1);
-			expect(logger.error.mock.calls[0][0]).toMatchObject({
-				message: 'some error message',
-				result: 'failure',
-				category: 'NODE_SYSTEM_ERROR',
-			});
+		const e = new Error('some error message');
+		await failureLogger(event)(e);
+		expect(logger.error.mock.calls).toHaveLength(1);
+		expect(logger.error.mock.calls[0][0]).toMatchObject({
+			message: 'some error message',
+			result: 'failure',
+			category: 'NODE_SYSTEM_ERROR',
+		});
+	});
+
+	it('log extended node system error correctly', async () => {
+		class ExtendedError extends Error {
+			constructor({ status = 500, message } = {}) {
+				super(message);
+				this.message = message;
+				this.status = status;
+			}
 		}
+		const extendedSystemError = new ExtendedError({
+			message: 'some error message',
+		});
+		await failureLogger()(extendedSystemError);
+		expect(logger.error.mock.calls).toHaveLength(1);
+		expect(logger.error.mock.calls[0][0]).toMatchObject({
+			message: 'some error message',
+			result: 'failure',
+			category: 'EXCEPTION',
+			status: 500,
+		});
 	});
 
 	it('log exception based on its status correctly', async () => {

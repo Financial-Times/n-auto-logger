@@ -38,17 +38,18 @@ const failureLogger = (context = {}) => async e => {
 			...formattedError,
 		});
 	}
-	// in case of Node system standard error
+	// in case of Node Error Object or an extended Node Error Object
 	// error codes: https://nodejs.org/api/errors.html#nodejs-error-codes
 	if (e instanceof Error) {
-		const { code, message, stack } = e; // ...e wouldn't spread the properties of Error
+		const { code, message, stack, ...rest } = e; // ...e wouldn't spread the properties of Error
 		return logger.error({
 			...context,
 			result: 'failure',
-			category: 'NODE_SYSTEM_ERROR',
+			category: Object.keys(rest).length ? 'EXCEPTION' : 'NODE_SYSTEM_ERROR',
 			code,
 			message,
 			stack,
+			...rest,
 		});
 	}
 	// in case of exception in any format of object not prototyped by Error
