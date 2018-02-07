@@ -31,10 +31,10 @@ export const loggerEvent = event => {
 	return eventLogger;
 };
 
-export const autoLog = callFunction => (params, meta, ...excessive) => {
+export const autoLog = callFunction => (paramsOrArgs, meta, ...excessive) => {
 	if (
 		excessive.length ||
-		(params !== undefined && typeof params !== 'object') ||
+		(paramsOrArgs !== undefined && typeof paramsOrArgs !== 'object') ||
 		(meta !== undefined && typeof meta !== 'object')
 	) {
 		throw Error(
@@ -46,12 +46,12 @@ export const autoLog = callFunction => (params, meta, ...excessive) => {
 
 	const event = loggerEvent({
 		action: callFunction.name,
-		...params,
+		...paramsOrArgs,
 		...meta,
 	});
 
 	try {
-		const call = callFunction(params, meta);
+		const call = callFunction(paramsOrArgs, meta);
 		if (isPromise(call)) {
 			return call
 				.then(data => {
@@ -76,8 +76,8 @@ export const autoLog = callFunction => (params, meta, ...excessive) => {
 export const autoLogService = helperStandardService => {
 	const enhanced = {};
 	Object.keys(helperStandardService).forEach(methodName => {
-		enhanced[methodName] = (params, meta) =>
-			autoLog(helperStandardService[methodName])(params, meta);
+		enhanced[methodName] = (paramsOrArgs, meta) =>
+			autoLog(helperStandardService[methodName])(paramsOrArgs, meta);
 	});
 	return enhanced;
 };
