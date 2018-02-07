@@ -18,7 +18,8 @@ import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n
 ```
 
 ```js
-// auto log a function of its start, success/failure state (function name recorded as action in logger)
+// auto log a function of its start, success/failure state 
+// (function name recorded as action in logger)
 const result = autoLog(someOtherFunction)(params, meta); // use await if it is an async function
 ```
 
@@ -86,7 +87,9 @@ sandbox.stub(nEventLogger, 'autoLogService').callsFake(service => service);
 
 ## before/after
 ```js
-/* --- BEFORE --- */
+/* ---------------------- 
+         BEFORE 
+----------------------- */
 /* some-api-service.js */
 const methodA = async (params, meta) => {
     try {
@@ -133,7 +136,9 @@ try {
 ```
 
 ```js
-/* --- AFTER --- */
+/* ---------------------- 
+         AFTER
+----------------------- */
 /* some-api-service.js */
 export default autoLogService({ methodA, methodB });
 
