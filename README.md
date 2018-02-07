@@ -4,10 +4,10 @@ auto log (api) function calls with a single line of code
 - [quickstart](#quickstart)
 - [install](#install)
 - [usage](#usage)
-    * [exception/error](#exception-error)
+    * [error parsing and format](#error-parsing-and-format)
     * [function args format](#function-args-format)
     * [test stub](#test-stub)
-- [before/after](#before-after)
+- [before/after](#beforeafter)
 - [development](#development)
 - [todos](#todos)
 
@@ -55,7 +55,7 @@ npm install @financial-times/n-auto-logger
 
 ## usage
 
-### exception/error
+### error parsing and format
 
 `n-auto-logger` would parse different forms of the following error objects to logger-suitable format
 * Fetch Response Error
