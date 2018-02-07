@@ -57,7 +57,7 @@ npm install @financial-times/n-auto-logger
 
 ### error parsing and format
 
-`n-auto-logger` would parse different forms of the following error objects to logger-suitable format
+`n-auto-logger` would parse different forms of the following error objects to logger-suitable format, [detail](src/failure.js)
 * Fetch Response Error
 * Fetch (Network) Error
 * Node Native Error Objects
