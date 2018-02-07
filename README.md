@@ -63,10 +63,10 @@ npm install @financial-times/n-auto-logger
 
 Both `(args: Object) => {}` and `(params: Object, meta?: Object) => {}` would work, and destructing assignment is recommended `({ paramA, paramB }, { metaA, metaB }) => {}`.
 
-The package would throw Errors if function signature is incorrect for `autoLog`.
+> The package would throw Errors if function signature is incorrect for `autoLog`.
 
-> `(mandatory: Object, optional?: Object) => {}` is recommended in case you want to do params validation, while nullable params field/meta can be put in the second args.
-```
+`(mandatory: Object, optional?: Object) => {}` is recommended in case you want to do params validation, while nullable params field/meta can be put in the second args.
+```js
 const someFunction = (mandatory, optional) => {
    try {
       validate(mandatory); // throw error before continue for e.g. API call
