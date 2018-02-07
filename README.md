@@ -92,7 +92,7 @@ sandbox.stub(logger);
 ### out-of-box error parsing support
 
 `n-auto-logger` would parse different forms of the following error objects to logger-suitable format automatically([detail](src/failure.js))
-* Fetch Response Error (`content-type`:`application/json``text/plain`,`text/html`)
+* Fetch Response Error `content-type`:`application/json`,`text/plain`,`text/html`
 * Fetch (Network) Error
 * Node Native Error Objects
 * Custom Object extends Native Error Object
