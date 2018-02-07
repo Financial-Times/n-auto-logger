@@ -17,19 +17,19 @@ auto log (api) function calls with a single line of code
 import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n-auto-logger';
 ```
 
-auto log a function of its start, success/failure state (function name recorded as action in logger)
 ```js
+// auto log a function of its start, success/failure state (function name recorded as action in logger)
 const result = autoLog(someOtherFunction)(params, meta); // use await if it is an async function
 ```
 
-auto log multiple functions wrapped in an object
 ```js
+// auto log multiple functions wrapped in an object
 const APIService = autoLogService{ methodA, methodB, methodC };
 APIService.CallA(params, meta);
 ```
 
-log operation and adhoc actions
 ```js
+// log operation and adhoc actions
 const meta = { transactionId, userId, operation };
 const event = eventLogger(meta);
 
