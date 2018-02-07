@@ -71,19 +71,9 @@ If you want to use the shorthand `autoLog(someFunction)(params, meta)`, then the
 ### test stub
 
 ```js
-import * as nEventLogger from '@financial-times/n-auto-logger';
+import logger from '@financial-times/n-auto-logger';
 
-const stubLoggerEvent = meta => ({
-    start: () => null,
-    success: () => null,
-    failure: () => null,
-    action: () => stubLoggerEvent(meta)
-});
-sandbox.stub(nEventLogger, 'loggerEvent').callsFake(stubLoggerEvent);
-sandbox.stub(nEventLogger, 'autoLog').callsFake(
-    callFunction => (params, meta) => callFunction(params, meta)
-);
-sandbox.stub(nEventLogger, 'autoLogService').callsFake(service => service);
+sandbox.stub(logger);
 ```
 
 ## before/after
