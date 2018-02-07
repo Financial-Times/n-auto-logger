@@ -1,34 +1,28 @@
 # n-auto-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-auto-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-auto-logger) [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-auto-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-auto-logger?branch=master)
-log all your API service calls and function calls with a single line of code
+auto log (api) function calls with a single line of code
 
 - [quickstart](#quickstart)
 - [before/after](#before/after)
 - [install](#install)
-- [gotcha](#gotcha)
+- [usage](#usage)
     * [function args format standard](#function-args-format-standard)
     * [exception/error format standard](#exception/error-format-standard)
-- [usage](#usage)
-    * [enhance a single API service call](#enhance-a-single-api-service-call)
-    * [enhance a whole series of API service call](#enhance-a-whole-series-of-api-service-call)
-    * [log your operation in structure with loggerEvent](#log-your-operation-in-structure-with-loggerevent)
-    * [auto log non-api-service function with autoLog enhancer](#auto-log-non-api-service-function-with-autoLog-enhancer)
-    * [track some non-api-service function on the fly](#track-some-non-api-service-function-on-the-fly)
     * [test stub](#test-stub)
 - [development](#development)
 - [todos](#todos)
 
 
 ## quickstart
-```javascript
-import { autoLog, autoLogService, eventLogger } from '@financial-times/n-auto-logger';
+```js
+import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n-auto-logger';
 ```
 auto log different status of a function call (commonly an action under an operation)
-```javascript
+```js
 const data = await autoLog(yourCallFunction)(params, meta);
 const result = autoLog(someOtherFunction)(params, meta);
 ```
 enhance all methods in api service module ensure that it would be logged wherever used
-```javascript
+```js
 /*-- some-api-service --*/
 export default autoLogService{ CallA, CallB };
 
@@ -39,7 +33,7 @@ await APIService.CallA(params, meta);
 await APIService.CallB(params, meta);
 ```
 more strcutured operation/action log
-```javascript
+```js
 const meta = { transactionId, userId, operation };
 const event = eventLogger(meta);
 
@@ -52,52 +46,91 @@ try {
 
 ```
 set key names of fields to be muted in .env to reduce log for development
-```javascript
+```js
 LOGGER_MUTE_FIELDS=transactionId, userId
 ```
 ## before/after
-```javascript
-// before
+before
+```js
+/* some-api-service.js */
+const methodA = async (params, meta) => {
+    try {
+        logger.info(params, meta, { action: 'methodA' });
+        await fetch();
+        logger.info(params, meta, { action: 'methodA', result: 'success' });
+    } catch (e) {
+        const error = parseErrorForLogger(e);
+        logger.error(params, meta, { action: 'methodA', result: 'failure' }, error);
+        //...
+    }
+}
+
+const methodB = async (params, meta) => { /*similar amount of code for logger*/ };
+
+export default { methodA, methodB };
+
+/* some-controller-or-middleware.js */
+const someFunctionForDataAB(dataA, dataB, meta) => {
+    // ...logger.info({ dataA, dataB }, meta, { action: 'someFunctionForDataAB' });
+    // ...logger.info({ dataA, dataB }, meta, { action: 'someFunctionForDataAB', result: 'success' });
+    // ...logger.info({ dataA, dataB }, meta, { action: 'someFunctionForDataAB', result: 'failure' });
+}
+
+const meta = { transactionId, userId, operation };
+logger.info(meta);
+
 try {
-    logger.info(meta, { action: 'yourCallFunction' }, params);
-    const data = await yourCallFunction(params, metaSubset);
-    logger.info(meta, { action: 'yourCallFunction' }, params, { result: 'success' });
+    const dataA = await APIService.methodA(paramsA, meta);
+    const dataB = await APIService.methodB(paramsB, meta);
+    const dataC = someFunctionForDataAB(dataA, dataB, meta);
+    if (dataC && dataC !== 'code block not in function') {
+        logger.error(meta, { action: 'someCheckAction' }, { result: 'failure' });
+        throw someException;
+    }
+    logger.error(meta, { action: 'someCheckAction' }, { result: 'success' });; // optional
+    logger.error(meta, { result: 'failure' });
 } catch(e) {
     // some error handling and parsing...
     logger.info(meta, { action: 'yourCallFunction' }, params, { result: 'failure' }, parsedError);
+    // ...
+    next(e);
 }
-// after: 7+ lines (depends on error parsing) => 1 line
-const data = await autoLog(yourCallFunction)(params, meta);
 ```
-```javascript
+after
+```js
+/* some-api-service.js */
+export default autoLogService({ methodA, methodB });
+
+/* some-controller-or-middleware.js */
 const meta = { transactionId, userId, operation };
-
-// before
-logger.info(meta);
-try {
-    logger.info(meta, { action: 'someAction', result: 'success' });
-    logger.info(meta, { result: 'success' });
-} catch(e) {
-    // some error hanldling and parsing
-    logger.error(meta, { result: 'failure' }, parsedError);
-}
-
-// after: some less key strokes
 const event = eventLogger(meta);
+
 try {
-    event.action('someAction').success();
+    // ...
+    const dataA = await APIService.methodA(paramsA, meta);
+    const dataB = await APIService.methodB(paramsB, meta);
+    const dataC = autoLog(someFunctionForDataAB)(dataA, dataB);
+    if (dataC && dataC !== 'code block not in function') {
+        event.action('someCheckAction').failure();
+        throw someException;
+    }
+    event.action('someCheckAction').success(); // optional
     event.success();
+    // ...
 } catch(e) {
     event.failure(e);
+    // ...
+    next(e);
 }
-
 ```
+
+
 ## install
 ```shell
 npm install @financial-times/n-auto-logger
 ```
 
-## gotcha
+## usage
 
 ### function args format standard
 
@@ -112,226 +145,9 @@ out-of-box parse support for the following standard types of errors
 
 > if your custom Error types are extended from native Error class, the logger might not be able to pick up custom information fields well, just use an object not constructed by Error
 
-## usage
-
-### enhance a single API service call
-
-```javascript
-/*-- api-service.js --*/
-import { autoLog } from '@financial-times/n-auto-logger';
-
-export const callSomeAPIService = (params, meta) => {
-    const options = {
-        headers: {
-            /* some meta data specific headers... */
-        }
-    };
-
-    /* maybe some code before fetch... */
-
-    return fetch(url, options)
-        .then(/* some code for response... */)
-        .catch(/* some error hanlding... */);
-}
-
-// this would record the name of the function 'callSomeAPIService' as action in the logger automatically
-export const enhancedCallSomeAPIService = (params, meta) => autoLog(callSomeAPIService)(params, meta);
-
-/*
-    currently async/await is needed for the logger to work correctly, update coming soon
- */
-
-/*-- middleware/controller.js --*/
-import { enhancedCallSomeAPIService } from '../api-service';
-
-const someOperationFunction = async (req, res, next) => {
-    const meta = {
-        /* some fields for headers */
-        transactionId: req.transactionId,
-        /* extra fields for loggers */
-        operation: 'someOperation',
-        userId: req.userId,
-    };
-
-    try{
-        await enhancedCallSomeAPIService(params, meta);
-    } catch (e) {
-        next(e);
-    }
-}
-```
----
-
-> info: transactionId: xxxx-xxx, userId: xxxx-xxx, operatoin: someOperation, action: callSomeAPIService
-
-> info: transactionId: xxxx-xxx, userId: xxxx-xxx, operatoin: someOperation, action: callSomeAPIService, status: success
-
----
-
-depends on the error status code, it would log as warn for 4XX, and error for 5XX
-
-> warn: transactionId: xxxx-xxx, userId: xxxx-xxx, operatoin: someOperation, action: callSomeAPIService, status: failure, message: some error message
-
-> error: transactionId: xxxx-xxx, userId: xxxx-xxx, operatoin: someOperation, action: callSomeAPIService, status: failure, message: some error message
-
-### enhance a whole series of API service call
-
-```javascript
-/*-- api-service.js --*/
-import { autoLogService } from '@financial-times/n-auto-logger';
-
-export const apiServiceCallA = (params, meta) => {}
-export const apiServiceCallB = (params, meta) => {}
-
-// helper to enhance all API service call functions as object methods
-export default autoLogService{
-    apiServiceCallA,
-    apiServiceCallB
-};
-
-/*-- middleware/controller.js --*/
-import SomeAPIService from '../some-api-service';
-
-const someOperationFunction = async (req, res, next) => {
-    const meta = {
-        transactionId: req.transactionId,
-        userId: req.userId,
-        operation: 'someOperation',
-    };
-
-    try{
-        await someAPIService.apiServiceCallA(params, meta);
-        await someAPIService.apiServiceCallB(params, meta);
-    } catch (e) {
-        next(e);
-    }
-}
-```
-
-### log your operation in structure with loggerEvent
-
-```javascript
-/*-- middleware/controller.js --*/
-import { loggerEvent } from '@financial-times/n-auto-logger';
-import SomeAPIService from '../some-api-service';
-
-const someOperationFunction = async (req, res, next) => {
-    const meta = {
-        transactionId: req.transactionId,
-        userId: req.userId,
-        operation: 'someOperation',
-    };
-    const event = loggerEvent(meta);
-
-    try{
-        const a = await someAPIService.apiServiceCallA(params, meta);
-        const b = await someAPIService.apiServiceCallB(params, meta);
-        /* some other code... */
-        const c = someFunction(a, b);
-        event.success({ c });
-        /* some other code... */
-    } catch (e) {
-        event.failure(e);
-        next(e);
-    }
-}
-```
-
----
-
-> info: transactionId: xxxx-xxx, userId: xxxx-xxx, operatoin: someOperation
-
-> ... some more process info log from various actions
-
-> info: transactionId: xxxx-xxx, userId: xxxx-xxx, operatoin: someOperation, status: success, data: { "c": 'values are stringified JSON' }
-
----
-
-> info: transactionId: xxxx-xxx, userId: xxxx-xxx, operatoin: someOperation
-
-> ... some more process info log from various actions
-
-> error: transactionId: xxxx-xxx, userId: xxxx-xxx, operatoin: someOperation, action: apiServiceCallB, result: failure, message: "some message"
-
-> error: transactionId: xxxx-xxx, userId: xxxx-xxx, operatoin: someOperation, status: failure, message: "error message"
-
-logs help you track down exactly which function call leads to the operation failure with what params in call in what context
-
----
-
-### auto log non-api-service function with autoLog enhancer
-```javascript
-import { loggerEvent, autoLog } from '@financial-times/n-auto-logger';
-
-const someFunction = (a, b) => {
-    try {
-        /* some code... */
-        return c;
-    } catch(e) {
-        /* some error handling... */
-        // function needs to throw error or return Promise.reject() for failure status to be logged
-        throw e;
-    }
-}
-
-const someOperationFunction = async (req, res, next) => {
-    const meta = {
-        transactionId: req.transactionId,
-        userId: req.userId,
-        operation: 'someOperation',
-    };
-    const event = loggerEvent(meta);
-
-    try{
-        const a = await someAPIService.apiServiceCallA(params, meta);
-        const b = await someAPIService.apiServiceCallB(params, meta);
-        /* some other code... */
-        // await is needed for the result status logger to work correctly
-        const c = await autoLog(meta)(someFunction)(a, b);
-        event.success({ c });
-        /* some other code... */
-    } catch (e) {
-        event.failure(e);
-        next(e);
-    }
-}
-```
-
-### track some non-api-service function on the fly
-
-```javascript
-/*-- middleware/controller.js --*/
-const someOperationFunction = async (req, res, next) => {
-    const meta = {
-        transactionId: req.transactionId,
-        userId: req.userId,
-        operation: 'someOperation',
-    };
-    const event = loggerEvent(meta);
-
-    try{
-        const a = await someAPIService.apiServiceCallA(params, meta);
-        const b = await someAPIService.apiServiceCallB(params, meta);
-        /* some other code... */
-        if(someCondition && someCheck){
-            event.action('someAction').success();
-        } else {
-            event.action('someAction').failure();
-            throw ;
-        }
-        /* some other code... */
-        event.success();
-        /* some other code... */
-    } catch (e) {
-        event.failure(e);
-        next(e);
-    }
-}
-```
-
 ### test stub
 
-```javascript
+```js
 import * as nEventLogger from '@financial-times/n-auto-logger';
 
 //example using sinon sandbox, will look into provide testStub as a module based on sinon/jest
