@@ -1,5 +1,5 @@
 # n-auto-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-auto-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-auto-logger) [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-auto-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-auto-logger?branch=master)
-auto log (api) function calls with a single line of code
+auto log (api) function calls with a single line of code, based on [n-logger](https://github.com/Financial-Times/n-logger)
 
 - [quickstart](#quickstart)
 - [install](#install)
@@ -46,7 +46,6 @@ try {
     event.failure(e);
 }
 ```
-
 ```js
 // set key names of fields to be muted in .env to reduce log for development
 LOGGER_MUTE_FIELDS=transactionId, userId
@@ -82,7 +81,7 @@ autoLog(someFunction)(mandatory, optional);
 ### test stub
 
 ```js
-import logger from '@financial-times/n-auto-logger';
+import logger from '@financial-times/n-auto-logger'; // the underlying logger instance (`n-logger`)
 
 sandbox.stub(logger);
 ```
