@@ -5,7 +5,7 @@ auto log (api) function calls with a single line of code
 - [install](#install)
 - [usage](#usage)
     * [error parsing and format](#error-parsing-and-format)
-    * [function args format](#function-args-format)
+    * [function signature format](#function-signature-format)
     * [test stub](#test-stub)
 - [before/after](#beforeafter)
 - [development](#development)
@@ -19,8 +19,8 @@ import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n
 
 ```js
 // auto log a function of its start, success/failure state 
-// * function name recorded as `action` in log
-// * params, meta need to be Object, key names in the object would be logged
+// function name would be auto logged, e.g. `action=someFunction`
+// * params, meta need to be Object so that values can be logged with key names
 const result = autoLog(someFunction)(params, meta); // use await if it is an async function
 ```
 
@@ -64,10 +64,13 @@ npm install @financial-times/n-auto-logger
 
 > if you are parsing those errors to your customised object in error handling, `n-auto-logger` would pick up what's in the object automatically, but the object can't be an `instanceof Error`, otherwise extended fields would not be pickedup
 
-### function args format
+### function signature format
 
-(params, meta) need to be objects, as the key name would be logged for each value. Object destruction assignment is recommended for defining the function `({ paramA, paramB }, { metaA, metaB }) => {}`.
-If you want to use the shorthand `autoLog(someFunction)(params, meta)`, then the args of the function needs to be in exact the order of `(params, meta)`.
+To ensure auto log works correctly, `function (params: Object, meta?: Object)` format is required for function signature so that values can be logged with corresponding key names. `function (args: Object)` is also acceptable, if you would like to omit `meta` or put `meta` and `params` in one `args` Object.
+
+Object destruction assignment is recommended `({ paramA, paramB }, { metaA, metaB }) => {}`.
+
+The package would throw Errors if function signature is incorrect for `autoLog`
 
 ### test stub
 
