@@ -6,7 +6,7 @@ auto log (api) function calls with a single line of code, based on [n-logger](ht
 - [usage](#usage)
    * [function signature format](#function-signature-format)
    * [test stub](#test-stub)
-- [benefits](#benefits)
+- [builtin](#builtin)
    * [out-of-box error parsing support](#out-of-box-error-parsing-support)
    * [trim empty fields](#trim-empty-fields)
 - [before/after](#beforeafter)
@@ -86,7 +86,7 @@ import logger from '@financial-times/n-auto-logger'; // the underlying logger in
 sandbox.stub(logger);
 ```
 
-## benefits
+## builtin
 
 ### out-of-box error parsing support
 
