@@ -24,7 +24,6 @@ const failureLogger = (context = {}) => async e => {
 		return logger[loggerLevel]({
 			...context,
 			result: 'failure',
-			category: 'FETCH_RESPONSE_ERROR',
 			...formattedError,
 		});
 	}
@@ -34,7 +33,6 @@ const failureLogger = (context = {}) => async e => {
 		return logger.error({
 			...context,
 			result: 'failure',
-			category: 'FETCH_NETWORK_ERROR',
 			...formattedError,
 		});
 	}
