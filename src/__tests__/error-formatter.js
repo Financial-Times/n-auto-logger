@@ -2,7 +2,7 @@ import { Response, Headers, FetchError } from 'node-fetch';
 import {
 	formatFetchResponseError,
 	formatFetchNetworkError,
-	formatFetchError
+	formatFetchError,
 } from '../error-formatter';
 
 describe('formatFetchResponseError', () => {
