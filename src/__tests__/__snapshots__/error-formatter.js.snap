@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`formatFetchError format network error correctly 1`] = `
+Object {
+  "category": "FETCH_NETWORK_ERROR",
+  "code": "UNABLE_TO_VERIFY_LEAF_SIGNATURE",
+  "message": "request to https://mock.com/ failed, reason: unable to verify the first certificate",
+}
+`;
+
+exports[`formatFetchError format response error correctly 1`] = `
+Object {
+  "category": "FETCH_RESPONSE_ERROR",
+  "contentType": "text/plain; charset=utf-8",
+  "message": "403 Forbidden",
+  "status": 403,
+}
+`;
+
 exports[`formatFetchNetworkError format network error correctly 1`] = `
 Object {
   "category": "FETCH_NETWORK_ERROR",
