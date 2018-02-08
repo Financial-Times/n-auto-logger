@@ -1,4 +1,6 @@
-const CATEGORIES = {
+import fetch from 'node-fetch';
+
+export const CATEGORIES = {
 	FETCH_RESPONSE_OK: 'FETCH_RESPONSE_OK',
 	FETCH_RESPONSE_ERROR: 'FETCH_RESPONSE_ERROR',
 	FETCH_NETWORK_ERROR: 'FETCH_NETWORK_ERROR',
@@ -20,7 +22,7 @@ export const formatFetchResponseError = async response => {
 	const contentType = headers.get('content-type');
 	const parseMethod =
 		contentType && contentType.includes('application/json') ? 'json' : 'text';
-	const message = await response[parseMethod]();
+	const message = await response[parseMethod](); // system Error would be thrown if it fails
 	return {
 		category: CATEGORIES.FETCH_RESPONSE_ERROR,
 		contentType,
@@ -34,3 +36,14 @@ export const formatFetchNetworkError = e => ({
 	message: e.message,
 	code: e.code,
 });
+
+export const formatFetchError = async e => {
+	if (e instanceof fetch.Response) {
+		const formattedError = await formatFetchResponseError(e);
+		return formattedError;
+	}
+	if (e instanceof fetch.FetchError) {
+		return formatFetchNetworkError(e);
+	}
+	return e; // uncaught exception
+};
