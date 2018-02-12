@@ -1,3 +1,4 @@
+import 'isomorphic-fetch';
 import logger from '@financial-times/n-logger';
 import fetch from 'node-fetch';
 import {
@@ -17,7 +18,7 @@ const failureLogger = (context = {}) => async e => {
 		});
 	}
 	// in case of a fetch response error
-	if (e instanceof fetch.Response) {
+	if (e instanceof fetch.Response || e instanceof Response) {
 		const response = e;
 		const loggerLevel = response.status >= 500 ? 'error' : 'warn';
 		const formattedError = await formatFetchResponseError(response);
@@ -47,7 +48,7 @@ const failureLogger = (context = {}) => async e => {
 			code,
 			message,
 			stack,
-			...rest,
+			...rest, // if e.category would override the above
 		});
 	}
 	// in case of exception in any format of object not prototyped by Error

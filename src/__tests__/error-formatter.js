@@ -1,4 +1,5 @@
-import { Response, Headers, FetchError } from 'node-fetch';
+import 'isomorphic-fetch';
+import nodeFetch from 'node-fetch';
 import {
 	formatFetchResponseError,
 	formatFetchNetworkError,
@@ -44,7 +45,7 @@ describe('formatFetchResponseError', () => {
 
 describe('formatFetchNetworkError', () => {
 	it('format network error correctly', async () => {
-		const e = new FetchError(
+		const e = new nodeFetch.FetchError(
 			'request to https://mock.com/ failed, reason: unable to verify the first certificate',
 		);
 		e.code = 'UNABLE_TO_VERIFY_LEAF_SIGNATURE';
@@ -54,7 +55,15 @@ describe('formatFetchNetworkError', () => {
 });
 
 describe('formatFetchError', () => {
-	it('format response error correctly', async () => {
+	it('format isomorphic-fetch response error correctly', async () => {
+		const headers = new nodeFetch.Headers();
+		headers.append('content-type', 'text/plain; charset=utf-8');
+		const e = new nodeFetch.Response('403 Forbidden', { status: 403, headers });
+		const formatted = await formatFetchError(e);
+		expect(formatted).toMatchSnapshot();
+	});
+
+	it('format node-fetch response error correctly', async () => {
 		const headers = new Headers();
 		headers.append('content-type', 'text/plain; charset=utf-8');
 		const e = new Response('403 Forbidden', { status: 403, headers });
@@ -63,7 +72,7 @@ describe('formatFetchError', () => {
 	});
 
 	it('format network error correctly', async () => {
-		const e = new FetchError(
+		const e = new nodeFetch.FetchError(
 			'request to https://mock.com/ failed, reason: unable to verify the first certificate',
 		);
 		e.code = 'UNABLE_TO_VERIFY_LEAF_SIGNATURE';

@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`formatFetchError format isomorphic-fetch response error correctly 1`] = `
+Object {
+  "category": "FETCH_RESPONSE_ERROR",
+  "contentType": "text/plain; charset=utf-8",
+  "message": "403 Forbidden",
+  "status": 403,
+}
+`;
+
 exports[`formatFetchError format network error correctly 1`] = `
 Object {
   "category": "FETCH_NETWORK_ERROR",
@@ -8,12 +17,25 @@ Object {
 }
 `;
 
-exports[`formatFetchError format response error correctly 1`] = `
-Object {
-  "category": "FETCH_RESPONSE_ERROR",
-  "contentType": "text/plain; charset=utf-8",
-  "message": "403 Forbidden",
+exports[`formatFetchError format node-fetch response error correctly 1`] = `
+Body {
+  "_abort": false,
+  "_raw": Array [],
+  "body": "403 Forbidden",
+  "bodyUsed": false,
+  "headers": Headers {
+    "_headers": Object {
+      "content-type": Array [
+        "text/plain; charset=utf-8",
+      ],
+    },
+  },
+  "ok": false,
+  "size": 0,
   "status": 403,
+  "statusText": "Forbidden",
+  "timeout": 0,
+  "url": undefined,
 }
 `;
 
