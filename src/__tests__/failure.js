@@ -85,31 +85,52 @@ describe('failureLogger', () => {
 		});
 	});
 
-	it('log exception based on its status correctly', async () => {
-		try {
-			const formattedError = {
-				status: 500,
-				message: 'some message to describe the case',
-			};
-			throw formattedError;
-		} catch (e) {
-			await failureLogger()(e);
-			expect(logger.error.mock.calls).toHaveLength(1);
-			expect(logger.error.mock.calls[0][0]).toMatchSnapshot();
+	it('override category for extended node system error correctly', async () => {
+		class ExtendedError extends Error {
+			constructor({ category } = {}) {
+				super();
+				this.category = category;
+			}
 		}
+		const extendedSystemError = new ExtendedError({
+			category: 'FETCH_RESPONSE_ERROR',
+		});
+		await failureLogger()(extendedSystemError);
+		expect(logger.error.mock.calls).toHaveLength(1);
+		expect(logger.error.mock.calls[0][0]).toMatchObject({
+			result: 'failure',
+			category: 'FETCH_RESPONSE_ERROR',
+		});
+	});
 
-		try {
-			const formattedError = {
-				status: 404,
-				message: 'some message to describe the case',
-			};
-			throw formattedError;
-		} catch (e) {
-			await failureLogger()(e);
-			expect(logger.error.mock.calls).toHaveLength(1);
-			expect(logger.warn.mock.calls).toHaveLength(1);
-			expect(logger.warn.mock.calls[0][0]).toMatchSnapshot();
-		}
+	it('log exception based on its status correctly', async () => {
+		const formattedError500 = {
+			status: 500,
+			message: 'some message to describe the case',
+		};
+		await failureLogger()(formattedError500);
+		expect(logger.error.mock.calls).toHaveLength(1);
+		expect(logger.error.mock.calls[0][0]).toMatchSnapshot();
+
+		const formattedError404 = {
+			status: 404,
+			message: 'some message to describe the case',
+		};
+		await failureLogger()(formattedError404);
+		expect(logger.error.mock.calls).toHaveLength(1);
+		expect(logger.warn.mock.calls).toHaveLength(1);
+		expect(logger.warn.mock.calls[0][0]).toMatchSnapshot();
+	});
+
+	it('override category for formatted error correctly', async () => {
+		const formattedError = {
+			status: 500,
+			message: 'some message to describe the case',
+			category: 'FETCH_RESPONSE_ERROR',
+		};
+		await failureLogger()(formattedError);
+		expect(logger.error.mock.calls).toHaveLength(1);
+		expect(logger.error.mock.calls[0][0]).toMatchSnapshot();
 	});
 
 	it('log other exceptions not described as object correctly', async () => {

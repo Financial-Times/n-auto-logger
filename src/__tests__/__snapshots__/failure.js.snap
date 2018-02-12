@@ -61,3 +61,12 @@ Object {
   "result": "failure",
 }
 `;
+
+exports[`failureLogger override category for formatted error correctly 1`] = `
+Object {
+  "category": "FETCH_RESPONSE_ERROR",
+  "message": "some message to describe the case",
+  "result": "failure",
+  "status": 500,
+}
+`;
