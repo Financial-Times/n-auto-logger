@@ -12,3 +12,4 @@ dist/
 # dot files
 .DS_Store
 *.env*
+package-lock.json

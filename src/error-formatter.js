@@ -1,10 +1,7 @@
+import 'isomorphic-fetch';
 import fetch from 'node-fetch';
 
-export const CATEGORIES = {
-	FETCH_RESPONSE_OK: 'FETCH_RESPONSE_OK',
-	FETCH_RESPONSE_ERROR: 'FETCH_RESPONSE_ERROR',
-	FETCH_NETWORK_ERROR: 'FETCH_NETWORK_ERROR',
-};
+import { CATEGORIES } from './constants';
 
 // parse the response error based on content-type text/html, text/plain or application/json
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
@@ -38,7 +35,7 @@ export const formatFetchNetworkError = e => ({
 });
 
 export const formatFetchError = async e => {
-	if (e instanceof fetch.Response) {
+	if (e instanceof fetch.Response || e instanceof Response) {
 		const formattedError = await formatFetchResponseError(e);
 		return formattedError;
 	}

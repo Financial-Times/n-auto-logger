@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "@financial-times/n-logger": "^5.5.11",
-    "node-fetch": "^2.0.0-alpha.9"
+    "isomorphic-fetch": "^2.2.1",
+    "node-fetch": "^2.0.0"
   },
   "devDependencies": {
     "@financial-times/n-gage": "^1.19.3",
