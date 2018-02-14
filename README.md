@@ -5,8 +5,9 @@ auto log (api) function calls with a single line of code, based on [n-logger](ht
 - [install](#install)
 - [usage](#usage)
    * [function signature format](#function-signature-format)
+   * [filter user field](#filter-user-field)
    * [test stub](#test-stub)
-- [builtin](#builtin)
+- [built-in](#built-in)
    * [out-of-box error parsing support](#out-of-box-error-parsing-support)
    * [trim empty fields](#trim-empty-fields)
 - [before/after](#beforeafter)
@@ -78,6 +79,17 @@ const someFunction = (mandatory, optional) => {
 autoLog(someFunction)(mandatory, optional);
 ```
 
+### filter user field
+```js
+// data under `user` field in meta wouldn't be logged, sensitive personal data could be put here
+const meta = { operation, user: { id, email } };
+const event = eventLogger(meta);
+
+// data under `user` field in error wouldn't be logged, message to be rendered on UI could be put here
+const error = { status, message, user: { message } };
+event.failure(error);
+````
+
 ### test stub
 
 ```js
@@ -86,7 +98,7 @@ import logger from '@financial-times/n-auto-logger'; // the underlying logger in
 sandbox.stub(logger);
 ```
 
-## builtin
+## built-in
 
 ### out-of-box error parsing support
 
