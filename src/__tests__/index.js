@@ -28,7 +28,7 @@ describe('n-auto-logger', () => {
 		it('should trim excessive field in event meta for logger', () => {
 			loggerEvent(commonMeta);
 			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.info.mock.calls[0][0]).toMatchObject(commonTrimmedMeta);
+			expect(logger.info.mock.calls[0][0]).toEqual(commonTrimmedMeta);
 		});
 
 		it('should suppress configured meta field for development', () => {
@@ -40,21 +40,31 @@ describe('n-auto-logger', () => {
 			};
 			loggerEvent(commonMeta);
 			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.info.mock.calls[0][0]).toMatchObject(mutedMeta);
+			expect(logger.info.mock.calls[0][0]).toEqual(mutedMeta);
 			delete process.env.LOGGER_MUTE_FIELDS;
+		});
+
+		it('should NOT ignore data put under user field', () => {
+			const commonMetaWithUser = {
+				...commonMeta,
+				user: { message: 'please ask help center' },
+			};
+			loggerEvent(commonMetaWithUser);
+			expect(logger.info.mock.calls).toHaveLength(1);
+			expect(logger.info.mock.calls).toMatchSnapshot();
 		});
 
 		it('should fire info when initialised', () => {
 			loggerEvent(commonMeta);
 			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.info.mock.calls[0][0]).toMatchObject(commonTrimmedMeta);
+			expect(logger.info.mock.calls[0][0]).toEqual(commonTrimmedMeta);
 		});
 
 		it('should create the correct logger when fire the success method', () => {
 			const event = loggerEvent(commonMeta);
 			event.success({ d: 'some data', e: 'some other data' });
 			expect(logger.info.mock.calls).toHaveLength(2);
-			expect(logger.info.mock.calls[1][0]).toMatchObject({
+			expect(logger.info.mock.calls[1][0]).toEqual({
 				...commonTrimmedMeta,
 				result: 'success',
 				data: { d: 'some data', e: 'some other data' },
@@ -65,7 +75,7 @@ describe('n-auto-logger', () => {
 			const event = loggerEvent(commonMeta);
 			event.failure({ message: 'some error message' });
 			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.warn.mock.calls[0][0]).toMatchObject({
+			expect(logger.warn.mock.calls[0][0]).toEqual({
 				...commonTrimmedMeta,
 				result: 'failure',
 				category: 'EXCEPTION',
@@ -90,8 +100,9 @@ describe('n-auto-logger', () => {
 			const event = loggerEvent(commonMeta);
 			event.failure({ status: 400, reason: 'not found' });
 			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.warn.mock.calls[0][0]).toMatchObject({
+			expect(logger.warn.mock.calls[0][0]).toEqual({
 				...commonTrimmedMeta,
+				category: 'EXCEPTION',
 				result: 'failure',
 				status: 400,
 				reason: 'not found',
@@ -102,7 +113,7 @@ describe('n-auto-logger', () => {
 			const event = loggerEvent(commonMeta);
 			event.action('someAction').start();
 			expect(logger.info.mock.calls).toHaveLength(2);
-			expect(logger.info.mock.calls[1][0]).toMatchObject({
+			expect(logger.info.mock.calls[1][0]).toEqual({
 				...commonTrimmedMeta,
 				action: 'someAction',
 			});
@@ -112,7 +123,7 @@ describe('n-auto-logger', () => {
 			const event = loggerEvent(commonMeta);
 			event.action('someAction').success({ returnData: 'someReturnData' });
 			expect(logger.info.mock.calls).toHaveLength(2);
-			expect(logger.info.mock.calls[1][0]).toMatchObject({
+			expect(logger.info.mock.calls[1][0]).toEqual({
 				...commonTrimmedMeta,
 				action: 'someAction',
 				result: 'success',
@@ -126,8 +137,10 @@ describe('n-auto-logger', () => {
 				.action('someAction')
 				.failure({ status: 400, reason: 'some action error message' });
 			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.warn.mock.calls[0][0]).toMatchObject({
+			expect(logger.warn.mock.calls[0][0]).toEqual({
 				...commonTrimmedMeta,
+				category: 'EXCEPTION',
+				status: 400,
 				action: 'someAction',
 				result: 'failure',
 				reason: 'some action error message',
@@ -138,7 +151,7 @@ describe('n-auto-logger', () => {
 			const event = loggerEvent(commonMeta);
 			event.action('someAction').failure();
 			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.warn.mock.calls[0][0]).toMatchObject({
+			expect(logger.warn.mock.calls[0][0]).toEqual({
 				...commonTrimmedMeta,
 				action: 'someAction',
 				result: 'failure',
@@ -152,10 +165,12 @@ describe('n-auto-logger', () => {
 				.failure({ reason: 'some action error message', status: 500 });
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls).toHaveLength(0);
-			expect(logger.error.mock.calls[0][0]).toMatchObject({
+			expect(logger.error.mock.calls[0][0]).toEqual({
 				...commonTrimmedMeta,
 				action: 'someAction',
 				result: 'failure',
+				category: 'EXCEPTION',
+				status: 500,
 				reason: 'some action error message',
 			});
 		});
@@ -232,7 +247,7 @@ describe('n-auto-logger', () => {
 		it('logs callFunction name as action name', async () => {
 			const callFunction = () => null;
 			autoLog(callFunction)();
-			expect(logger.info.mock.calls[1][0]).toMatchObject({
+			expect(logger.info.mock.calls[1][0]).toEqual({
 				action: 'callFunction',
 				result: 'success',
 			});
@@ -245,14 +260,14 @@ describe('n-auto-logger', () => {
 			const meta = { b: 'bar' };
 			const args = { ...params, ...meta };
 			await enhanced(args);
-			expect(logger.info.mock.calls[1][0]).toMatchObject({
+			expect(logger.info.mock.calls[1][0]).toEqual({
 				...params,
 				...meta,
 				action: 'callFunction',
 				result: 'success',
 			});
 			await enhanced(params);
-			expect(logger.info.mock.calls[3][0]).toMatchObject({
+			expect(logger.info.mock.calls[3][0]).toEqual({
 				...params,
 				action: 'callFunction',
 				result: 'success',
@@ -303,7 +318,7 @@ describe('n-auto-logger', () => {
 			expect(callFunctionB.mock.calls).toHaveLength(1);
 			expect(callFunctionB.mock.calls[0]).toEqual([paramsB, meta]);
 			expect(logger.info.mock.calls).toHaveLength(4);
-			expect(logger.info.mock.calls[1][0]).toMatchObject({
+			expect(logger.info.mock.calls[1][0]).toEqual({
 				...meta,
 				...paramsA,
 				action: 'mockConstructor',

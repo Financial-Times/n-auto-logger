@@ -11,13 +11,13 @@ export * from './error-formatter';
 
 // TODO: support trim nested object leaves?
 // N-LOGGER would flatten nested object and logout their leave values
-const createEventLogger = context => {
+const createEventLogger = meta => {
 	const { LOGGER_MUTE_FIELDS } = process.env;
-	const event = LOGGER_MUTE_FIELDS
-		? removeObjectKeys(trimObject(context))(
-				fieldStringToArray(LOGGER_MUTE_FIELDS),
-			)
-		: trimObject(context);
+	const filteredMeta = removeObjectKeys(meta)([
+		...fieldStringToArray(LOGGER_MUTE_FIELDS),
+		'user',
+	]);
+	const event = trimObject(filteredMeta);
 	return {
 		start: () => logger.info(event),
 		success: data =>
@@ -27,8 +27,8 @@ const createEventLogger = context => {
 	};
 };
 
-export const loggerEvent = event => {
-	const eventLogger = createEventLogger(event);
+export const loggerEvent = meta => {
+	const eventLogger = createEventLogger(meta);
 	eventLogger.start();
 	return eventLogger;
 };

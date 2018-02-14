@@ -35,6 +35,8 @@ export const removeObjectKeys = obj => keys => {
 };
 
 export const fieldStringToArray = fieldString =>
-	fieldString.split(',').map(keyName => keyName.trim());
+	typeof fieldString === 'string' && fieldString !== ''
+		? fieldString.split(',').map(keyName => keyName.trim())
+		: [];
 
 export const isPromise = value => Promise.resolve(value) === value;
