@@ -8,8 +8,6 @@ import {
 import failureLogger from './failure';
 import { RESULTS } from './constants';
 
-export * from './error-formatter';
-
 // TODO: support trim nested object leaves?
 // N-LOGGER would flatten nested object and logout their leave values
 const createEventLogger = meta => {

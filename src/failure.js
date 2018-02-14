@@ -1,11 +1,8 @@
 import 'isomorphic-fetch';
-import logger from '@financial-times/n-logger';
 import fetch from 'node-fetch';
+import logger from '@financial-times/n-logger';
+import { formatFetchError } from '@financial-times/n-error';
 
-import {
-	formatFetchResponseError,
-	formatFetchNetworkError,
-} from './error-formatter';
 import { trimObject, removeObjectKeys } from './utils';
 import { CATEGORIES, RESULTS } from './constants';
 
@@ -23,7 +20,7 @@ const failureLogger = (context = {}) => async e => {
 	if (e instanceof fetch.Response || e instanceof Response) {
 		const response = e;
 		const loggerLevel = response.status >= 500 ? 'error' : 'warn';
-		const formattedError = await formatFetchResponseError(response);
+		const formattedError = await formatFetchError(response);
 		return logger[loggerLevel]({
 			...context,
 			result: RESULTS.FAILURE,
@@ -32,7 +29,7 @@ const failureLogger = (context = {}) => async e => {
 	}
 	// in case of fetch error, typically network error
 	if (e instanceof fetch.FetchError) {
-		const formattedError = formatFetchNetworkError(e);
+		const formattedError = await formatFetchError(e);
 		return logger.error({
 			...context,
 			result: RESULTS.FAILURE,

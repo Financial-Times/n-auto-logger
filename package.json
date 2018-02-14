@@ -15,6 +15,7 @@
     "prepush": "make lint unit-test && make verify -j3"
   },
   "dependencies": {
+    "@financial-times/n-error": "^0.0.2",
     "@financial-times/n-logger": "^5.5.11",
     "isomorphic-fetch": "^2.2.1",
     "node-fetch": "^2.0.0"

@@ -62,6 +62,13 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@financial-times/n-error@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@financial-times/n-error/-/n-error-0.0.2.tgz#3f668c78712565973a8f7af853298b0fff704c57"
+  dependencies:
+    isomorphic-fetch "^2.2.1"
+    node-fetch "^2.0.0"
+
 "@financial-times/n-fetch@^1.0.0-beta.4":
   version "1.0.0-beta.4"
   resolved "https://registry.yarnpkg.com/@financial-times/n-fetch/-/n-fetch-1.0.0-beta.4.tgz#b6acb0b3c2a81f3a17be1265516946e13caa1698"
