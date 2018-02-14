@@ -6,6 +6,7 @@ import {
 	isPromise,
 } from './utils';
 import failureLogger from './failure';
+import { RESULTS } from './constants';
 
 export * from './error-formatter';
 
@@ -21,7 +22,7 @@ const createEventLogger = meta => {
 	return {
 		start: () => logger.info(event),
 		success: data =>
-			logger.info(trimObject({ ...event, result: 'success', data })),
+			logger.info(trimObject({ ...event, result: RESULTS.SUCCESS, data })),
 		failure: exception => failureLogger(event)(exception),
 		action: action => createEventLogger({ ...event, action }),
 	};

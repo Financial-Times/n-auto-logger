@@ -6,6 +6,7 @@ import {
 	formatFetchNetworkError,
 } from './error-formatter';
 import { trimObject } from './utils';
+import { CATEGORIES, RESULTS } from './constants';
 
 // TODO: consider logics to decide default logger level based on status
 // 	use warn for errors wouldn't be cause the by the codebase, error for those possibly are
@@ -14,7 +15,7 @@ const failureLogger = (context = {}) => async e => {
 	if (typeof e === 'undefined' || e === null) {
 		return logger.warn({
 			...context,
-			result: 'failure',
+			result: RESULTS.FAILURE,
 		});
 	}
 	// in case of a fetch response error
@@ -24,7 +25,7 @@ const failureLogger = (context = {}) => async e => {
 		const formattedError = await formatFetchResponseError(response);
 		return logger[loggerLevel]({
 			...context,
-			result: 'failure',
+			result: RESULTS.FAILURE,
 			...formattedError,
 		});
 	}
@@ -33,7 +34,7 @@ const failureLogger = (context = {}) => async e => {
 		const formattedError = formatFetchNetworkError(e);
 		return logger.error({
 			...context,
-			result: 'failure',
+			result: RESULTS.FAILURE,
 			...formattedError,
 		});
 	}
@@ -43,8 +44,10 @@ const failureLogger = (context = {}) => async e => {
 		const { code, message, stack, ...rest } = e; // ...e wouldn't spread the properties of Error
 		return logger.error({
 			...context,
-			result: 'failure',
-			category: Object.keys(rest).length ? 'EXCEPTION' : 'NODE_SYSTEM_ERROR',
+			result: RESULTS.FAILURE,
+			category: Object.keys(rest).length
+				? CATEGORIES.CUSTOM_ERROR
+				: CATEGORIES.NODE_SYSTEM_ERROR,
 			code,
 			message,
 			stack,
@@ -55,15 +58,15 @@ const failureLogger = (context = {}) => async e => {
 	if (e instanceof Object) {
 		return logger[e.status >= 500 ? 'error' : 'warn']({
 			...context,
-			result: 'failure',
-			category: 'EXCEPTION',
+			result: RESULTS.FAILURE,
+			category: CATEGORIES.CUSTOM_ERROR,
 			...trimObject(e),
 		});
 	}
 	// in case of other exceptions
 	return logger.warn({
 		...context,
-		result: 'failure',
+		result: RESULTS.FAILURE,
 		message: e,
 	});
 };

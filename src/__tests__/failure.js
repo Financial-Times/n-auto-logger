@@ -1,6 +1,7 @@
 import logger from '@financial-times/n-logger';
 import { Response, Headers, FetchError } from 'node-fetch';
 import failureLogger from '../failure';
+import { CATEGORIES, RESULTS } from '../constants';
 
 jest.mock('@financial-times/n-logger');
 
@@ -59,8 +60,8 @@ describe('failureLogger', () => {
 		expect(logger.error.mock.calls).toHaveLength(1);
 		expect(logger.error.mock.calls[0][0]).toMatchObject({
 			message: 'some error message',
-			result: 'failure',
-			category: 'NODE_SYSTEM_ERROR',
+			result: RESULTS.FAILURE,
+			category: CATEGORIES.NODE_SYSTEM_ERROR,
 		});
 	});
 
@@ -79,8 +80,8 @@ describe('failureLogger', () => {
 		expect(logger.error.mock.calls).toHaveLength(1);
 		expect(logger.error.mock.calls[0][0]).toMatchObject({
 			message: 'some error message',
-			result: 'failure',
-			category: 'EXCEPTION',
+			result: RESULTS.FAILURE,
+			category: CATEGORIES.CUSTOM_ERROR,
 			status: 500,
 		});
 	});
@@ -93,13 +94,13 @@ describe('failureLogger', () => {
 			}
 		}
 		const extendedSystemError = new ExtendedError({
-			category: 'FETCH_RESPONSE_ERROR',
+			category: CATEGORIES.FETCH_RESPONSE_ERROR,
 		});
 		await failureLogger()(extendedSystemError);
 		expect(logger.error.mock.calls).toHaveLength(1);
 		expect(logger.error.mock.calls[0][0]).toMatchObject({
-			result: 'failure',
-			category: 'FETCH_RESPONSE_ERROR',
+			result: RESULTS.FAILURE,
+			category: CATEGORIES.FETCH_RESPONSE_ERROR,
 		});
 	});
 
@@ -126,7 +127,7 @@ describe('failureLogger', () => {
 		const formattedError = {
 			status: 500,
 			message: 'some message to describe the case',
-			category: 'FETCH_RESPONSE_ERROR',
+			category: CATEGORIES.FETCH_RESPONSE_ERROR,
 		};
 		await failureLogger()(formattedError);
 		expect(logger.error.mock.calls).toHaveLength(1);

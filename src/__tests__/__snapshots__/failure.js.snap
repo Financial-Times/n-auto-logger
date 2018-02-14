@@ -2,7 +2,7 @@
 
 exports[`failureLogger log exception based on its status correctly 1`] = `
 Object {
-  "category": "EXCEPTION",
+  "category": "CUSTOM_ERROR",
   "message": "some message to describe the case",
   "result": "failure",
   "status": 500,
@@ -11,7 +11,7 @@ Object {
 
 exports[`failureLogger log exception based on its status correctly 2`] = `
 Object {
-  "category": "EXCEPTION",
+  "category": "CUSTOM_ERROR",
   "message": "some message to describe the case",
   "result": "failure",
   "status": 404,

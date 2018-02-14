@@ -1,4 +1,5 @@
 import logger, { loggerEvent, autoLog, autoLogService } from '../index';
+import { CATEGORIES, RESULTS } from '../constants';
 
 jest.mock('@financial-times/n-logger');
 
@@ -66,7 +67,7 @@ describe('n-auto-logger', () => {
 			expect(logger.info.mock.calls).toHaveLength(2);
 			expect(logger.info.mock.calls[1][0]).toEqual({
 				...commonTrimmedMeta,
-				result: 'success',
+				result: RESULTS.SUCCESS,
 				data: { d: 'some data', e: 'some other data' },
 			});
 		});
@@ -77,8 +78,8 @@ describe('n-auto-logger', () => {
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls[0][0]).toEqual({
 				...commonTrimmedMeta,
-				result: 'failure',
-				category: 'EXCEPTION',
+				result: RESULTS.FAILURE,
+				category: CATEGORIES.CUSTOM_ERROR,
 				message: 'some error message',
 			});
 		});
@@ -89,8 +90,8 @@ describe('n-auto-logger', () => {
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.error.mock.calls[0][0]).toMatchObject({
 				...commonTrimmedMeta,
-				result: 'failure',
-				category: 'NODE_SYSTEM_ERROR',
+				result: RESULTS.FAILURE,
+				category: CATEGORIES.NODE_SYSTEM_ERROR,
 				message: 'some error message',
 			});
 			expect(logger.error.mock.calls[0][0]).toHaveProperty('stack');
@@ -102,8 +103,8 @@ describe('n-auto-logger', () => {
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls[0][0]).toEqual({
 				...commonTrimmedMeta,
-				category: 'EXCEPTION',
-				result: 'failure',
+				category: CATEGORIES.CUSTOM_ERROR,
+				result: RESULTS.FAILURE,
 				status: 400,
 				reason: 'not found',
 			});
@@ -126,7 +127,7 @@ describe('n-auto-logger', () => {
 			expect(logger.info.mock.calls[1][0]).toEqual({
 				...commonTrimmedMeta,
 				action: 'someAction',
-				result: 'success',
+				result: RESULTS.SUCCESS,
 				data: { returnData: 'someReturnData' },
 			});
 		});
@@ -139,10 +140,10 @@ describe('n-auto-logger', () => {
 			expect(logger.info.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls[0][0]).toEqual({
 				...commonTrimmedMeta,
-				category: 'EXCEPTION',
+				category: CATEGORIES.CUSTOM_ERROR,
 				status: 400,
 				action: 'someAction',
-				result: 'failure',
+				result: RESULTS.FAILURE,
 				reason: 'some action error message',
 			});
 		});
@@ -154,7 +155,7 @@ describe('n-auto-logger', () => {
 			expect(logger.warn.mock.calls[0][0]).toEqual({
 				...commonTrimmedMeta,
 				action: 'someAction',
-				result: 'failure',
+				result: RESULTS.FAILURE,
 			});
 		});
 
@@ -168,8 +169,8 @@ describe('n-auto-logger', () => {
 			expect(logger.error.mock.calls[0][0]).toEqual({
 				...commonTrimmedMeta,
 				action: 'someAction',
-				result: 'failure',
-				category: 'EXCEPTION',
+				result: RESULTS.FAILURE,
+				category: CATEGORIES.CUSTOM_ERROR,
 				status: 500,
 				reason: 'some action error message',
 			});
@@ -249,7 +250,7 @@ describe('n-auto-logger', () => {
 			autoLog(callFunction)();
 			expect(logger.info.mock.calls[1][0]).toEqual({
 				action: 'callFunction',
-				result: 'success',
+				result: RESULTS.SUCCESS,
 			});
 		});
 
@@ -264,13 +265,13 @@ describe('n-auto-logger', () => {
 				...params,
 				...meta,
 				action: 'callFunction',
-				result: 'success',
+				result: RESULTS.SUCCESS,
 			});
 			await enhanced(params);
 			expect(logger.info.mock.calls[3][0]).toEqual({
 				...params,
 				action: 'callFunction',
-				result: 'success',
+				result: RESULTS.SUCCESS,
 			});
 		});
 
@@ -322,7 +323,7 @@ describe('n-auto-logger', () => {
 				...meta,
 				...paramsA,
 				action: 'mockConstructor',
-				result: 'success',
+				result: RESULTS.SUCCESS,
 			});
 		});
 	});
