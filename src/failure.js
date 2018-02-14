@@ -1,11 +1,12 @@
 import 'isomorphic-fetch';
 import logger from '@financial-times/n-logger';
 import fetch from 'node-fetch';
+
 import {
 	formatFetchResponseError,
 	formatFetchNetworkError,
 } from './error-formatter';
-import { trimObject } from './utils';
+import { trimObject, removeObjectKeys } from './utils';
 import { CATEGORIES, RESULTS } from './constants';
 
 // TODO: consider logics to decide default logger level based on status
@@ -42,17 +43,19 @@ const failureLogger = (context = {}) => async e => {
 	// error codes: https://nodejs.org/api/errors.html#nodejs-error-codes
 	if (e instanceof Error) {
 		const { code, message, stack, ...rest } = e; // ...e wouldn't spread the properties of Error
-		return logger.error({
-			...context,
-			result: RESULTS.FAILURE,
-			category: Object.keys(rest).length
-				? CATEGORIES.CUSTOM_ERROR
-				: CATEGORIES.NODE_SYSTEM_ERROR,
-			code,
-			message,
-			stack,
-			...rest, // if e.category would override the above
-		});
+		return logger.error(
+			trimObject({
+				...context,
+				result: RESULTS.FAILURE,
+				category: Object.keys(rest).length
+					? CATEGORIES.CUSTOM_ERROR
+					: CATEGORIES.NODE_SYSTEM_ERROR,
+				code,
+				message,
+				stack,
+				...removeObjectKeys(rest)(['user']), // if e.category would override the above
+			}),
+		);
 	}
 	// in case of exception in any format of object not prototyped by Error
 	if (e instanceof Object) {

@@ -1,7 +1,8 @@
 import logger from '@financial-times/n-logger';
 import { Response, Headers, FetchError } from 'node-fetch';
+
 import failureLogger from '../failure';
-import { CATEGORIES, RESULTS } from '../constants';
+import { CATEGORIES } from '../constants';
 
 jest.mock('@financial-times/n-logger');
 
@@ -58,11 +59,10 @@ describe('failureLogger', () => {
 		const e = new Error('some error message');
 		await failureLogger(event)(e);
 		expect(logger.error.mock.calls).toHaveLength(1);
-		expect(logger.error.mock.calls[0][0]).toMatchObject({
-			message: 'some error message',
-			result: RESULTS.FAILURE,
-			category: CATEGORIES.NODE_SYSTEM_ERROR,
-		});
+		const loggedError = logger.error.mock.calls[0][0];
+		expect(loggedError.stack).toBeDefined();
+		const { stack, ...loggedErrorStackless } = loggedError;
+		expect(loggedErrorStackless).toMatchSnapshot();
 	});
 
 	it('log extended node system error correctly', async () => {
@@ -78,12 +78,10 @@ describe('failureLogger', () => {
 		});
 		await failureLogger()(extendedSystemError);
 		expect(logger.error.mock.calls).toHaveLength(1);
-		expect(logger.error.mock.calls[0][0]).toMatchObject({
-			message: 'some error message',
-			result: RESULTS.FAILURE,
-			category: CATEGORIES.CUSTOM_ERROR,
-			status: 500,
-		});
+		const loggedError = logger.error.mock.calls[0][0];
+		expect(loggedError.stack).toBeDefined();
+		const { stack, ...loggedErrorStackless } = loggedError;
+		expect(loggedErrorStackless).toMatchSnapshot();
 	});
 
 	it('override category for extended node system error correctly', async () => {
@@ -98,10 +96,44 @@ describe('failureLogger', () => {
 		});
 		await failureLogger()(extendedSystemError);
 		expect(logger.error.mock.calls).toHaveLength(1);
-		expect(logger.error.mock.calls[0][0]).toMatchObject({
-			result: RESULTS.FAILURE,
-			category: CATEGORIES.FETCH_RESPONSE_ERROR,
+		const loggedError = logger.error.mock.calls[0][0];
+		expect(loggedError.stack).toBeDefined();
+		const { stack, ...loggedErrorStackless } = loggedError;
+		expect(loggedErrorStackless).toMatchSnapshot();
+	});
+
+	it('logs extended node system error with user field correctly', async () => {
+		class ExtendedError extends Error {
+			constructor({ user } = {}) {
+				super();
+				this.user = user;
+			}
+		}
+		const extendedSystemError = new ExtendedError({
+			user: {
+				message: 'some message',
+				email: 'some email address',
+			},
 		});
+		await failureLogger()(extendedSystemError);
+		expect(logger.error.mock.calls).toHaveLength(1);
+		const loggedError = logger.error.mock.calls[0][0];
+		expect(loggedError.category).toBe(CATEGORIES.CUSTOM_ERROR);
+		expect(loggedError.user).toBeUndefined();
+	});
+
+	it('logs extended node system error with empty fields correctly', async () => {
+		class ExtendedError extends Error {
+			constructor({ test } = {}) {
+				super();
+				this.test = test;
+			}
+		}
+		const extendedSystemError = new ExtendedError({});
+		await failureLogger()(extendedSystemError);
+		const loggedError = logger.error.mock.calls[0][0];
+		expect(loggedError.category).toBe(CATEGORIES.CUSTOM_ERROR);
+		expect(loggedError.test).toBeUndefined();
 	});
 
 	it('log exception based on its status correctly', async () => {

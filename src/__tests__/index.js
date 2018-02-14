@@ -88,13 +88,10 @@ describe('n-auto-logger', () => {
 			const event = loggerEvent(commonMeta);
 			event.failure(new Error('some error message'));
 			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.error.mock.calls[0][0]).toMatchObject({
-				...commonTrimmedMeta,
-				result: RESULTS.FAILURE,
-				category: CATEGORIES.NODE_SYSTEM_ERROR,
-				message: 'some error message',
-			});
-			expect(logger.error.mock.calls[0][0]).toHaveProperty('stack');
+			const loggedError = logger.error.mock.calls[0][0];
+			expect(loggedError.stack).toBeDefined();
+			const { stack, ...loggedErrorStackless } = loggedError;
+			expect(loggedErrorStackless).toMatchSnapshot();
 		});
 
 		it('failure method should log custom Error correctly', () => {

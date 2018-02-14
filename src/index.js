@@ -23,7 +23,7 @@ const createEventLogger = meta => {
 		start: () => logger.info(event),
 		success: data =>
 			logger.info(trimObject({ ...event, result: RESULTS.SUCCESS, data })),
-		failure: exception => failureLogger(event)(exception),
+		failure: error => failureLogger(event)(error),
 		action: action => createEventLogger({ ...event, action }),
 	};
 };

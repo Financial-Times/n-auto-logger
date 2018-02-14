@@ -102,6 +102,19 @@ Array [
 
 exports[`n-auto-logger autoLog should throw error if there're more than 2 args 1`] = `"check the args format of autoLogged function [callFunction], it needs to be (params: Object, meta: Object), documents: https://github.com/Financial-Times/n-auto-logger/blob/master/README.md#function-args-format"`;
 
+exports[`n-auto-logger loggerEvent failure method should log system Error correctly 1`] = `
+Object {
+  "a": "test",
+  "b": "test",
+  "category": "NODE_SYSTEM_ERROR",
+  "message": "some error message",
+  "operation": "test",
+  "result": "failure",
+  "transactionId": "test",
+  "userId": "test",
+}
+`;
+
 exports[`n-auto-logger loggerEvent should NOT ignore data put under user field 1`] = `
 Array [
   Array [

@@ -18,6 +18,15 @@ Object {
 }
 `;
 
+exports[`failureLogger log extended node system error correctly 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "message": "some error message",
+  "result": "failure",
+  "status": 500,
+}
+`;
+
 exports[`failureLogger log fetch network error correctly 1`] = `
 Object {
   "category": "FETCH_NETWORK_ERROR",
@@ -47,6 +56,15 @@ Object {
 }
 `;
 
+exports[`failureLogger log node system error correctly 1`] = `
+Object {
+  "category": "NODE_SYSTEM_ERROR",
+  "message": "some error message",
+  "operation": "someOperation",
+  "result": "failure",
+}
+`;
+
 exports[`failureLogger log other exceptions not described as object correctly 1`] = `
 Object {
   "message": "some error message",
@@ -58,6 +76,13 @@ exports[`failureLogger log without an error object input correctly 1`] = `
 Object {
   "action": "someAction",
   "operation": "someOperation",
+  "result": "failure",
+}
+`;
+
+exports[`failureLogger override category for extended node system error correctly 1`] = `
+Object {
+  "category": "FETCH_RESPONSE_ERROR",
   "result": "failure",
 }
 `;
