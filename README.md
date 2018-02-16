@@ -3,6 +3,8 @@
 # n-auto-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-auto-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-auto-logger) [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-auto-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-auto-logger?branch=master)
 auto log (api) function calls with a single line of code, based on [n-logger](https://github.com/Financial-Times/n-logger)
 
+<br>
+
 - [quickstart](#quickstart)
 - [install](#install)
 - [usage](#usage)
@@ -17,6 +19,7 @@ auto log (api) function calls with a single line of code, based on [n-logger](ht
 - [development](#development)
 - [todos](#todos)
 
+<br>
 
 ## quickstart
 ```js
@@ -27,14 +30,19 @@ import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n
 // auto log a function of its start, success/failure state
 // * function name would be auto logged as action `action=someFunction`
 // * use Object in function signature so that values can be logged with key names
-const result = someFunction(args);
 const result = autoLog(someFunction)(args, meta?);
 ```
-further details on [function signature format](#function-signature-format)
+more details on [function signature format](#function-signature-format)
+
 ```js
 // auto log multiple functions wrapped in an object
 const APIService = autoLogService{ methodA, methodB, methodC };
 APIService.CallA(params, meta);
+```
+
+```js
+// set key names of fields to be muted in .env to reduce log for development
+LOGGER_MUTE_FIELDS=transactionId, userId
 ```
 
 ```js
@@ -48,10 +56,6 @@ try {
 } catch(e) {
     event.failure(e);
 }
-```
-```js
-// set key names of fields to be muted in .env to reduce log for development
-LOGGER_MUTE_FIELDS=transactionId, userId
 ```
 
 ## install
