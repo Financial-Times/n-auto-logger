@@ -27,12 +27,10 @@ import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n
 ```
 
 ```js
-// auto log a function of its start, success/failure state
-// * function name would be auto logged as action `action=someFunction`
-// * use Object in function signature so that values can be logged with key names
-const result = autoLog(someFunction)(args, meta?);
+// auto log a function of its start, success/failure state with function name as `action`
+const result = autoLog(someFunction)(args: Object, meta?: Object);
 ```
-more details on [function signature format](#function-signature-format)
+> more details on [function signature format](#function-signature-format)
 
 ```js
 // auto log multiple functions wrapped in an object
@@ -67,7 +65,7 @@ npm install @financial-times/n-auto-logger
 
 ### function signature format
 
-`n-auto-logger` allows two objects as the signature of the function to be autoLogged, and destructing assignment is recommended.
+`n-auto-logger` allows two objects as the args of the autoLogged function so that values can be logged with corresponding key names.
 ```js
 // you can auto log the call with meta, even if it is not mandatory to the function
 const someFunction = ({ argsA, argsB }) => {};
@@ -75,10 +73,10 @@ autoLog(someFunction)(args, meta);
 autoLog(someFunction)(argsAndMeta);
 
 // if you need to pass certain meta in the function call
-const someFunction = ({ paramsA, paramsB }, { metaA, metaB }={}) => {};
+const someFunction = ({ paramsA, paramsB }, { metaA, metaB }) => {};
 
 // if you need to do input params validation (e.g. before an API call)
-const someFunction = (mandatory: Object, optional?: Object) => {
+const someFunction = (mandatory: Object, optional?: Object ={}) => {
   validate(mandatory);
   // ...
 };
