@@ -1,6 +1,6 @@
 <img height="180" align="right" src="http://78.media.tumblr.com/7ba12e3aa60cecb80ad00f11cb181dde/tumblr_inline_mjx5ioXh8l1qz4rgp.gif"><br><br>
 
-# n-auto-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-auto-logger.svg?style=svg)](https://circleci.com/gh/Financial-Times/n-auto-logger) [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-auto-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-auto-logger?branch=master)
+# n-auto-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-auto-logger.svg?style=shield)](https://circleci.com/gh/Financial-Times/n-auto-logger) [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-auto-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-auto-logger?branch=master)
 auto log (api) function calls with a single line of code, based on [n-logger](https://github.com/Financial-Times/n-logger)
 
 <br>
