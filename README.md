@@ -136,7 +136,7 @@ sandbox.stub(logger);
 `n-auto-logger` would trim any empty fields in the input objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields.
 
 ## example
-[example](EXAMPLE.md)
+[example](example/EXAMPLE.md)
 
 ## development
 * `make install` or `yarn`
