@@ -1,8 +1,5 @@
-## before/after
+## from using n-logger
 ```js
-/* ----------------------
-         BEFORE
------------------------ */
 /* some-api-service.js */
 const methodA = async (params, meta) => {
     try {
@@ -47,11 +44,8 @@ try {
     next(e);
 }
 ```
-
+## to using n-auto-logger
 ```js
-/* ----------------------
-         AFTER
------------------------ */
 /* some-api-service.js */
 export default autoLogService({ methodA, methodB });
 
