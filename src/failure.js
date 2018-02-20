@@ -22,7 +22,7 @@ const errorLog = e => {
 const statusLogger = e => log =>
 	e.status && e.status < 500 ? logger.warn(log) : logger.error(log);
 
-const failureLogger = (context = {}) => async e => {
+export default (context = {}) => async e => {
 	// in case of failure without a specified error, e.g. .action('someAction').failure()
 	if (typeof e === 'undefined' || e === null) {
 		return logger.warn({
@@ -65,5 +65,3 @@ const failureLogger = (context = {}) => async e => {
 		message: e,
 	});
 };
-
-export default failureLogger;
