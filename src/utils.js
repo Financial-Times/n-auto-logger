@@ -40,3 +40,9 @@ export const fieldStringToArray = fieldString =>
 		: [];
 
 export const isPromise = value => Promise.resolve(value) === value;
+
+export const assertErrorLog = e => {
+	const { stack, ...rest } = e;
+	expect(stack).toBeDefined();
+	expect(rest).toMatchSnapshot();
+};

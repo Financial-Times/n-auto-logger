@@ -76,7 +76,7 @@ describe('n-auto-logger', () => {
 			const event = loggerEvent(commonMeta);
 			event.failure({ message: 'some error message' });
 			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.warn.mock.calls[0][0]).toEqual({
+			expect(logger.error.mock.calls[0][0]).toEqual({
 				...commonTrimmedMeta,
 				result: RESULTS.FAILURE,
 				category: CATEGORIES.CUSTOM_ERROR,
@@ -204,7 +204,7 @@ describe('n-auto-logger', () => {
 				await autoLog(callFunction)(params, meta);
 			} catch (e) {
 				expect(e).toBe(errorInstance);
-				expect(logger.warn.mock.calls).toMatchSnapshot();
+				expect(logger.error.mock.calls).toMatchSnapshot();
 			}
 		});
 
@@ -237,8 +237,8 @@ describe('n-auto-logger', () => {
 				autoLog(callFunction)(params, meta);
 			} catch (e) {
 				expect(e).toBe(errorInstance);
-				expect(logger.warn.mock.calls).toHaveLength(1);
-				expect(logger.warn.mock.calls).toMatchSnapshot();
+				expect(logger.error.mock.calls).toHaveLength(1);
+				expect(logger.error.mock.calls).toMatchSnapshot();
 			}
 		});
 

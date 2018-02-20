@@ -1,24 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`failureLogger log exception based on its status correctly 1`] = `
+exports[`failureLogger correctly logs Error 1`] = `
 Object {
-  "category": "CUSTOM_ERROR",
-  "message": "some message to describe the case",
+  "category": "NODE_SYSTEM_ERROR",
+  "message": "some error message",
+  "operation": "someOperation",
   "result": "failure",
-  "status": 500,
 }
 `;
 
-exports[`failureLogger log exception based on its status correctly 2`] = `
+exports[`failureLogger correctly logs exceptions not described as object 1`] = `
 Object {
-  "category": "CUSTOM_ERROR",
-  "message": "some message to describe the case",
+  "message": "some error message",
   "result": "failure",
-  "status": 404,
 }
 `;
 
-exports[`failureLogger log extended node system error correctly 1`] = `
+exports[`failureLogger correctly logs extended Error with status 1`] = `
 Object {
   "category": "CUSTOM_ERROR",
   "message": "some error message",
@@ -27,7 +25,16 @@ Object {
 }
 `;
 
-exports[`failureLogger log fetch network error correctly 1`] = `
+exports[`failureLogger correctly logs extended Error with status 2`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "message": "some error message",
+  "result": "failure",
+  "status": 500,
+}
+`;
+
+exports[`failureLogger correctly logs fetch network error 1`] = `
 Object {
   "category": "FETCH_NETWORK_ERROR",
   "code": "ENOTFOUND",
@@ -36,17 +43,7 @@ Object {
 }
 `;
 
-exports[`failureLogger log fetch response error correctly based on status 1`] = `
-Object {
-  "category": "FETCH_RESPONSE_ERROR",
-  "contentType": "text/plain; charset=utf-8",
-  "message": "403 Forbidden",
-  "result": "failure",
-  "status": 403,
-}
-`;
-
-exports[`failureLogger log fetch response error correctly based on status 2`] = `
+exports[`failureLogger correctly logs fetch response error with status 1`] = `
 Object {
   "category": "FETCH_RESPONSE_ERROR",
   "contentType": "text/plain; charset=utf-8",
@@ -56,23 +53,17 @@ Object {
 }
 `;
 
-exports[`failureLogger log node system error correctly 1`] = `
+exports[`failureLogger correctly logs fetch response error with status 2`] = `
 Object {
-  "category": "NODE_SYSTEM_ERROR",
-  "message": "some error message",
-  "operation": "someOperation",
+  "category": "FETCH_RESPONSE_ERROR",
+  "contentType": "text/plain; charset=utf-8",
+  "message": "404 Not Found",
   "result": "failure",
+  "status": 404,
 }
 `;
 
-exports[`failureLogger log other exceptions not described as object correctly 1`] = `
-Object {
-  "message": "some error message",
-  "result": "failure",
-}
-`;
-
-exports[`failureLogger log without an error object input correctly 1`] = `
+exports[`failureLogger correctly logs null or undefined input 1`] = `
 Object {
   "action": "someAction",
   "operation": "someOperation",
@@ -80,18 +71,20 @@ Object {
 }
 `;
 
-exports[`failureLogger override category for extended node system error correctly 1`] = `
+exports[`failureLogger correctly logs plain object with status 1`] = `
 Object {
-  "category": "FETCH_RESPONSE_ERROR",
-  "result": "failure",
-}
-`;
-
-exports[`failureLogger override category for formatted error correctly 1`] = `
-Object {
-  "category": "FETCH_RESPONSE_ERROR",
+  "category": "CUSTOM_ERROR",
   "message": "some message to describe the case",
   "result": "failure",
   "status": 500,
+}
+`;
+
+exports[`failureLogger correctly logs plain object with status 2`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "message": "some message to describe the case",
+  "result": "failure",
+  "status": 404,
 }
 `;

@@ -1,13 +1,27 @@
-import 'isomorphic-fetch';
-import fetch from 'node-fetch';
 import logger from '@financial-times/n-logger';
-import { formatFetchError } from '@financial-times/n-error';
+import { isFetchError, parseFetchError } from '@financial-times/n-error';
 
 import { trimObject, removeObjectKeys } from './utils';
 import { CATEGORIES, RESULTS } from './constants';
 
+const errorLog = e => {
+	const { code, message, stack, ...rest } = e; // ...e wouldn't spread the properties of Error
+	return trimObject({
+		category: Object.keys(rest).length
+			? CATEGORIES.CUSTOM_ERROR
+			: CATEGORIES.NODE_SYSTEM_ERROR,
+		code,
+		message,
+		stack,
+		...removeObjectKeys(rest)(['user']), // `category` key here would override the above
+	});
+};
+
 // TODO: consider logics to decide default logger level based on status
-// 	use warn for errors wouldn't be cause the by the codebase, error for those possibly are
+// for generic error without status or falsely reported error, use 'error'
+const statusLogger = e => log =>
+	e.status && e.status < 500 ? logger.warn(log) : logger.error(log);
+
 const failureLogger = (context = {}) => async e => {
 	// in case of failure without a specified error, e.g. .action('someAction').failure()
 	if (typeof e === 'undefined' || e === null) {
@@ -16,51 +30,32 @@ const failureLogger = (context = {}) => async e => {
 			result: RESULTS.FAILURE,
 		});
 	}
-	// in case of a fetch response error
-	if (e instanceof fetch.Response || e instanceof Response) {
-		const response = e;
-		const loggerLevel = response.status >= 500 ? 'error' : 'warn';
-		const formattedError = await formatFetchError(response);
-		return logger[loggerLevel]({
+	// in case of a fetch error, both Response Error and Network Error
+	// find more details in https://github.com/Financial-Times/n-error/blob/master/src/parser.js
+	if (isFetchError(e)) {
+		const parsed = await parseFetchError(e);
+		return statusLogger(parsed)({
 			...context,
 			result: RESULTS.FAILURE,
-			...formattedError,
-		});
-	}
-	// in case of fetch error, typically network error
-	if (e instanceof fetch.FetchError) {
-		const formattedError = await formatFetchError(e);
-		return logger.error({
-			...context,
-			result: RESULTS.FAILURE,
-			...formattedError,
+			...errorLog(parsed),
 		});
 	}
 	// in case of Node Error Object or an extended Node Error Object
 	// error codes: https://nodejs.org/api/errors.html#nodejs-error-codes
 	if (e instanceof Error) {
-		const { code, message, stack, ...rest } = e; // ...e wouldn't spread the properties of Error
-		return logger.error(
-			trimObject({
-				...context,
-				result: RESULTS.FAILURE,
-				category: Object.keys(rest).length
-					? CATEGORIES.CUSTOM_ERROR
-					: CATEGORIES.NODE_SYSTEM_ERROR,
-				code,
-				message,
-				stack,
-				...removeObjectKeys(rest)(['user']), // if e.category would override the above
-			}),
-		);
+		return statusLogger(e)({
+			...context,
+			result: RESULTS.FAILURE,
+			...errorLog(e),
+		});
 	}
 	// in case of exception in any format of object not prototyped by Error
 	if (e instanceof Object) {
-		return logger[e.status >= 500 ? 'error' : 'warn']({
+		return statusLogger(e)({
 			...context,
 			result: RESULTS.FAILURE,
 			category: CATEGORIES.CUSTOM_ERROR,
-			...trimObject(e),
+			...trimObject(removeObjectKeys(e)(['user'])),
 		});
 	}
 	// in case of other exceptions
