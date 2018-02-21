@@ -1,5 +1,5 @@
 import logger from '@financial-times/n-logger';
-import { createCustomError } from '@financial-times/n-error';
+import nError from '@financial-times/n-error';
 import { Response, Headers, FetchError } from 'node-fetch';
 
 import failureLogger from '../failure';
@@ -66,7 +66,7 @@ describe('failureLogger', () => {
 		});
 
 		it('extended Error with status', async () => {
-			const extendedSystemError = createCustomError({
+			const extendedSystemError = nError({
 				status: 500,
 				message: 'some error message',
 			});
@@ -74,7 +74,7 @@ describe('failureLogger', () => {
 			expect(logger.error.mock.calls).toHaveLength(1);
 			assertErrorLog(logger.error.mock.calls[0][0]);
 
-			const extendedSystemError404 = createCustomError({
+			const extendedSystemError404 = nError({
 				status: 404,
 				message: 'some error message',
 			});
@@ -84,6 +84,7 @@ describe('failureLogger', () => {
 			assertErrorLog(logger.error.mock.calls[0][0]);
 		});
 
+		// TODO: consolidate this into nError
 		it('extended Error with empty fields', async () => {
 			class ExtendedError extends Error {
 				constructor({ test } = {}) {
@@ -126,7 +127,7 @@ describe('failureLogger', () => {
 
 	describe('hides user field in', () => {
 		it('extended Error', async () => {
-			const extendedSystemError = createCustomError({
+			const extendedSystemError = nError({
 				user: {
 					message: 'some message',
 					email: 'some email address',
@@ -186,7 +187,7 @@ describe('failureLogger', () => {
 		});
 
 		it('extended Error', async () => {
-			const extendedSystemError = createCustomError({
+			const extendedSystemError = nError({
 				category: CATEGORIES.FETCH_RESPONSE_ERROR,
 			});
 			await failureLogger()(extendedSystemError);
