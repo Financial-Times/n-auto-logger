@@ -138,7 +138,9 @@ sandbox.stub(logger);
 
 ## example
 [before/after](example/EXAMPLE.md)
+
 [enhanced api service example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/apis/newspaper-info-svc.js)
+
 [controller example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/routes/delivery-address/controller.js)
 
 ## development
