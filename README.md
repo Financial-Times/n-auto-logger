@@ -16,7 +16,7 @@ auto log (api) function calls with a single line of code, based on [n-logger](ht
    * [test stub](#test-stub)
 - [built-in](#built-in)
    * [out-of-box error parsing support](#out-of-box-error-parsing-support)
-   * [trim empty fields](#trim-empty-fields)
+   * [clean up log object](#clean-up-log-object)
 - [example](#example)
 - [development](#development)
 - [todos](#todos)
@@ -132,9 +132,9 @@ sandbox.stub(logger);
 * Node Native Error Objects
 * Custom Object extends Native Error Object
 
-### trim empty fields
+### clean up log object
 
-`n-auto-logger` would trim any empty fields in the input objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields.
+`n-auto-logger` would trim any empty fields and method fields in the input meta or error objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields or extend Error object with methods.
 
 ## example
 [before/after](example/EXAMPLE.md)
