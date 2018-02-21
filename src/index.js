@@ -1,6 +1,6 @@
 import logger from '@financial-times/n-logger';
 import {
-	trimObject,
+	onlyValues,
 	removeObjectKeys,
 	fieldStringToArray,
 	isPromise,
@@ -8,7 +8,7 @@ import {
 import failureLogger from './failure';
 import { RESULTS } from './constants';
 
-// TODO: support trim nested object leaves?
+// TODO: support deepTrimObject / deepOnlyValues
 // N-LOGGER would flatten nested object and logout their leave values
 const createEventLogger = meta => {
 	const { LOGGER_MUTE_FIELDS } = process.env;
@@ -16,11 +16,11 @@ const createEventLogger = meta => {
 		...fieldStringToArray(LOGGER_MUTE_FIELDS),
 		'user',
 	]);
-	const event = trimObject(filteredMeta);
+	const event = onlyValues(filteredMeta);
 	return {
 		start: () => logger.info(event),
 		success: data =>
-			logger.info(trimObject({ ...event, result: RESULTS.SUCCESS, data })),
+			logger.info(onlyValues({ ...event, result: RESULTS.SUCCESS, data })),
 		failure: error => failureLogger(event)(error),
 		action: action => createEventLogger({ ...event, action }),
 	};
@@ -73,7 +73,6 @@ export const autoLog = callFunction => (paramsOrArgs, meta, ...excessive) => {
 	}
 };
 
-// TODO: confirm performance impact when using individual method over decorate them seperately
 export const autoLogService = helperStandardService => {
 	const enhanced = {};
 	Object.keys(helperStandardService).forEach(methodName => {

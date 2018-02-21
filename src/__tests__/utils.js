@@ -1,6 +1,7 @@
 import {
 	emptyCheck,
 	trimObject,
+	onlyValues,
 	removeObjectKeys,
 	fieldStringToArray,
 	isPromise,
@@ -72,6 +73,46 @@ describe('trimObject', () => {
 	it('should sustain the constructor prototype', () => {
 		const test = new Error();
 		const trimmed = trimObject(test);
+		expect(trimmed instanceof Error).toBe(true);
+	});
+});
+
+describe('onlyValues', () => {
+	describe('should remove', () => {
+		it('undefined value', () => {
+			const args = { a: undefined, b: 'test' };
+			const trimmed = onlyValues(args);
+			expect(trimmed).toEqual({ b: 'test' });
+		});
+
+		it('empty string', () => {
+			const args = { a: '', b: 'test' };
+			const trimmed = onlyValues(args);
+			expect(trimmed).toEqual({ b: 'test' });
+		});
+
+		it('null value', () => {
+			const args = { a: null, b: 'test' };
+			const trimmed = onlyValues(args);
+			expect(trimmed).toEqual({ b: 'test' });
+		});
+
+		it('empty values', () => {
+			const args = { a: null, b: 'test', c: '', d: undefined };
+			const trimmed = onlyValues(args);
+			expect(trimmed).toEqual({ b: 'test' });
+		});
+
+		it('functions', () => {
+			const args = { a: null, b: 'test', c: () => null };
+			const trimmed = onlyValues(args);
+			expect(trimmed).toEqual({ b: 'test' });
+		});
+	});
+
+	it('should sustain the constructor prototype', () => {
+		const test = new Error();
+		const trimmed = onlyValues(test);
 		expect(trimmed instanceof Error).toBe(true);
 	});
 });

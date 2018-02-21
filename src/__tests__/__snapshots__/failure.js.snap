@@ -16,6 +16,15 @@ Object {
 }
 `;
 
+exports[`failureLogger correctly logs extended Error with methods 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "message": "some error message",
+  "result": "failure",
+  "status": 500,
+}
+`;
+
 exports[`failureLogger correctly logs extended Error with status 1`] = `
 Object {
   "category": "CUSTOM_ERROR",
@@ -68,6 +77,15 @@ Object {
   "action": "someAction",
   "operation": "someOperation",
   "result": "failure",
+}
+`;
+
+exports[`failureLogger correctly logs plain object with methods 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "message": "some message to describe the case",
+  "result": "failure",
+  "status": 500,
 }
 `;
 

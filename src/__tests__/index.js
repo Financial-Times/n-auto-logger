@@ -86,6 +86,16 @@ describe('n-auto-logger', () => {
 				expect(logger.info.mock.calls).toHaveLength(1);
 				expect(logger.info.mock.calls[0][0]).toEqual(commonTrimmedMeta);
 			});
+
+			it('function fields', () => {
+				const commonMetaWithFunc = {
+					...commonMeta,
+					func: () => null,
+				};
+				loggerEvent(commonMetaWithFunc);
+				expect(logger.info.mock.calls).toHaveLength(1);
+				expect(logger.info.mock.calls[0][0]).toEqual(commonTrimmedMeta);
+			});
 		});
 
 		describe('.action()', () => {

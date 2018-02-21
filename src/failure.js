@@ -1,12 +1,12 @@
 import logger from '@financial-times/n-logger';
 import { isFetchError, parseFetchError } from '@financial-times/n-error';
 
-import { trimObject, removeObjectKeys } from './utils';
+import { onlyValues, removeObjectKeys } from './utils';
 import { CATEGORIES, RESULTS } from './constants';
 
 const errorLog = e => {
 	const { code, message, stack, ...rest } = e; // ...e wouldn't spread the properties of Error
-	return trimObject({
+	return onlyValues({
 		category: Object.keys(rest).length
 			? CATEGORIES.CUSTOM_ERROR
 			: CATEGORIES.NODE_SYSTEM_ERROR,
@@ -55,7 +55,7 @@ export default (context = {}) => async e => {
 			...context,
 			result: RESULTS.FAILURE,
 			category: CATEGORIES.CUSTOM_ERROR,
-			...trimObject(removeObjectKeys(e)(['user'])),
+			...onlyValues(removeObjectKeys(e)(['user'])),
 		});
 	}
 	// in case of other exceptions

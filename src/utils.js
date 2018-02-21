@@ -20,6 +20,18 @@ export const trimObject = obj => {
 	return output;
 };
 
+export const onlyValues = obj => {
+	const output = Object.create(obj);
+	Object.keys(obj).forEach(key => {
+		const isEmtpy = emptyCheck(obj[key]);
+		const isFunc = typeof obj[key] === 'function';
+		if (!isEmtpy && !isFunc) {
+			output[key] = obj[key];
+		}
+	});
+	return output;
+};
+
 export const removeObjectKeys = obj => keys => {
 	if (!Array.isArray(keys)) {
 		throw Error('keys need to be formatted in array');

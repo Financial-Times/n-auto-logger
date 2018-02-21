@@ -84,6 +84,18 @@ describe('failureLogger', () => {
 			assertErrorLog(logger.error.mock.calls[0][0]);
 		});
 
+		it('extended Error with methods', async () => {
+			const e = nError({
+				status: 500,
+				message: 'some error message',
+				extend: () => null,
+			});
+			await failureLogger()(e);
+			expect(logger.error.mock.calls).toHaveLength(1);
+			expect(logger.error.mock.calls[0][0].extend).toBeUndefined();
+			assertErrorLog(logger.error.mock.calls[0][0]);
+		});
+
 		// TODO: consolidate this into nError
 		it('extended Error with empty fields', async () => {
 			class ExtendedError extends Error {
@@ -116,6 +128,17 @@ describe('failureLogger', () => {
 			expect(logger.error.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls[0][0]).toMatchSnapshot();
+		});
+
+		it('plain object with methods', async () => {
+			const e = {
+				status: 500,
+				message: 'some message to describe the case',
+				extend: () => null,
+			};
+			await failureLogger()(e);
+			expect(logger.error.mock.calls).toHaveLength(1);
+			expect(logger.error.mock.calls[0][0]).toMatchSnapshot();
 		});
 
 		it('exceptions not described as object', async () => {
