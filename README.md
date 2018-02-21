@@ -1,7 +1,11 @@
-<img height="180" align="right" src="http://78.media.tumblr.com/7ba12e3aa60cecb80ad00f11cb181dde/tumblr_inline_mjx5ioXh8l1qz4rgp.gif"><br><br>
+<img height="180" align="right" src="http://78.media.tumblr.com/7ba12e3aa60cecb80ad00f11cb181dde/tumblr_inline_mjx5ioXh8l1qz4rgp.gif"><br>
 
-# n-auto-logger [![CircleCI](https://circleci.com/gh/Financial-Times/n-auto-logger.svg?style=shield)](https://circleci.com/gh/Financial-Times/n-auto-logger) [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-auto-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-auto-logger?branch=master) [![npm version](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger.svg)](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger) [![Dependencies](https://david-dm.org/Financial-Times/n-auto-logger.svg)](https://david-dm.org/Financial-Times/n-auto-logger) [![devDependencies](https://david-dm.org/Financial-Times/n-auto-logger/dev-status.svg)](https://david-dm.org/Financial-Times/n-auto-logger?type=dev) [![Known Vulnerabilities](https://snyk.io/test/github/Financial-Times/n-auto-logger/badge.svg)](https://snyk.io/test/github/Financial-Times/n-auto-logger)
+# n-auto-logger 
 auto log (api) function calls with a single line of code, based on [n-logger](https://github.com/Financial-Times/n-logger)
+
+[![CircleCI](https://circleci.com/gh/Financial-Times/n-auto-logger.svg?style=shield)](https://circleci.com/gh/Financial-Times/n-auto-logger) [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-auto-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-auto-logger?branch=master) [![Dependencies](https://david-dm.org/Financial-Times/n-auto-logger.svg)](https://david-dm.org/Financial-Times/n-auto-logger) [![Known Vulnerabilities](https://snyk.io/test/github/Financial-Times/n-auto-logger/badge.svg)](https://snyk.io/test/github/Financial-Times/n-auto-logger)
+
+[![npm version](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger.svg)](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger) [![devDependencies](https://david-dm.org/Financial-Times/n-auto-logger/dev-status.svg)](https://david-dm.org/Financial-Times/n-auto-logger?type=dev)
 
 <br>
 
@@ -35,13 +39,11 @@ const result = autoLog(someFunction)(args: Object, meta?: Object);
 ```js
 // auto log multiple functions wrapped in an object
 const APIService = autoLogService{ methodA, methodB, methodC };
-APIService.CallA(params, meta);
 ```
 
 ```js
 // log operation and adhoc actions
-const meta = { transactionId, userId, operation };
-const event = eventLogger(meta);
+const event = eventLogger({ transactionId, userId, operation });
 
 try {
     event.action('someAction').success();
@@ -137,7 +139,9 @@ sandbox.stub(logger);
 `n-auto-logger` would trim any empty fields in the input objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields.
 
 ## example
-[example](example/EXAMPLE.md)
+[before/after](example/EXAMPLE.md)
+[enhanced api service example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/apis/newspaper-info-svc.js)
+[controller example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/routes/delivery-address/controller.js)
 
 ## development
 * `make install` or `yarn`
