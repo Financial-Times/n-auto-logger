@@ -129,8 +129,9 @@ sandbox.stub(logger);
 `n-auto-logger` would parse different forms of the following error objects to logger-suitable format automatically([detail](src/failure.js)), while it still logs plain object and string message.
 * Fetch Response Error `content-type`:`application/json`,`text/plain`,`text/html`
 * Fetch (Network) Error
-* Node Native Error Objects
-* Custom Object extends Native Error Object
+* Node native Error objects
+* Custom objects extends native Error object
+* (NError)[https://github.com/Financial-Times/n-error]
 
 ### clean up log object
 
