@@ -131,7 +131,7 @@ sandbox.stub(logger);
 * Fetch (Network) Error
 * Node native Error objects
 * Custom objects extends native Error object
-* (NError)[https://github.com/Financial-Times/n-error]
+* [NError](https://github.com/Financial-Times/n-error)
 
 ### clean up log object
 
