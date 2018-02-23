@@ -8,6 +8,16 @@ import { assertErrorLog } from '../utils';
 
 jest.mock('@financial-times/n-logger');
 
+class ExtendedError extends Error {
+	constructor({ status = 500, message, method, category } = {}) {
+		super(message);
+		this.name = 'ExtendedError';
+		this.status = status;
+		this.method = method;
+		this.category = category;
+	}
+}
+
 describe('failureLogger', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
@@ -40,14 +50,14 @@ describe('failureLogger', () => {
 				headers,
 			});
 			await failureLogger()(errorResponse404);
-			expect(logger.warn.mock.calls).toHaveLength(1);
 			expect(logger.error.mock.calls).toHaveLength(1);
+			expect(logger.warn.mock.calls).toHaveLength(1);
 			assertErrorLog(logger.warn.mock.calls[0][0]);
 		});
 
 		it('fetch network error', async () => {
 			const e = new FetchError(
-				'request to https://unknown/ failed, reason: getaddrinfo ENOTFOUND unknown unknown:443',
+				'request to https://unknown/ failed, reason: some reason',
 			);
 			e.code = 'ENOTFOUND';
 			await failureLogger()(e);
@@ -65,7 +75,23 @@ describe('failureLogger', () => {
 			assertErrorLog(logger.error.mock.calls[0][0]);
 		});
 
-		it('extended Error with status', async () => {
+		it('ExtendedErrorError with status', async () => {
+			const event = {
+				operation: 'someOperation',
+			};
+			const e = new ExtendedError({ message: 'some error message' });
+			await failureLogger(event)(e);
+			expect(logger.error.mock.calls).toHaveLength(1);
+			assertErrorLog(logger.error.mock.calls[0][0]);
+
+			const ee = new ExtendedError({ status: 404 });
+			await failureLogger(event)(ee);
+			expect(logger.error.mock.calls).toHaveLength(1);
+			expect(logger.warn.mock.calls).toHaveLength(1);
+			assertErrorLog(logger.warn.mock.calls[0][0]);
+		});
+
+		it('nError with status', async () => {
 			const extendedSystemError = nError({
 				status: 500,
 				message: 'some error message',
@@ -81,34 +107,7 @@ describe('failureLogger', () => {
 			await failureLogger()(extendedSystemError404);
 			expect(logger.error.mock.calls).toHaveLength(1);
 			expect(logger.warn.mock.calls).toHaveLength(1);
-			assertErrorLog(logger.error.mock.calls[0][0]);
-		});
-
-		it('extended Error with methods', async () => {
-			const e = nError({
-				status: 500,
-				message: 'some error message',
-				extend: () => null,
-			});
-			await failureLogger()(e);
-			expect(logger.error.mock.calls).toHaveLength(1);
-			expect(logger.error.mock.calls[0][0].extend).toBeUndefined();
-			assertErrorLog(logger.error.mock.calls[0][0]);
-		});
-
-		// TODO: consolidate this into nError
-		it('extended Error with empty fields', async () => {
-			class ExtendedError extends Error {
-				constructor({ test } = {}) {
-					super();
-					this.test = test;
-				}
-			}
-			const extendedSystemError = new ExtendedError({});
-			await failureLogger()(extendedSystemError);
-			const loggedError = logger.error.mock.calls[0][0];
-			expect(loggedError.category).toBe(CATEGORIES.CUSTOM_ERROR);
-			expect(loggedError.test).toBeUndefined();
+			assertErrorLog(logger.warn.mock.calls[0][0]);
 		});
 
 		it('plain object with status', async () => {
@@ -130,6 +129,47 @@ describe('failureLogger', () => {
 			expect(logger.warn.mock.calls[0][0]).toMatchSnapshot();
 		});
 
+		it('exceptions not described as object', async () => {
+			await failureLogger()('some error message');
+			expect(logger.warn.mock.calls).toHaveLength(1);
+			expect(logger.warn.mock.calls[0][0]).toMatchSnapshot();
+		});
+	});
+
+	describe('logs only values from the error object', () => {
+		it('ExtendedError with empty fields', async () => {
+			const e = new ExtendedError();
+			await failureLogger()(e);
+			assertErrorLog(logger.error.mock.calls[0][0]);
+		});
+
+		// TODO: edge case, assign a method to message wouldn't been clean up
+		it('ExtendedError with methods', async () => {
+			const e = new ExtendedError({
+				method: () => 'test',
+			});
+			await failureLogger()(e);
+			assertErrorLog(logger.error.mock.calls[0][0]);
+		});
+
+		it('nError with empty fields', async () => {
+			const e = nError({});
+			await failureLogger()(e);
+			assertErrorLog(logger.error.mock.calls[0][0]);
+		});
+
+		it('nError with methods', async () => {
+			const e = nError({
+				status: 500,
+				message: 'some error message',
+				extend: () => null,
+			});
+			await failureLogger()(e);
+			expect(logger.error.mock.calls).toHaveLength(1);
+			expect(logger.error.mock.calls[0][0].extend).toBeUndefined();
+			assertErrorLog(logger.error.mock.calls[0][0]);
+		});
+
 		it('plain object with methods', async () => {
 			const e = {
 				status: 500,
@@ -140,23 +180,30 @@ describe('failureLogger', () => {
 			expect(logger.error.mock.calls).toHaveLength(1);
 			expect(logger.error.mock.calls[0][0]).toMatchSnapshot();
 		});
-
-		it('exceptions not described as object', async () => {
-			await failureLogger()('some error message');
-			expect(logger.warn.mock.calls).toHaveLength(1);
-			expect(logger.warn.mock.calls[0][0]).toMatchSnapshot();
-		});
 	});
 
 	describe('hides user field in', () => {
-		it('extended Error', async () => {
-			const extendedSystemError = nError({
+		it('ExtendedError', async () => {
+			const e = new ExtendedError({
 				user: {
 					message: 'some message',
 					email: 'some email address',
 				},
 			});
-			await failureLogger()(extendedSystemError);
+			await failureLogger()(e);
+			expect(logger.error.mock.calls).toHaveLength(1);
+			const loggedError = logger.error.mock.calls[0][0];
+			expect(loggedError.user).toBeUndefined();
+		});
+
+		it('nError', async () => {
+			const e = nError({
+				user: {
+					message: 'some message',
+					email: 'some email address',
+				},
+			});
+			await failureLogger()(e);
 			expect(logger.error.mock.calls).toHaveLength(1);
 			const loggedError = logger.error.mock.calls[0][0];
 			expect(loggedError.category).toBe(CATEGORIES.CUSTOM_ERROR);
@@ -209,11 +256,22 @@ describe('failureLogger', () => {
 			);
 		});
 
-		it('extended Error', async () => {
-			const extendedSystemError = nError({
+		it('nError', async () => {
+			const e = nError({
 				category: CATEGORIES.FETCH_RESPONSE_ERROR,
 			});
-			await failureLogger()(extendedSystemError);
+			await failureLogger()(e);
+			expect(logger.error.mock.calls[0][0]).toHaveProperty(
+				'category',
+				CATEGORIES.FETCH_RESPONSE_ERROR,
+			);
+		});
+
+		it('ExtendedError if it has .category', async () => {
+			const e = nError({
+				category: CATEGORIES.FETCH_RESPONSE_ERROR,
+			});
+			await failureLogger()(e);
 			expect(logger.error.mock.calls[0][0]).toHaveProperty(
 				'category',
 				CATEGORIES.FETCH_RESPONSE_ERROR,

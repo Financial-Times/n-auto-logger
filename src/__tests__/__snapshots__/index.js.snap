@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`n-auto-logger autoLog args format should log error if input arg meta is specified but not an Object 1`] = `"check the args format of autoLogged function [callFunction], it needs to be (params: Object, meta: Object), documents: https://github.com/Financial-Times/n-auto-logger/blob/master/README.md#function-args-format"`;
+exports[`n-auto-logger autoLog args format should log error if input arg meta is specified but not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
 
-exports[`n-auto-logger autoLog args format should log error if input arg params is not an Object 1`] = `"check the args format of autoLogged function [callFunction], it needs to be (params: Object, meta: Object), documents: https://github.com/Financial-Times/n-auto-logger/blob/master/README.md#function-args-format"`;
+exports[`n-auto-logger autoLog args format should log error if input arg params is not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
 
-exports[`n-auto-logger autoLog args format should throw error if there're more than 2 args 1`] = `"check the args format of autoLogged function [callFunction], it needs to be (params: Object, meta: Object), documents: https://github.com/Financial-Times/n-auto-logger/blob/master/README.md#function-args-format"`;
+exports[`n-auto-logger autoLog args format should throw error if there're more than 2 args 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
 
 exports[`n-auto-logger autoLog async function should invoke callFunction correctly 1`] = `
 Array [

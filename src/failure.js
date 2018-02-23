@@ -1,21 +1,11 @@
 import logger from '@financial-times/n-logger';
-import { isFetchError, parseFetchError } from '@financial-times/n-error';
+import NError, {
+	isFetchError,
+	parseFetchError,
+} from '@financial-times/n-error';
 
 import { onlyValues, removeObjectKeys } from './utils';
 import { CATEGORIES, RESULTS } from './constants';
-
-const errorLog = e => {
-	const { code, message, stack, ...rest } = e; // ...e wouldn't spread the properties of Error
-	return onlyValues({
-		category: Object.keys(rest).length
-			? CATEGORIES.CUSTOM_ERROR
-			: CATEGORIES.NODE_SYSTEM_ERROR,
-		code,
-		message,
-		stack,
-		...removeObjectKeys(rest)(['user']), // `category` key here would override the above
-	});
-};
 
 // TODO: consider logics to decide default logger level based on status
 // for generic error without status or falsely reported error, use 'error'
@@ -33,20 +23,40 @@ export default (context = {}) => async e => {
 	// in case of a fetch error, both Response Error and Network Error
 	// find more details in https://github.com/Financial-Times/n-error/blob/master/src/parser.js
 	if (isFetchError(e)) {
-		const parsed = await parseFetchError(e);
+		const parsed = await parseFetchError(e); // parsed: NError
+		const { stack, ...rest } = parsed;
 		return statusLogger(parsed)({
 			...context,
 			result: RESULTS.FAILURE,
-			...errorLog(parsed),
+			stack,
+			...onlyValues(removeObjectKeys(rest)(['user'])),
 		});
 	}
 	// in case of Node Error Object or an extended Node Error Object
 	// error codes: https://nodejs.org/api/errors.html#nodejs-error-codes
 	if (e instanceof Error) {
+		// Error prototype fields wouldn't be append in rest spread
+		const { name, code, stack, message, ...rest } = e;
+		const reserved = { name, code, stack, message };
 		return statusLogger(e)({
 			...context,
 			result: RESULTS.FAILURE,
-			...errorLog(e),
+			category: Object.keys(rest).length
+				? CATEGORIES.CUSTOM_ERROR
+				: CATEGORIES.NODE_SYSTEM_ERROR,
+			...onlyValues(reserved),
+			...onlyValues(removeObjectKeys(rest)(['user'])),
+		});
+	}
+	// in case of NError
+	if (e instanceof NError) {
+		const { stack, ...rest } = e;
+		return statusLogger(e)({
+			...context,
+			result: RESULTS.FAILURE,
+			category: CATEGORIES.CUSTOM_ERROR,
+			stack,
+			...onlyValues(removeObjectKeys(rest)(['user'])),
 		});
 	}
 	// in case of exception in any format of object not prototyped by Error

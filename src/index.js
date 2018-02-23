@@ -39,9 +39,9 @@ export const autoLog = callFunction => (paramsOrArgs, meta, ...excessive) => {
 		(meta !== undefined && typeof meta !== 'object')
 	) {
 		throw Error(
-			`check the args format of autoLogged function [${
+			`input args of autoLogged function [${
 				callFunction.name
-			}], it needs to be (params: Object, meta: Object), documents: https://github.com/Financial-Times/n-auto-logger/blob/master/README.md#function-args-format`,
+			}] needs to (params: Object, meta?: Object)`,
 		);
 	}
 

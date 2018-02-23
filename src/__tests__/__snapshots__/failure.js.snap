@@ -4,8 +4,30 @@ exports[`failureLogger correctly logs Error 1`] = `
 Object {
   "category": "NODE_SYSTEM_ERROR",
   "message": "some error message",
+  "name": "TypeError",
   "operation": "someOperation",
   "result": "failure",
+}
+`;
+
+exports[`failureLogger correctly logs ExtendedErrorError with status 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "message": "some error message",
+  "name": "ExtendedError",
+  "operation": "someOperation",
+  "result": "failure",
+  "status": 500,
+}
+`;
+
+exports[`failureLogger correctly logs ExtendedErrorError with status 2`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "name": "ExtendedError",
+  "operation": "someOperation",
+  "result": "failure",
+  "status": 404,
 }
 `;
 
@@ -16,38 +38,11 @@ Object {
 }
 `;
 
-exports[`failureLogger correctly logs extended Error with methods 1`] = `
-Object {
-  "category": "CUSTOM_ERROR",
-  "message": "some error message",
-  "result": "failure",
-  "status": 500,
-}
-`;
-
-exports[`failureLogger correctly logs extended Error with status 1`] = `
-Object {
-  "category": "CUSTOM_ERROR",
-  "message": "some error message",
-  "result": "failure",
-  "status": 500,
-}
-`;
-
-exports[`failureLogger correctly logs extended Error with status 2`] = `
-Object {
-  "category": "CUSTOM_ERROR",
-  "message": "some error message",
-  "result": "failure",
-  "status": 500,
-}
-`;
-
 exports[`failureLogger correctly logs fetch network error 1`] = `
 Object {
   "category": "FETCH_NETWORK_ERROR",
   "code": "ENOTFOUND",
-  "message": "request to https://unknown/ failed, reason: getaddrinfo ENOTFOUND unknown unknown:443",
+  "message": "request to https://unknown/ failed, reason: some reason",
   "result": "failure",
 }
 `;
@@ -72,20 +67,29 @@ Object {
 }
 `;
 
+exports[`failureLogger correctly logs nError with status 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "message": "some error message",
+  "result": "failure",
+  "status": 500,
+}
+`;
+
+exports[`failureLogger correctly logs nError with status 2`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "message": "some error message",
+  "result": "failure",
+  "status": 404,
+}
+`;
+
 exports[`failureLogger correctly logs null or undefined input 1`] = `
 Object {
   "action": "someAction",
   "operation": "someOperation",
   "result": "failure",
-}
-`;
-
-exports[`failureLogger correctly logs plain object with methods 1`] = `
-Object {
-  "category": "CUSTOM_ERROR",
-  "message": "some message to describe the case",
-  "result": "failure",
-  "status": 500,
 }
 `;
 
@@ -104,5 +108,48 @@ Object {
   "message": "some message to describe the case",
   "result": "failure",
   "status": 404,
+}
+`;
+
+exports[`failureLogger logs only values from the error object ExtendedError with empty fields 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "name": "ExtendedError",
+  "result": "failure",
+  "status": 500,
+}
+`;
+
+exports[`failureLogger logs only values from the error object ExtendedError with methods 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "name": "ExtendedError",
+  "result": "failure",
+  "status": 500,
+}
+`;
+
+exports[`failureLogger logs only values from the error object nError with empty fields 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "result": "failure",
+}
+`;
+
+exports[`failureLogger logs only values from the error object nError with methods 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "message": "some error message",
+  "result": "failure",
+  "status": 500,
+}
+`;
+
+exports[`failureLogger logs only values from the error object plain object with methods 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "message": "some message to describe the case",
+  "result": "failure",
+  "status": 500,
 }
 `;
