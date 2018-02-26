@@ -53,7 +53,7 @@ try {
 
 
 ```js
-// set key names of fields to be muted in .env to reduce log for development
+// set key names of fields to be muted in .env to reduce log for development or filter fields in production
 LOGGER_MUTE_FIELDS=transactionId, userId
 ```
 
@@ -110,7 +110,7 @@ autoLog(someFunction)(args, meta);
 ````
 
 ### reserved field override
-`n-auto-logger` will append values to following reserved fields automatically, the values would be overriden by the key value of the same name in your `args/params/meta`
+`n-auto-logger` will append values to following reserved fields automatically, the values would be overriden by the key value of the same name in your `args/params/meta`, be cautious not to override them unintentionally.
 * `action` default to `callFunction.name`
 * `category` default to `FETCH_RESPONSE_ERROR/FETCH_NETWORK_ERROR/NODE_SYSTEM_ERROR/CUSTOM_ERROR`
 
