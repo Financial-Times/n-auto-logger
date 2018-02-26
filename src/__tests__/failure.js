@@ -9,12 +9,14 @@ import { assertErrorLog } from '../utils';
 jest.mock('@financial-times/n-logger');
 
 class ExtendedError extends Error {
-	constructor({ status = 500, message, method, category } = {}) {
+	constructor({ status = 500, message, method, category, user, action } = {}) {
 		super(message);
 		this.name = 'ExtendedError';
 		this.status = status;
 		this.method = method;
 		this.category = category;
+		this.action = action;
+		this.user = user;
 	}
 }
 
@@ -239,6 +241,58 @@ describe('failureLogger', () => {
 			const loggedError = logger.error.mock.calls[0][0];
 			expect(loggedError.category).toBe(CATEGORIES.CUSTOM_ERROR);
 			expect(loggedError.user).toBeUndefined();
+		});
+	});
+
+	describe('mute fields of LOGGER_MUTE_FIELDS including .stack in', () => {
+		beforeAll(() => {
+			process.env.LOGGER_MUTE_FIELDS = 'action, stack, result';
+		});
+
+		afterAll(() => {
+			delete process.env.LOGGER_MUTE_FIELDS;
+		});
+
+		it('ExtendedError', async () => {
+			const e = new ExtendedError({ action: 'SOME_ACTION' });
+			await failureLogger()(e);
+			expect(logger.error.mock.calls).toHaveLength(1);
+			const loggedError = logger.error.mock.calls[0][0];
+			expect(loggedError.stack).toBeUndefined();
+			expect(loggedError).toMatchSnapshot();
+		});
+
+		it('nError', async () => {
+			const e = nError({ action: 'SOME_ACTION' });
+			await failureLogger()(e);
+			expect(logger.error.mock.calls).toHaveLength(1);
+			const loggedError = logger.error.mock.calls[0][0];
+			expect(loggedError.stack).toBeUndefined();
+			expect(loggedError).toMatchSnapshot();
+		});
+
+		it('fetch response error', async () => {
+			const headers = new Headers();
+			headers.append('content-type', 'application/json; charset=utf-8');
+			const e = new Response(JSON.stringify({ message: 'test' }), {
+				status: 500,
+				headers,
+			});
+			e.action = 'SOME_ACTION';
+			await failureLogger()(e);
+			expect(logger.error.mock.calls).toHaveLength(1);
+			const loggedError = logger.error.mock.calls[0][0];
+			expect(loggedError.stack).toBeUndefined();
+			expect(loggedError).toMatchSnapshot();
+		});
+
+		it('plain object', async () => {
+			const e = { action: 'SOME_ACTION' };
+			await failureLogger()(e);
+			expect(logger.error.mock.calls).toHaveLength(1);
+			const loggedError = logger.error.mock.calls[0][0];
+			expect(loggedError.stack).toBeUndefined();
+			expect(loggedError).toMatchSnapshot();
 		});
 	});
 

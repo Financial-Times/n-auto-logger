@@ -4,13 +4,21 @@ import NError, {
 	parseFetchError,
 } from '@financial-times/n-error';
 
-import { onlyValues, removeObjectKeys } from './utils';
-import { CATEGORIES, RESULTS } from './constants';
+import { onlyValues, removeObjectKeys, fieldStringToArray } from './utils';
+import { CATEGORIES, ALWAYS_MUTTED, UNMUTTABLE, RESULTS } from './constants';
 
 // TODO: consider logics to decide default logger level based on status
 // for generic error without status or falsely reported error, use 'error'
-const statusLogger = e => log =>
-	e.status && e.status < 500 ? logger.warn(log) : logger.error(log);
+const statusLoggerWithFilter = e => log => {
+	const loggerMuteFields = [
+		...fieldStringToArray(process.env.LOGGER_MUTE_FIELDS),
+		...ALWAYS_MUTTED,
+	].filter(field => !UNMUTTABLE.includes(field));
+	const filtered = removeObjectKeys(log)(loggerMuteFields);
+	return e.status && e.status < 500
+		? logger.warn(filtered)
+		: logger.error(filtered);
+};
 
 export default (context = {}) => async e => {
 	// in case of failure without a specified error, e.g. .action('someAction').failure()
@@ -25,11 +33,11 @@ export default (context = {}) => async e => {
 	if (isFetchError(e)) {
 		const parsed = await parseFetchError(e); // parsed: NError
 		const { stack, ...rest } = parsed;
-		return statusLogger(parsed)({
+		return statusLoggerWithFilter(parsed)({
 			...context,
 			result: RESULTS.FAILURE,
 			stack,
-			...onlyValues(removeObjectKeys(rest)(['user'])),
+			...onlyValues(rest),
 		});
 	}
 	// in case of Node Error Object or an extended Node Error Object
@@ -38,34 +46,34 @@ export default (context = {}) => async e => {
 		// Error prototype fields wouldn't be append in rest spread
 		const { name, code, stack, message, ...rest } = e;
 		const reserved = { name, code, stack, message };
-		return statusLogger(e)({
+		return statusLoggerWithFilter(e)({
 			...context,
 			result: RESULTS.FAILURE,
 			category: Object.keys(rest).length
 				? CATEGORIES.CUSTOM_ERROR
 				: CATEGORIES.NODE_SYSTEM_ERROR,
 			...onlyValues(reserved),
-			...onlyValues(removeObjectKeys(rest)(['user'])),
+			...onlyValues(rest),
 		});
 	}
 	// in case of NError
 	if (e instanceof NError) {
 		const { stack, ...rest } = e;
-		return statusLogger(e)({
+		return statusLoggerWithFilter(e)({
 			...context,
 			result: RESULTS.FAILURE,
 			category: CATEGORIES.CUSTOM_ERROR,
 			stack,
-			...onlyValues(removeObjectKeys(rest)(['user'])),
+			...onlyValues(rest),
 		});
 	}
 	// in case of exception in any format of object not prototyped by Error
 	if (e instanceof Object) {
-		return statusLogger(e)({
+		return statusLoggerWithFilter(e)({
 			...context,
 			result: RESULTS.FAILURE,
 			category: CATEGORIES.CUSTOM_ERROR,
-			...onlyValues(removeObjectKeys(e)(['user'])),
+			...onlyValues(e),
 		});
 	}
 	// in case of other exceptions

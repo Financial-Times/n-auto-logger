@@ -6,16 +6,16 @@ import {
 	isPromise,
 } from './utils';
 import failureLogger from './failure';
-import { RESULTS } from './constants';
+import { RESULTS, ALWAYS_MUTTED } from './constants';
 
 // TODO: support deepTrimObject / deepOnlyValues
 // N-LOGGER would flatten nested object and logout their leave values
 const createEventLogger = meta => {
-	const { LOGGER_MUTE_FIELDS } = process.env;
-	const filteredMeta = removeObjectKeys(meta)([
-		...fieldStringToArray(LOGGER_MUTE_FIELDS),
-		'user',
-	]);
+	const loggerMuteFields = [
+		...fieldStringToArray(process.env.LOGGER_MUTE_FIELDS),
+		...ALWAYS_MUTTED,
+	];
+	const filteredMeta = removeObjectKeys(meta)(loggerMuteFields);
 	const event = onlyValues(filteredMeta);
 	return {
 		start: () => logger.info(event),

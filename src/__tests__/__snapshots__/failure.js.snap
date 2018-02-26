@@ -153,3 +153,38 @@ Object {
   "status": 500,
 }
 `;
+
+exports[`failureLogger mute fields of LOGGER_MUTE_FIELDS including .stack in ExtendedError 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "name": "ExtendedError",
+  "result": "failure",
+  "status": 500,
+}
+`;
+
+exports[`failureLogger mute fields of LOGGER_MUTE_FIELDS including .stack in fetch response error 1`] = `
+Object {
+  "category": "FETCH_RESPONSE_ERROR",
+  "contentType": "application/json; charset=utf-8",
+  "message": Object {
+    "message": "test",
+  },
+  "result": "failure",
+  "status": 500,
+}
+`;
+
+exports[`failureLogger mute fields of LOGGER_MUTE_FIELDS including .stack in nError 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "result": "failure",
+}
+`;
+
+exports[`failureLogger mute fields of LOGGER_MUTE_FIELDS including .stack in plain object 1`] = `
+Object {
+  "category": "CUSTOM_ERROR",
+  "result": "failure",
+}
+`;
