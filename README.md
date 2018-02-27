@@ -25,7 +25,13 @@ auto log (api) function calls with a single line of code, based on [n-logger](ht
 
 ## quickstart
 ```js
-import logger, { autoLog, autoLogService, eventLogger } from '@financial-times/n-auto-logger';
+import logger, { 
+  autoLog, 
+  autoLogService, 
+  autoLogOperation,
+  autoLogController,
+  eventLogger,
+} from '@financial-times/n-auto-logger';
 ```
 
 ```js
@@ -40,8 +46,33 @@ const APIService = autoLogService{ methodA, methodB, methodC };
 ```
 
 ```js
+// auto log success/failure express middleware/controller as an operation function 
+// function name would be logged as `operation`, and available in meta
+const operationFunction = (meta, req, res, next) => {};
+export autoLogOperation(operationFunction);
+```
+
+```js
+// auto log multiple operation functions wrapped in an object as controller
+const someController = autoLogController({ operationFunctionA, operationFuncitonB });
+```
+
+```js
+// log both operation and actions automatically
+/* --- some-middleware/controller.js --- */
+const operationFunction = async (meta, req, res, next) => {
+  const data = await APIService.methodA(params, meta); // from autoLogService
+  next();
+};
+export autoLogOperation(operationFunction);
+
+/* --- router.js --- */
+app.use(someMiddleware)
+```
+
+```js
 // log operation and adhoc actions
-const event = eventLogger({ transactionId, userId, operation });
+const event = eventLogger(meta);
 
 try {
     event.action('someAction').success();
