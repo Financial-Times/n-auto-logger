@@ -2,7 +2,7 @@ import express from 'express';
 import request from 'supertest';
 
 import logger, { autoLog } from '../index';
-import { autoLogOperation } from '../operation';
+import { autoLogOperation, autoLogController } from '../operation';
 
 jest.mock('@financial-times/n-logger');
 
@@ -138,5 +138,34 @@ describe('autoLogOperation', () => {
 			expect(res.body).toMatchSnapshot();
 			expect(logger.info.mock.calls).toMatchSnapshot();
 		});
+	});
+});
+
+describe('autoLogController', () => {
+	afterEach(() => {
+		jest.resetAllMocks();
+	});
+
+	it('decorate each method correctly', async () => {
+		const operationFunctionA = (meta, req, res) => {
+			res.status(200).send(meta);
+		};
+		const operationFunctionB = (meta, req, res) => {
+			res.status(200).send(meta);
+		};
+		const enhancedController = autoLogController({
+			operationFunctionA,
+			operationFunctionB,
+		});
+		const app = express();
+		app.use('/a', enhancedController.operationFunctionA);
+		app.use('/b', enhancedController.operationFunctionB);
+		const resA = await request(app).get('/a');
+		expect(resA.statusCode).toBe(200);
+		expect(resA.body).toMatchSnapshot();
+		expect(logger.info.mock.calls).toMatchSnapshot();
+		const resB = await request(app).get('/b');
+		expect(resB.statusCode).toBe(200);
+		expect(resB.body).toMatchSnapshot();
 	});
 });

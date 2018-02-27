@@ -1,5 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`autoLogController decorate each method correctly 1`] = `
+Object {
+  "operation": "operationFunctionA",
+}
+`;
+
+exports[`autoLogController decorate each method correctly 2`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunctionA",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionA",
+      "result": "success",
+    },
+  ],
+]
+`;
+
+exports[`autoLogController decorate each method correctly 3`] = `
+Object {
+  "operation": "operationFunctionB",
+}
+`;
+
 exports[`autoLogOperation invokes operation function as middleware correctly as non-async function 1`] = `
 Array [
   Array [

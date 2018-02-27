@@ -18,6 +18,12 @@ export const autoLogOperation = operationFunction => async (req, res, next) => {
 	}
 };
 
-export default {
-	autoLogOperation,
+export const autoLogController = operationFunctionBundle => {
+	const enhanced = {};
+	Object.keys(operationFunctionBundle).forEach(methodName => {
+		enhanced[methodName] = autoLogOperation(
+			operationFunctionBundle[methodName],
+		);
+	});
+	return enhanced;
 };
