@@ -59,14 +59,13 @@ const someController = autoLogController({ operationFunctionA, operationFunciton
 
 ```js
 // log both operation and actions automatically
-/* --- some-middleware/controller.js --- */
 const operationFunction = async (meta, req, res, next) => {
   const data = await APIService.methodA(params, meta); // from autoLogService
   next();
 };
 export autoLogOperation(operationFunction);
 
-/* --- router.js --- */
+/* ------------------- */
 app.use(someMiddleware)
 ```
 
@@ -181,6 +180,5 @@ sandbox.stub(logger);
 * `yarn watch` to automatically correct code format on saving src
 
 ## todos
-* middleware/controller one-line enhancer
 * minified output with webpack/uglify/prepack with dist/index.min.js tested, [bundlesize badge](https://unpkg.com/#/)
 * logger coverage measurement in test
