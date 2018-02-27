@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`autoLogOperation invokes operation function as middleware correctly as non-async function 1`] = `
+Array [
+  Array [
+    "e",
+  ],
+]
+`;
+
+exports[`autoLogOperation invokes operation function as middleware correctly next the error for error handling 1`] = `
+Array [
+  Array [
+    Object {
+      "message": "foo",
+      "status": 500,
+    },
+  ],
+]
+`;
+
+exports[`autoLogOperation logs correctly operation failure 1`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+    },
+  ],
+  Array [
+    Object {
+      "action": "mockConstructor",
+      "operation": "operationFunction",
+    },
+  ],
+]
+`;
+
+exports[`autoLogOperation logs correctly operation failure 2`] = `
+Array [
+  Array [
+    Object {
+      "action": "mockConstructor",
+      "category": "CUSTOM_ERROR",
+      "message": "foo",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 500,
+    },
+  ],
+  Array [
+    Object {
+      "category": "CUSTOM_ERROR",
+      "message": "foo",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 500,
+    },
+  ],
+]
+`;
+
+exports[`autoLogOperation logs correctly operationFunction name as .operation 1`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+    },
+  ],
+]
+`;
+
+exports[`autoLogOperation logs correctly req.meta from previous middlewares 1`] = `
+Object {
+  "operation": "operationFunction",
+  "transactionId": "xxxx-xxxx",
+}
+`;
+
+exports[`autoLogOperation logs correctly req.meta from previous middlewares 2`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+      "transactionId": "xxxx-xxxx",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunction",
+      "result": "success",
+      "transactionId": "xxxx-xxxx",
+    },
+  ],
+]
+`;
+
+exports[`autoLogOperation logs correctly sub actions with autoLog 1`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+    },
+  ],
+  Array [
+    Object {
+      "action": "mockConstructor",
+      "operation": "operationFunction",
+    },
+  ],
+  Array [
+    Object {
+      "action": "mockConstructor",
+      "operation": "operationFunction",
+      "result": "success",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunction",
+      "result": "success",
+    },
+  ],
+]
+`;
