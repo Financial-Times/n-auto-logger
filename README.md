@@ -25,7 +25,7 @@ auto log (api) function calls with a single line of code, based on [n-logger](ht
 
 ## quickstart
 ```js
-import logger, { 
+import { 
   autoLog, 
   autoLogService, 
   autoLogOperation,
