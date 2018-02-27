@@ -152,3 +152,4 @@ sandbox.stub(logger);
 ## todos
 * middleware/controller one-line enhancer
 * minified output with webpack/uglify/prepack with dist/index.min.js tested, [bundlesize badge](https://unpkg.com/#/)
+* logger coverage measurement in test
