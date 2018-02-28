@@ -30,7 +30,7 @@ import {
   autoLogService, 
   autoLogOperation,
   autoLogController,
-  eventLogger,
+  loggerEvent,
 } from '@financial-times/n-auto-logger';
 ```
 
@@ -71,7 +71,7 @@ app.use(someMiddleware)
 
 ```js
 // log operation and adhoc actions, autoLog(someFunction) is recommended
-const event = eventLogger(meta);
+const event = loggerEvent(meta);
 
 try {
     event.action('someAction').success();
