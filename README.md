@@ -11,7 +11,7 @@ auto log (api) function calls with a single line of code, based on [n-logger](ht
 - [install](#install)
 - [usage](#usage)
    * [function signature format](#function-signature-format)
-   * [filter user field](#filter-user-field)
+   * [filter user/handler field](#filter-userhandler-field)
    * [reserved filed override](#reserved-field-override)
    * [test stub](#test-stub)
 - [built-in](#built-in)
@@ -115,7 +115,7 @@ const someFunction = (mandatory: Object, optional?: Object ={}) => {
 
 > The package would throw Errors if function signature is incorrect for `autoLog`.
 
-### filter user field
+### filter user/handler field
 ```js
 // data under `user` field in meta wouldn't be logged, sensitive personal data could be put here
 const meta = { operation, user: { id, email } };
@@ -138,11 +138,25 @@ const someFunction = (args, { metaA, user }) => {
 }
 autoLog(someFunction)(args, meta);
 ````
+```js
+// .handler field wouldn't be recorded in logger, as it is only useful for error handler
+  try {
+    throw nError({
+      status: 404,
+      handler: 'REDIRECT_TO_INDEX',
+    });
+  } catch (e) {
+    event.failure(e);
+    next(e);
+  }
+````
 
 ### reserved field override
-`n-auto-logger` will append values to following reserved fields automatically, the values would be overriden by the key value of the same name in your `args/params/meta`, be cautious not to override them unintentionally.
+`n-auto-logger` will append values to following reserved fields automatically, the values would be overriden by the key value of the same name in your `args/params/meta` or error object, be cautious not to override them unintentionally.
+* `operation` default to `operationFunction.name`
 * `action` default to `callFunction.name`
 * `category` default to `FETCH_RESPONSE_ERROR/FETCH_NETWORK_ERROR/NODE_SYSTEM_ERROR/CUSTOM_ERROR`
+* `result` default to `success/failure`
 
 ### test stub
 
