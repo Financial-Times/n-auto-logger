@@ -117,6 +117,23 @@ describe('autoLogOperation', () => {
 			await autoLogOperation(operationFunction)(null, null, next);
 			expect(logger.info.mock.calls).toMatchSnapshot();
 			expect(logger.error.mock.calls).toMatchSnapshot();
+			expect(next.mock.calls).toMatchSnapshot();
+		});
+
+		it('operation failure in try catch block', async () => {
+			const operationFunction = async () => {
+				try {
+					const e = { message: 'some error message' };
+					throw e;
+				} catch (e) {
+					throw e;
+				}
+			};
+			const next = jest.fn();
+			await autoLogOperation(operationFunction)(null, null, next);
+			expect(logger.info.mock.calls).toMatchSnapshot();
+			expect(logger.error.mock.calls).toMatchSnapshot();
+			expect(next.mock.calls).toMatchSnapshot();
 		});
 
 		it('req.meta from previous middlewares', async () => {

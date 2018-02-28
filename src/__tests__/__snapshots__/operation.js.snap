@@ -87,6 +87,50 @@ Array [
 ]
 `;
 
+exports[`autoLogOperation logs correctly operation failure 3`] = `
+Array [
+  Array [
+    Object {
+      "message": "foo",
+      "status": 500,
+    },
+  ],
+]
+`;
+
+exports[`autoLogOperation logs correctly operation failure in try catch block 1`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+    },
+  ],
+]
+`;
+
+exports[`autoLogOperation logs correctly operation failure in try catch block 2`] = `
+Array [
+  Array [
+    Object {
+      "category": "CUSTOM_ERROR",
+      "message": "some error message",
+      "operation": "operationFunction",
+      "result": "failure",
+    },
+  ],
+]
+`;
+
+exports[`autoLogOperation logs correctly operation failure in try catch block 3`] = `
+Array [
+  Array [
+    Object {
+      "message": "some error message",
+    },
+  ],
+]
+`;
+
 exports[`autoLogOperation logs correctly operationFunction name as .operation 1`] = `
 Array [
   Array [
