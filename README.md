@@ -65,12 +65,12 @@ const operationFunction = async (meta, req, res, next) => {
 };
 export autoLogOperation(operationFunction);
 
-/* ------------------- */
+
 app.use(someMiddleware)
 ```
 
 ```js
-// log operation and adhoc actions
+// log operation and adhoc actions, autoLog(someFunction) is recommended
 const event = eventLogger(meta);
 
 try {
