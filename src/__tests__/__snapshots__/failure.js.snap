@@ -154,8 +154,9 @@ Object {
 }
 `;
 
-exports[`failureLogger mute fields of LOGGER_MUTE_FIELDS including .stack in ExtendedError 1`] = `
+exports[`failureLogger mute non-reserved fields of LOGGER_MUTE_FIELDS including .stack in ExtendedError 1`] = `
 Object {
+  "action": "SOME_ACTION",
   "category": "CUSTOM_ERROR",
   "name": "ExtendedError",
   "result": "failure",
@@ -163,7 +164,7 @@ Object {
 }
 `;
 
-exports[`failureLogger mute fields of LOGGER_MUTE_FIELDS including .stack in fetch response error 1`] = `
+exports[`failureLogger mute non-reserved fields of LOGGER_MUTE_FIELDS including .stack in fetch response error 1`] = `
 Object {
   "category": "FETCH_RESPONSE_ERROR",
   "contentType": "application/json; charset=utf-8",
@@ -175,15 +176,17 @@ Object {
 }
 `;
 
-exports[`failureLogger mute fields of LOGGER_MUTE_FIELDS including .stack in nError 1`] = `
+exports[`failureLogger mute non-reserved fields of LOGGER_MUTE_FIELDS including .stack in nError 1`] = `
 Object {
+  "action": "SOME_ACTION",
   "category": "CUSTOM_ERROR",
   "result": "failure",
 }
 `;
 
-exports[`failureLogger mute fields of LOGGER_MUTE_FIELDS including .stack in plain object 1`] = `
+exports[`failureLogger mute non-reserved fields of LOGGER_MUTE_FIELDS including .stack in plain object 1`] = `
 Object {
+  "action": "SOME_ACTION",
   "category": "CUSTOM_ERROR",
   "result": "failure",
 }
