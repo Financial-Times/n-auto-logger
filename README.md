@@ -28,6 +28,8 @@ auto log (api) function calls with a single line of code, based on [n-logger](ht
 import { 
   autoLog, 
   autoLogService, 
+  autoLogOperation,
+  autoLogController,
   loggerEvent,
 } from '@financial-times/n-auto-logger';
 ```
@@ -41,6 +43,30 @@ const result = autoLog(someFunction)(args: Object, meta?: Object);
 ```js
 // auto log multiple functions wrapped in an object
 const APIService = autoLogService{ methodA, methodB, methodC };
+```
+
+```js
+// auto log success/failure express middleware/controller as an operation function 
+// function name would be logged as `operation`, and available in meta
+const operationFunction = (meta, req, res, next) => {};
+export autoLogOperation(operationFunction);
+```
+
+```js
+// auto log multiple operation functions wrapped in an object as controller
+const someController = autoLogController({ operationFunctionA, operationFuncitonB });
+```
+
+```js
+// log both operation and actions automatically
+const operationFunction = async (meta, req, res, next) => {
+  const data = await APIService.methodA(params, meta); // from autoLogService
+  next();
+};
+export autoLogOperation(operationFunction);
+
+
+app.use(someMiddleware)
 ```
 
 ```js
