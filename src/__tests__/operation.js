@@ -35,66 +35,30 @@ describe('autoLogOperation', () => {
 			expect(res.statusCode).toBe(200);
 			expect(res.body).toEqual({ operation: 'operationFunction' });
 		});
-	});
 
-	describe('invokes operation function as middleware correctly', () => {
-		const middlewareFunctionsStub = {
-			req: jest.fn(),
-			res: jest.fn(),
-			next: jest.fn(),
-		};
-
-		it('as non-async function', () => {
-			const operationFunction = (meta, req, res, next) => {
-				req.a = 'a';
-				res.b = 'b';
-				next('e');
-			};
-			const { req, res, next } = middlewareFunctionsStub;
-			autoLogOperation(operationFunction)(req, res, next);
-			expect(req.a).toBe('a');
-			expect(res.b).toBe('b');
-			expect(next.mock.calls).toMatchSnapshot();
-		});
-
-		it('as async function', async () => {
-			const callFunction = jest.fn(() => Promise.resolve('foo'));
+		it('for async function throwing error', async () => {
 			const operationFunction = async (meta, req, res, next) => {
-				const data = await callFunction();
-				res.data = data;
-				next();
-			};
-			const { req, res, next } = middlewareFunctionsStub;
-			await autoLogOperation(operationFunction)(req, res, next);
-			expect(res.data).toBe('foo');
-		});
-
-		it('next the error for error handling', async () => {
-			const next = jest.fn();
-			const callFunction = jest.fn(() => {
-				const e = {
-					status: 500,
-					message: 'foo',
-				};
+				const e = { status: 404, message: 'Not Found' };
+				next(e);
 				throw e;
-			});
-			const operationFunction = async meta => {
-				await autoLog(callFunction)(null, meta);
 			};
-			await autoLogOperation(operationFunction)(null, null, next);
-			expect(next.mock.calls).toMatchSnapshot();
+			/* eslint-disable no-unused-vars */
+			const errorHanlder = (err, req, res, next) => {
+				res.status(err.status).send(err);
+			};
+			/* eslint-enable no-unused-vars */
+			const middleware = autoLogOperation(operationFunction);
+			const app = express();
+			app.use('/', middleware, errorHanlder);
+			const res = await request(app).get('/');
+			expect(res.statusCode).toBe(404);
+			expect(res.body.message).toBe('Not Found');
 		});
 	});
 
 	describe('logs correctly', () => {
-		it('operationFunction name as .operation', () => {
-			const operationFunction = () => {};
-			autoLogOperation(operationFunction)();
-			expect(logger.info.mock.calls).toMatchSnapshot();
-		});
-
-		it('sub actions with autoLog', async () => {
-			const callFunction = jest.fn(() => Promise.resolve('foo'));
+		it('operationFunction name and sub actions with autoLog', async () => {
+			const callFunction = () => Promise.resolve('foo');
 			const operationFunction = async meta => {
 				await autoLog(callFunction)(null, meta);
 			};
@@ -103,29 +67,15 @@ describe('autoLogOperation', () => {
 		});
 
 		it('operation failure', async () => {
-			const next = jest.fn();
-			const callFunction = jest.fn(() => {
-				const e = {
-					status: 500,
-					message: 'foo',
-				};
+			const callFunction = () => {
+				const e = { status: 500, message: 'foo' };
 				throw e;
-			});
-			const operationFunction = async meta => {
-				await autoLog(callFunction)(null, meta);
 			};
-			await autoLogOperation(operationFunction)(null, null, next);
-			expect(logger.info.mock.calls).toMatchSnapshot();
-			expect(logger.error.mock.calls).toMatchSnapshot();
-			expect(next.mock.calls).toMatchSnapshot();
-		});
-
-		it('operation failure in try catch block', async () => {
-			const operationFunction = async () => {
+			const operationFunction = async (meta, req, res, next) => {
 				try {
-					const e = { message: 'some error message' };
-					throw e;
+					await autoLog(callFunction)(null, meta);
 				} catch (e) {
+					next(e);
 					throw e;
 				}
 			};

@@ -28,25 +28,6 @@ Object {
 }
 `;
 
-exports[`autoLogOperation invokes operation function as middleware correctly as non-async function 1`] = `
-Array [
-  Array [
-    "e",
-  ],
-]
-`;
-
-exports[`autoLogOperation invokes operation function as middleware correctly next the error for error handling 1`] = `
-Array [
-  Array [
-    Object {
-      "message": "foo",
-      "status": 500,
-    },
-  ],
-]
-`;
-
 exports[`autoLogOperation logs correctly operation failure 1`] = `
 Array [
   Array [
@@ -56,7 +37,7 @@ Array [
   ],
   Array [
     Object {
-      "action": "mockConstructor",
+      "action": "callFunction",
       "operation": "operationFunction",
     },
   ],
@@ -67,7 +48,7 @@ exports[`autoLogOperation logs correctly operation failure 2`] = `
 Array [
   Array [
     Object {
-      "action": "mockConstructor",
+      "action": "callFunction",
       "category": "CUSTOM_ERROR",
       "message": "foo",
       "operation": "operationFunction",
@@ -98,44 +79,30 @@ Array [
 ]
 `;
 
-exports[`autoLogOperation logs correctly operation failure in try catch block 1`] = `
+exports[`autoLogOperation logs correctly operationFunction name and sub actions with autoLog 1`] = `
 Array [
   Array [
     Object {
       "operation": "operationFunction",
     },
   ],
-]
-`;
-
-exports[`autoLogOperation logs correctly operation failure in try catch block 2`] = `
-Array [
   Array [
     Object {
-      "category": "CUSTOM_ERROR",
-      "message": "some error message",
+      "action": "callFunction",
       "operation": "operationFunction",
-      "result": "failure",
     },
   ],
-]
-`;
-
-exports[`autoLogOperation logs correctly operation failure in try catch block 3`] = `
-Array [
   Array [
     Object {
-      "message": "some error message",
+      "action": "callFunction",
+      "operation": "operationFunction",
+      "result": "success",
     },
   ],
-]
-`;
-
-exports[`autoLogOperation logs correctly operationFunction name as .operation 1`] = `
-Array [
   Array [
     Object {
       "operation": "operationFunction",
+      "result": "success",
     },
   ],
 ]
@@ -161,35 +128,6 @@ Array [
       "operation": "operationFunction",
       "result": "success",
       "transactionId": "xxxx-xxxx",
-    },
-  ],
-]
-`;
-
-exports[`autoLogOperation logs correctly sub actions with autoLog 1`] = `
-Array [
-  Array [
-    Object {
-      "operation": "operationFunction",
-    },
-  ],
-  Array [
-    Object {
-      "action": "mockConstructor",
-      "operation": "operationFunction",
-    },
-  ],
-  Array [
-    Object {
-      "action": "mockConstructor",
-      "operation": "operationFunction",
-      "result": "success",
-    },
-  ],
-  Array [
-    Object {
-      "operation": "operationFunction",
-      "result": "success",
     },
   ],
 ]

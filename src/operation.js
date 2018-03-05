@@ -14,7 +14,6 @@ export const autoLogOperation = operationFunction => async (req, res, next) => {
 		event.success();
 	} catch (e) {
 		event.failure(e);
-		next(e);
 	}
 };
 
