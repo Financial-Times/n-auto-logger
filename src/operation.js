@@ -1,6 +1,7 @@
 import loggerEvent from './event';
+import { isPromise } from './utils';
 
-export const autoLogOperation = operationFunction => async (req, res, next) => {
+export const autoLogOperation = operationFunction => (req, res, next) => {
 	const meta = {
 		operation: operationFunction.name,
 		...(req && Object.prototype.hasOwnProperty.call(req, 'meta')
@@ -10,10 +11,13 @@ export const autoLogOperation = operationFunction => async (req, res, next) => {
 	const event = loggerEvent(meta);
 
 	try {
-		await operationFunction(meta, req, res, next);
-		event.success();
+		const call = operationFunction(meta, req, res, next);
+		if (isPromise(call)) {
+			return call.then(() => event.success()).catch(e => event.failure(e));
+		}
+		return event.success();
 	} catch (e) {
-		event.failure(e);
+		return event.failure(e);
 	}
 };
 

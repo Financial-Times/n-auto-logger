@@ -36,6 +36,25 @@ describe('autoLogOperation', () => {
 			expect(res.body).toEqual({ operation: 'operationFunction' });
 		});
 
+		it('for non-async function throwing error', async () => {
+			const operationFunction = (meta, req, res, next) => {
+				const e = { status: 404, message: 'Not Found' };
+				next(e);
+				throw e;
+			};
+			/* eslint-disable no-unused-vars */
+			const errorHanlder = (err, req, res, next) => {
+				res.status(err.status).send(err);
+			};
+			/* eslint-enable no-unused-vars */
+			const middleware = autoLogOperation(operationFunction);
+			const app = express();
+			app.use('/', middleware, errorHanlder);
+			const res = await request(app).get('/');
+			expect(res.statusCode).toBe(404);
+			expect(res.body.message).toBe('Not Found');
+		});
+
 		it('for async function throwing error', async () => {
 			const operationFunction = async (meta, req, res, next) => {
 				const e = { status: 404, message: 'Not Found' };
@@ -57,7 +76,7 @@ describe('autoLogOperation', () => {
 	});
 
 	describe('logs correctly', () => {
-		it('operationFunction name and sub actions with autoLog', async () => {
+		it('operatoin success with operationFunction name and sub actions', async () => {
 			const callFunction = () => Promise.resolve('foo');
 			const operationFunction = async meta => {
 				await autoLog(callFunction)(null, meta);
@@ -66,7 +85,27 @@ describe('autoLogOperation', () => {
 			expect(logger.info.mock.calls).toMatchSnapshot();
 		});
 
-		it('operation failure', async () => {
+		it('operation failure of non-async function', () => {
+			const callFunction = () => {
+				const e = { status: 500, message: 'foo' };
+				throw e;
+			};
+			const operationFunction = (meta, req, res, next) => {
+				try {
+					autoLog(callFunction)(null, meta);
+				} catch (e) {
+					next(e);
+					throw e;
+				}
+			};
+			const next = jest.fn();
+			autoLogOperation(operationFunction)(null, null, next);
+			expect(logger.info.mock.calls).toMatchSnapshot();
+			expect(logger.error.mock.calls).toMatchSnapshot();
+			expect(next.mock.calls).toMatchSnapshot();
+		});
+
+		it('operation failure of async function', async () => {
 			const callFunction = () => {
 				const e = { status: 500, message: 'foo' };
 				throw e;
