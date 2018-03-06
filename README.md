@@ -42,7 +42,7 @@ const result = autoLogAction(someFunction)(args: Object, meta?: Object);
 
 ```js
 // auto log multiple functions wrapped in an object
-const APIService = autoLogActions{ methodA, methodB, methodC };
+const APIService = autoLogActions({ methodA, methodB, methodC });
 ```
 
 ```js
@@ -58,13 +58,12 @@ const someController = autoLogOps({ operationFunctionA, operationFuncitonB });
 ```
 
 ```js
-// log both operation and actions automatically
+// log both operation and actions together
 const operationFunction = async (meta, req, res, next) => {
   const data = await APIService.methodA(params, meta); // from autoLogActions
   next();
 };
 export autoLogOp(operationFunction);
-
 
 app.use(someMiddleware)
 ```
