@@ -76,73 +76,86 @@ describe('autoLogOp', () => {
 	});
 
 	describe('logs correctly', () => {
-		it('operatoin success with operationFunction name and sub actions', async () => {
-			const callFunction = () => Promise.resolve('foo');
-			const operationFunction = async meta => {
-				await autoLogAction(callFunction)(null, meta);
-			};
-			await autoLogOp(operationFunction)();
-			expect(logger.info.mock.calls).toMatchSnapshot();
-		});
-
-		it('operation failure of non-async function', () => {
-			const callFunction = () => {
-				const e = { status: 500, message: 'foo' };
-				throw e;
-			};
-			const operationFunction = (meta, req, res, next) => {
-				try {
-					autoLogAction(callFunction)(null, meta);
-				} catch (e) {
-					next(e);
-					throw e;
-				}
-			};
-			const next = jest.fn();
-			autoLogOp(operationFunction)(null, null, next);
-			expect(logger.info.mock.calls).toMatchSnapshot();
-			expect(logger.error.mock.calls).toMatchSnapshot();
-			expect(next.mock.calls).toMatchSnapshot();
-		});
-
-		it('operation failure of async function', async () => {
-			const callFunction = () => {
-				const e = { status: 500, message: 'foo' };
-				throw e;
-			};
-			const operationFunction = async (meta, req, res, next) => {
-				try {
+		describe('operation success of', () => {
+			it('async function with async sub actions', async () => {
+				const callFunction = () => Promise.resolve('foo');
+				const operationFunction = async meta => {
 					await autoLogAction(callFunction)(null, meta);
-				} catch (e) {
-					next(e);
-					throw e;
-				}
-			};
-			const next = jest.fn();
-			await autoLogOp(operationFunction)(null, null, next);
-			expect(logger.info.mock.calls).toMatchSnapshot();
-			expect(logger.error.mock.calls).toMatchSnapshot();
-			expect(next.mock.calls).toMatchSnapshot();
+				};
+				await autoLogOp(operationFunction)();
+				expect(logger.info.mock.calls).toMatchSnapshot();
+			});
+
+			it('non-async function with non async sub actions', async () => {
+				const callFunction = () => {};
+				const operationFunction = meta => {
+					autoLogAction(callFunction)(null, meta);
+				};
+				await autoLogOp(operationFunction)();
+				expect(logger.info.mock.calls).toMatchSnapshot();
+			});
+
+			it('req.meta from previous middlewares', async () => {
+				const metaMiddleware = (req, res, next) => {
+					req.meta = {
+						...req.meta,
+						transactionId: 'xxxx-xxxx',
+					};
+					next();
+				};
+				const operationFunction = async (meta, req, res) => {
+					res.status(200).send(meta);
+				};
+				const operationMiddleware = autoLogOp(operationFunction);
+				const app = express();
+				app.use('/', metaMiddleware, operationMiddleware);
+				const res = await request(app).get('/');
+				expect(res.statusCode).toBe(200);
+				expect(res.body).toMatchSnapshot();
+				expect(logger.info.mock.calls).toMatchSnapshot();
+			});
 		});
 
-		it('req.meta from previous middlewares', async () => {
-			const metaMiddleware = (req, res, next) => {
-				req.meta = {
-					...req.meta,
-					transactionId: 'xxxx-xxxx',
+		describe('operation failure of', () => {
+			it('non-async function', () => {
+				const callFunction = () => {
+					const e = { status: 500, message: 'foo' };
+					throw e;
 				};
-				next();
-			};
-			const operationFunction = async (meta, req, res) => {
-				res.status(200).send(meta);
-			};
-			const operationMiddleware = autoLogOp(operationFunction);
-			const app = express();
-			app.use('/', metaMiddleware, operationMiddleware);
-			const res = await request(app).get('/');
-			expect(res.statusCode).toBe(200);
-			expect(res.body).toMatchSnapshot();
-			expect(logger.info.mock.calls).toMatchSnapshot();
+				const operationFunction = (meta, req, res, next) => {
+					try {
+						autoLogAction(callFunction)(null, meta);
+					} catch (e) {
+						next(e);
+						throw e;
+					}
+				};
+				const next = jest.fn();
+				autoLogOp(operationFunction)(null, null, next);
+				expect(logger.info.mock.calls).toMatchSnapshot();
+				expect(logger.error.mock.calls).toMatchSnapshot();
+				expect(next.mock.calls).toMatchSnapshot();
+			});
+
+			it('async function', async () => {
+				const callFunction = () => {
+					const e = { status: 500, message: 'foo' };
+					throw e;
+				};
+				const operationFunction = async (meta, req, res, next) => {
+					try {
+						await autoLogAction(callFunction)(null, meta);
+					} catch (e) {
+						next(e);
+						throw e;
+					}
+				};
+				const next = jest.fn();
+				await autoLogOp(operationFunction)(null, null, next);
+				expect(logger.info.mock.calls).toMatchSnapshot();
+				expect(logger.error.mock.calls).toMatchSnapshot();
+				expect(next.mock.calls).toMatchSnapshot();
+			});
 		});
 	});
 });

@@ -1,33 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`autoLogOps decorate each method correctly 1`] = `
-Object {
-  "operation": "operationFunctionA",
-}
-`;
-
-exports[`autoLogOps decorate each method correctly 2`] = `
-Array [
-  Array [
-    Object {
-      "operation": "operationFunctionA",
-    },
-  ],
-  Array [
-    Object {
-      "operation": "operationFunctionA",
-      "result": "success",
-    },
-  ],
-]
-`;
-
-exports[`autoLogOps decorate each method correctly 3`] = `
-Object {
-  "operation": "operationFunctionB",
-}
-`;
-
 exports[`autoLogOp logs correctly operation failure of async function 1`] = `
 Array [
   Array [
@@ -130,7 +102,7 @@ Array [
 ]
 `;
 
-exports[`autoLogOp logs correctly operatoin success with operationFunction name and sub actions 1`] = `
+exports[`autoLogOp logs correctly operation success of async function with async sub actions 1`] = `
 Array [
   Array [
     Object {
@@ -159,14 +131,43 @@ Array [
 ]
 `;
 
-exports[`autoLogOp logs correctly req.meta from previous middlewares 1`] = `
+exports[`autoLogOp logs correctly operation success of non-async function with non async sub actions 1`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+    },
+  ],
+  Array [
+    Object {
+      "action": "callFunction",
+      "operation": "operationFunction",
+    },
+  ],
+  Array [
+    Object {
+      "action": "callFunction",
+      "operation": "operationFunction",
+      "result": "success",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunction",
+      "result": "success",
+    },
+  ],
+]
+`;
+
+exports[`autoLogOp logs correctly operation success of req.meta from previous middlewares 1`] = `
 Object {
   "operation": "operationFunction",
   "transactionId": "xxxx-xxxx",
 }
 `;
 
-exports[`autoLogOp logs correctly req.meta from previous middlewares 2`] = `
+exports[`autoLogOp logs correctly operation success of req.meta from previous middlewares 2`] = `
 Array [
   Array [
     Object {
@@ -182,4 +183,32 @@ Array [
     },
   ],
 ]
+`;
+
+exports[`autoLogOps decorate each method correctly 1`] = `
+Object {
+  "operation": "operationFunctionA",
+}
+`;
+
+exports[`autoLogOps decorate each method correctly 2`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunctionA",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionA",
+      "result": "success",
+    },
+  ],
+]
+`;
+
+exports[`autoLogOps decorate each method correctly 3`] = `
+Object {
+  "operation": "operationFunctionB",
+}
 `;
