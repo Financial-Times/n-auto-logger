@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest';
 
-import logger, { autoLog } from '../index';
+import logger, { autoLogAction } from '../index';
 import { autoLogOperation, autoLogController } from '../operation';
 
 jest.mock('@financial-times/n-logger');
@@ -79,7 +79,7 @@ describe('autoLogOperation', () => {
 		it('operatoin success with operationFunction name and sub actions', async () => {
 			const callFunction = () => Promise.resolve('foo');
 			const operationFunction = async meta => {
-				await autoLog(callFunction)(null, meta);
+				await autoLogAction(callFunction)(null, meta);
 			};
 			await autoLogOperation(operationFunction)();
 			expect(logger.info.mock.calls).toMatchSnapshot();
@@ -92,7 +92,7 @@ describe('autoLogOperation', () => {
 			};
 			const operationFunction = (meta, req, res, next) => {
 				try {
-					autoLog(callFunction)(null, meta);
+					autoLogAction(callFunction)(null, meta);
 				} catch (e) {
 					next(e);
 					throw e;
@@ -112,7 +112,7 @@ describe('autoLogOperation', () => {
 			};
 			const operationFunction = async (meta, req, res, next) => {
 				try {
-					await autoLog(callFunction)(null, meta);
+					await autoLogAction(callFunction)(null, meta);
 				} catch (e) {
 					next(e);
 					throw e;

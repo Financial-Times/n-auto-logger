@@ -1,7 +1,11 @@
 import loggerEvent from './event';
 import { isPromise } from './utils';
 
-export const autoLog = callFunction => (paramsOrArgs, meta, ...excessive) => {
+export const autoLogAction = callFunction => (
+	paramsOrArgs,
+	meta,
+	...excessive
+) => {
 	if (
 		excessive.length ||
 		(paramsOrArgs !== undefined && typeof paramsOrArgs !== 'object') ||
@@ -46,7 +50,7 @@ export const autoLogService = helperStandardService => {
 	const enhanced = {};
 	Object.keys(helperStandardService).forEach(methodName => {
 		enhanced[methodName] = (paramsOrArgs, meta) =>
-			autoLog(helperStandardService[methodName])(paramsOrArgs, meta);
+			autoLogAction(helperStandardService[methodName])(paramsOrArgs, meta);
 	});
 	return enhanced;
 };

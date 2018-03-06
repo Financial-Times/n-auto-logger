@@ -26,7 +26,7 @@ auto log function calls in operation/action model with a single line of code, ba
 ## quickstart
 ```js
 import { 
-  autoLog, 
+  autoLogAction, 
   autoLogService, 
   autoLogOperation,
   autoLogController,
@@ -36,7 +36,7 @@ import {
 
 ```js
 // auto log a function of its start, success/failure state with function name as `action`
-const result = autoLog(someFunction)(args: Object, meta?: Object);
+const result = autoLogAction(someFunction)(args: Object, meta?: Object);
 ```
 > more details on [function signature format](#function-signature-format)
 
@@ -70,7 +70,7 @@ app.use(someMiddleware)
 ```
 
 ```js
-// log operation and adhoc actions, autoLog(someFunction) is recommended
+// log operation and adhoc actions, autoLogAction(someFunction) is recommended
 const event = loggerEvent(meta);
 
 try {
@@ -100,8 +100,8 @@ npm install @financial-times/n-auto-logger
 ```js
 // you can auto log the call with meta, even if it is not mandatory to the function
 const someFunction = ({ argsA, argsB }) => {};
-autoLog(someFunction)(args, meta);
-autoLog(someFunction)(argsAndMeta);
+autoLogAction(someFunction)(args, meta);
+autoLogAction(someFunction)(argsAndMeta);
 
 // if you need to pass certain meta in the function call
 const someFunction = ({ paramsA, paramsB }, { metaA, metaB }) => {};
@@ -113,7 +113,7 @@ const someFunction = (mandatory: Object, optional?: Object ={}) => {
 };
 ```
 
-> The package would throw Errors if function signature is incorrect for `autoLog`.
+> The package would throw Errors if function signature is incorrect for `autoLogAction`.
 
 ### filter user/handler field
 ```js
@@ -136,7 +136,7 @@ const someFunction = (args, { metaA, user }) => {
     throw e;
   }
 }
-autoLog(someFunction)(args, meta);
+autoLogAction(someFunction)(args, meta);
 ````
 ```js
 // .handler field wouldn't be recorded in logger, as it is only useful for error handler

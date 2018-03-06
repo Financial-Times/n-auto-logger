@@ -1,17 +1,17 @@
 import logger from '../index';
-import { autoLog, autoLogService } from '../action';
+import { autoLogAction, autoLogService } from '../action';
 import { RESULTS } from '../constants';
 
 jest.mock('@financial-times/n-logger');
 
-describe('autoLog', () => {
+describe('autoLogAction', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
 
 	it('logs callFunction name as action name', async () => {
 		const callFunction = () => null;
-		autoLog(callFunction)();
+		autoLogAction(callFunction)();
 		expect(logger.info.mock.calls[1][0]).toEqual({
 			action: 'callFunction',
 			result: RESULTS.SUCCESS,
@@ -23,7 +23,7 @@ describe('autoLog', () => {
 			const callFunction = jest.fn(() => Promise.resolve('foo'));
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
-			const result = await autoLog(callFunction)(params, meta);
+			const result = await autoLogAction(callFunction)(params, meta);
 			expect(callFunction.mock.calls).toMatchSnapshot();
 			const expectedResult = await callFunction(params, meta);
 			expect(result).toBe(expectedResult);
@@ -33,7 +33,7 @@ describe('autoLog', () => {
 			const callFunction = () => Promise.resolve('foo');
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
-			await autoLog(callFunction)(params, meta);
+			await autoLogAction(callFunction)(params, meta);
 			expect(logger.info.mock.calls).toMatchSnapshot();
 		});
 
@@ -45,7 +45,7 @@ describe('autoLog', () => {
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
 			try {
-				await autoLog(callFunction)(params, meta);
+				await autoLogAction(callFunction)(params, meta);
 			} catch (e) {
 				expect(e).toBe(errorInstance);
 				expect(logger.error.mock.calls).toMatchSnapshot();
@@ -58,7 +58,7 @@ describe('autoLog', () => {
 			const callFunction = jest.fn(() => 'foo');
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
-			const result = autoLog(callFunction)(params, meta);
+			const result = autoLogAction(callFunction)(params, meta);
 			expect(callFunction.mock.calls).toMatchSnapshot();
 			const expectedResult = callFunction(params, meta);
 			expect(result).toBe(expectedResult);
@@ -68,7 +68,7 @@ describe('autoLog', () => {
 			const callFunction = () => 'foo';
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
-			autoLog(callFunction)(params, meta);
+			autoLogAction(callFunction)(params, meta);
 			expect(logger.info.mock.calls).toMatchSnapshot();
 		});
 
@@ -80,7 +80,7 @@ describe('autoLog', () => {
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
 			try {
-				autoLog(callFunction)(params, meta);
+				autoLogAction(callFunction)(params, meta);
 			} catch (e) {
 				expect(e).toBe(errorInstance);
 				expect(logger.error.mock.calls).toHaveLength(1);
@@ -92,7 +92,7 @@ describe('autoLog', () => {
 	describe('args format', () => {
 		it('should support lazy callFunction signature in one object or no meta', async () => {
 			const callFunction = () => null;
-			const enhanced = args => autoLog(callFunction)(args);
+			const enhanced = args => autoLogAction(callFunction)(args);
 			const params = { a: 'foo' };
 			const meta = { b: 'bar' };
 			const args = { ...params, ...meta };
@@ -116,7 +116,7 @@ describe('autoLog', () => {
 			const params = { a: 'test' };
 			const meta = { b: 'k' };
 			const random = 'test';
-			const execution = () => autoLog(callFunction)(params, meta, random);
+			const execution = () => autoLogAction(callFunction)(params, meta, random);
 			expect(execution).toThrowErrorMatchingSnapshot();
 		});
 
@@ -124,7 +124,7 @@ describe('autoLog', () => {
 			const callFunction = () => null;
 			const params = 'test';
 			const meta = { b: 'k' };
-			const execution = () => autoLog(callFunction)(params, meta);
+			const execution = () => autoLogAction(callFunction)(params, meta);
 			expect(execution).toThrowErrorMatchingSnapshot();
 		});
 
@@ -132,7 +132,7 @@ describe('autoLog', () => {
 			const callFunction = () => null;
 			const params = { a: 'foo' };
 			const meta = 'bar';
-			const execution = () => autoLog(callFunction)(params, meta);
+			const execution = () => autoLogAction(callFunction)(params, meta);
 			expect(execution).toThrowErrorMatchingSnapshot();
 		});
 	});

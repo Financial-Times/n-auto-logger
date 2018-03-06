@@ -57,7 +57,7 @@ try {
     // ...
     const dataA = await APIService.methodA(paramsA, meta);
     const dataB = await APIService.methodB(paramsB, meta);
-    const dataC = autoLog(someFunctionForDataAB)({ dataA, dataB }, meta);
+    const dataC = autoLogAction(someFunctionForDataAB)({ dataA, dataB }, meta);
     if (dataC && dataC !== 'code block not in function') {
         event.action('someCheckAction').failure();
         throw someException;

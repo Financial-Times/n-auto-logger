@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`autoLog args format should log error if input arg meta is specified but not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
+exports[`autoLogAction args format should log error if input arg meta is specified but not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
 
-exports[`autoLog args format should log error if input arg params is not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
+exports[`autoLogAction args format should log error if input arg params is not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
 
-exports[`autoLog args format should throw error if there're more than 2 args 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
+exports[`autoLogAction args format should throw error if there're more than 2 args 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
 
-exports[`autoLog async function should invoke callFunction correctly 1`] = `
+exports[`autoLogAction async function should invoke callFunction correctly 1`] = `
 Array [
   Array [
     Object {
@@ -19,7 +19,7 @@ Array [
 ]
 `;
 
-exports[`autoLog async function should log callFunction failure correctly and throw the original exception 1`] = `
+exports[`autoLogAction async function should log callFunction failure correctly and throw the original exception 1`] = `
 Array [
   Array [
     Object {
@@ -34,7 +34,7 @@ Array [
 ]
 `;
 
-exports[`autoLog async function should log callFunction success correctly 1`] = `
+exports[`autoLogAction async function should log callFunction success correctly 1`] = `
 Array [
   Array [
     Object {
@@ -54,7 +54,7 @@ Array [
 ]
 `;
 
-exports[`autoLog non-async function should invoke callFunction correctly 1`] = `
+exports[`autoLogAction non-async function should invoke callFunction correctly 1`] = `
 Array [
   Array [
     Object {
@@ -67,7 +67,7 @@ Array [
 ]
 `;
 
-exports[`autoLog non-async function should log callFunction failure correctly and throw the original exception 1`] = `
+exports[`autoLogAction non-async function should log callFunction failure correctly and throw the original exception 1`] = `
 Array [
   Array [
     Object {
@@ -82,7 +82,7 @@ Array [
 ]
 `;
 
-exports[`autoLog non-async function should log callFunction success correctly 1`] = `
+exports[`autoLogAction non-async function should log callFunction success correctly 1`] = `
 Array [
   Array [
     Object {
