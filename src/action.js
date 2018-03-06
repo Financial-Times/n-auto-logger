@@ -46,7 +46,7 @@ export const autoLogAction = callFunction => (
 	}
 };
 
-export const autoLogService = helperStandardService => {
+export const autoLogActions = helperStandardService => {
 	const enhanced = {};
 	Object.keys(helperStandardService).forEach(methodName => {
 		enhanced[methodName] = (paramsOrArgs, meta) =>

@@ -47,7 +47,7 @@ try {
 ## to using n-auto-logger
 ```js
 /* some-api-service.js */
-export default autoLogService({ methodA, methodB });
+export default autoLogActions({ methodA, methodB });
 
 /* some-controller-or-middleware.js */
 const meta = { transactionId, userId, operation };

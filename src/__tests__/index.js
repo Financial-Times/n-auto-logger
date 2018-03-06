@@ -1,6 +1,6 @@
 import logger, {
 	autoLogAction,
-	autoLogService,
+	autoLogActions,
 	autoLogOperation,
 	autoLogController,
 	loggerEvent,
@@ -15,8 +15,8 @@ describe('n-auto-logger exports', () => {
 		expect(typeof autoLogAction).toBe('function');
 	});
 
-	it('autoLogService', () => {
-		expect(typeof autoLogService).toBe('function');
+	it('autoLogActions', () => {
+		expect(typeof autoLogActions).toBe('function');
 	});
 
 	it('autoLogOperation', () => {

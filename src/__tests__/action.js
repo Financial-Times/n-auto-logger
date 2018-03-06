@@ -1,5 +1,5 @@
 import logger from '../index';
-import { autoLogAction, autoLogService } from '../action';
+import { autoLogAction, autoLogActions } from '../action';
 import { RESULTS } from '../constants';
 
 jest.mock('@financial-times/n-logger');
@@ -138,7 +138,7 @@ describe('autoLogAction', () => {
 	});
 });
 
-describe('autoLogService', () => {
+describe('autoLogActions', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
@@ -146,7 +146,7 @@ describe('autoLogService', () => {
 	it('decorate each method correctly', async () => {
 		const callFunctionA = jest.fn();
 		const callFunctionB = jest.fn();
-		const enhancedService = autoLogService({
+		const enhancedService = autoLogActions({
 			callFunctionA,
 			callFunctionB,
 		});

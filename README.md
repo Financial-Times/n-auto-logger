@@ -27,7 +27,7 @@ auto log function calls in operation/action model with a single line of code, ba
 ```js
 import { 
   autoLogAction, 
-  autoLogService, 
+  autoLogActions, 
   autoLogOperation,
   autoLogController,
   loggerEvent,
@@ -42,7 +42,7 @@ const result = autoLogAction(someFunction)(args: Object, meta?: Object);
 
 ```js
 // auto log multiple functions wrapped in an object
-const APIService = autoLogService{ methodA, methodB, methodC };
+const APIService = autoLogActions{ methodA, methodB, methodC };
 ```
 
 ```js
@@ -60,7 +60,7 @@ const someController = autoLogController({ operationFunctionA, operationFunciton
 ```js
 // log both operation and actions automatically
 const operationFunction = async (meta, req, res, next) => {
-  const data = await APIService.methodA(params, meta); // from autoLogService
+  const data = await APIService.methodA(params, meta); // from autoLogActions
   next();
 };
 export autoLogOperation(operationFunction);
