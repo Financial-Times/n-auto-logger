@@ -2,7 +2,7 @@ import express from 'express';
 import request from 'supertest';
 
 import logger, { autoLogAction } from '../index';
-import { autoLogOperation, autoLogController } from '../operation';
+import { autoLogOperation, autoLogOps } from '../operation';
 
 jest.mock('@financial-times/n-logger');
 
@@ -147,7 +147,7 @@ describe('autoLogOperation', () => {
 	});
 });
 
-describe('autoLogController', () => {
+describe('autoLogOps', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
@@ -159,7 +159,7 @@ describe('autoLogController', () => {
 		const operationFunctionB = (meta, req, res) => {
 			res.status(200).send(meta);
 		};
-		const enhancedController = autoLogController({
+		const enhancedController = autoLogOps({
 			operationFunctionA,
 			operationFunctionB,
 		});

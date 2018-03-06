@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`autoLogController decorate each method correctly 1`] = `
+exports[`autoLogOps decorate each method correctly 1`] = `
 Object {
   "operation": "operationFunctionA",
 }
 `;
 
-exports[`autoLogController decorate each method correctly 2`] = `
+exports[`autoLogOps decorate each method correctly 2`] = `
 Array [
   Array [
     Object {
@@ -22,7 +22,7 @@ Array [
 ]
 `;
 
-exports[`autoLogController decorate each method correctly 3`] = `
+exports[`autoLogOps decorate each method correctly 3`] = `
 Object {
   "operation": "operationFunctionB",
 }

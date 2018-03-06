@@ -2,7 +2,7 @@ import logger, {
 	autoLogAction,
 	autoLogActions,
 	autoLogOperation,
-	autoLogController,
+	autoLogOps,
 	loggerEvent,
 } from '../index';
 
@@ -23,8 +23,8 @@ describe('n-auto-logger exports', () => {
 		expect(typeof autoLogOperation).toBe('function');
 	});
 
-	it('autoLogController', () => {
-		expect(typeof autoLogController).toBe('function');
+	it('autoLogOps', () => {
+		expect(typeof autoLogOps).toBe('function');
 	});
 
 	it('loggerEvent', () => {

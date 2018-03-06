@@ -29,7 +29,7 @@ import {
   autoLogAction, 
   autoLogActions, 
   autoLogOperation,
-  autoLogController,
+  autoLogOps,
   loggerEvent,
 } from '@financial-times/n-auto-logger';
 ```
@@ -54,7 +54,7 @@ export autoLogOperation(operationFunction);
 
 ```js
 // auto log multiple operation functions wrapped in an object as controller
-const someController = autoLogController({ operationFunctionA, operationFuncitonB });
+const someController = autoLogOps({ operationFunctionA, operationFuncitonB });
 ```
 
 ```js

@@ -21,7 +21,7 @@ export const autoLogOperation = operationFunction => (req, res, next) => {
 	}
 };
 
-export const autoLogController = operationFunctionBundle => {
+export const autoLogOps = operationFunctionBundle => {
 	const enhanced = {};
 	Object.keys(operationFunctionBundle).forEach(methodName => {
 		enhanced[methodName] = autoLogOperation(
