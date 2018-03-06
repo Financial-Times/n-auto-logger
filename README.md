@@ -10,7 +10,8 @@ auto log function calls in operation/action model with a single line of code, ba
 - [quickstart](#quickstart)
 - [install](#install)
 - [usage](#usage)
-   * [function signature format](#function-signature-format)
+   * [action function signature](#action-function-signature)
+   * [operation function error handling](#operation-function-error-handling)
    * [filter user/handler field](#filter-userhandler-field)
    * [reserved filed override](#reserved-field-override)
    * [test stub](#test-stub)
@@ -38,7 +39,7 @@ import {
 // auto log a function of its start, success/failure state with function name as `action`
 const result = autoLogAction(someFunction)(args: Object, meta?: Object);
 ```
-> more details on [function signature format](#function-signature-format)
+> more details on [action function signature](#action-function-signature)
 
 ```js
 // auto log multiple functions wrapped in an object
@@ -48,9 +49,17 @@ const APIService = autoLogActions({ methodA, methodB, methodC });
 ```js
 // auto log success/failure express middleware/controller as an operation function 
 // function name would be logged as `operation`, and available in meta
-const operationFunction = (meta, req, res, next) => {};
+const operationFunction = (meta, req, res, next) => {
+  try {
+    next();
+  } catch(e) {
+    next(e);
+    throw e; // remember to throw in catch block so that failure can be logged correctly
+  }
+};
 export autoLogOp(operationFunction);
 ```
+> more details on [operation function error handling](#operation-function-error-handling)
 
 ```js
 // auto log multiple operation functions wrapped in an object as controller
@@ -93,7 +102,7 @@ npm install @financial-times/n-auto-logger
 
 ## usage
 
-### function signature format
+### action function signature
 
 `n-auto-logger` allows two objects as the args of the autoLogged function so that values can be logged with corresponding key names.
 ```js
@@ -113,6 +122,8 @@ const someFunction = (mandatory: Object, optional?: Object ={}) => {
 ```
 
 > The package would throw Errors if function signature is incorrect for `autoLogAction`.
+
+### operation function error handling
 
 ### filter user/handler field
 ```js
