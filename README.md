@@ -28,7 +28,7 @@ auto log function calls in operation/action model with a single line of code, ba
 import { 
   autoLogAction, 
   autoLogActions, 
-  autoLogOperation,
+  autoLogOp,
   autoLogOps,
   loggerEvent,
 } from '@financial-times/n-auto-logger';
@@ -49,7 +49,7 @@ const APIService = autoLogActions{ methodA, methodB, methodC };
 // auto log success/failure express middleware/controller as an operation function 
 // function name would be logged as `operation`, and available in meta
 const operationFunction = (meta, req, res, next) => {};
-export autoLogOperation(operationFunction);
+export autoLogOp(operationFunction);
 ```
 
 ```js
@@ -63,7 +63,7 @@ const operationFunction = async (meta, req, res, next) => {
   const data = await APIService.methodA(params, meta); // from autoLogActions
   next();
 };
-export autoLogOperation(operationFunction);
+export autoLogOp(operationFunction);
 
 
 app.use(someMiddleware)

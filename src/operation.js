@@ -1,7 +1,7 @@
 import loggerEvent from './event';
 import { isPromise } from './utils';
 
-export const autoLogOperation = operationFunction => (req, res, next) => {
+export const autoLogOp = operationFunction => (req, res, next) => {
 	const meta = {
 		operation: operationFunction.name,
 		...(req && Object.prototype.hasOwnProperty.call(req, 'meta')
@@ -24,9 +24,7 @@ export const autoLogOperation = operationFunction => (req, res, next) => {
 export const autoLogOps = operationFunctionBundle => {
 	const enhanced = {};
 	Object.keys(operationFunctionBundle).forEach(methodName => {
-		enhanced[methodName] = autoLogOperation(
-			operationFunctionBundle[methodName],
-		);
+		enhanced[methodName] = autoLogOp(operationFunctionBundle[methodName]);
 	});
 	return enhanced;
 };

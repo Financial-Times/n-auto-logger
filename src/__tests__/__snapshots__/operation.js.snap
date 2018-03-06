@@ -28,7 +28,7 @@ Object {
 }
 `;
 
-exports[`autoLogOperation logs correctly operation failure of async function 1`] = `
+exports[`autoLogOp logs correctly operation failure of async function 1`] = `
 Array [
   Array [
     Object {
@@ -44,58 +44,7 @@ Array [
 ]
 `;
 
-exports[`autoLogOperation logs correctly operation failure of async function 2`] = `
-Array [
-  Array [
-    Object {
-      "action": "callFunction",
-      "category": "CUSTOM_ERROR",
-      "message": "foo",
-      "operation": "operationFunction",
-      "result": "failure",
-      "status": 500,
-    },
-  ],
-  Array [
-    Object {
-      "category": "CUSTOM_ERROR",
-      "message": "foo",
-      "operation": "operationFunction",
-      "result": "failure",
-      "status": 500,
-    },
-  ],
-]
-`;
-
-exports[`autoLogOperation logs correctly operation failure of async function 3`] = `
-Array [
-  Array [
-    Object {
-      "message": "foo",
-      "status": 500,
-    },
-  ],
-]
-`;
-
-exports[`autoLogOperation logs correctly operation failure of non-async function 1`] = `
-Array [
-  Array [
-    Object {
-      "operation": "operationFunction",
-    },
-  ],
-  Array [
-    Object {
-      "action": "callFunction",
-      "operation": "operationFunction",
-    },
-  ],
-]
-`;
-
-exports[`autoLogOperation logs correctly operation failure of non-async function 2`] = `
+exports[`autoLogOp logs correctly operation failure of async function 2`] = `
 Array [
   Array [
     Object {
@@ -119,7 +68,7 @@ Array [
 ]
 `;
 
-exports[`autoLogOperation logs correctly operation failure of non-async function 3`] = `
+exports[`autoLogOp logs correctly operation failure of async function 3`] = `
 Array [
   Array [
     Object {
@@ -130,7 +79,58 @@ Array [
 ]
 `;
 
-exports[`autoLogOperation logs correctly operatoin success with operationFunction name and sub actions 1`] = `
+exports[`autoLogOp logs correctly operation failure of non-async function 1`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+    },
+  ],
+  Array [
+    Object {
+      "action": "callFunction",
+      "operation": "operationFunction",
+    },
+  ],
+]
+`;
+
+exports[`autoLogOp logs correctly operation failure of non-async function 2`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "category": "CUSTOM_ERROR",
+      "message": "foo",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 500,
+    },
+  ],
+  Array [
+    Object {
+      "category": "CUSTOM_ERROR",
+      "message": "foo",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 500,
+    },
+  ],
+]
+`;
+
+exports[`autoLogOp logs correctly operation failure of non-async function 3`] = `
+Array [
+  Array [
+    Object {
+      "message": "foo",
+      "status": 500,
+    },
+  ],
+]
+`;
+
+exports[`autoLogOp logs correctly operatoin success with operationFunction name and sub actions 1`] = `
 Array [
   Array [
     Object {
@@ -159,14 +159,14 @@ Array [
 ]
 `;
 
-exports[`autoLogOperation logs correctly req.meta from previous middlewares 1`] = `
+exports[`autoLogOp logs correctly req.meta from previous middlewares 1`] = `
 Object {
   "operation": "operationFunction",
   "transactionId": "xxxx-xxxx",
 }
 `;
 
-exports[`autoLogOperation logs correctly req.meta from previous middlewares 2`] = `
+exports[`autoLogOp logs correctly req.meta from previous middlewares 2`] = `
 Array [
   Array [
     Object {
