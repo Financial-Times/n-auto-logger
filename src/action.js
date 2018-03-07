@@ -19,9 +19,9 @@ export const autoLogAction = callFunction => (
 	}
 
 	const event = loggerEvent({
+		...meta,
 		action: callFunction.name,
 		...paramsOrArgs,
-		...meta,
 	});
 
 	try {
