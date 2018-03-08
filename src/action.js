@@ -52,8 +52,13 @@ export const autoLogAction = callFunction => {
 export const autoLogActions = helperStandardService => {
 	const enhanced = {};
 	Object.keys(helperStandardService).forEach(methodName => {
-		enhanced[methodName] = (paramsOrArgs, meta) =>
+		const enhancedMethod = (paramsOrArgs, meta) =>
 			autoLogAction(helperStandardService[methodName])(paramsOrArgs, meta);
+		Object.defineProperty(enhancedMethod, 'name', {
+			value: methodName,
+			configurable: true,
+		});
+		enhanced[methodName] = enhancedMethod;
 	});
 	return enhanced;
 };

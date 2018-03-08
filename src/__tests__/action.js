@@ -166,6 +166,8 @@ describe('autoLogActions', () => {
 		const meta = { operation: 'test' };
 		await enhancedService.callFunctionA(paramsA, meta);
 		await enhancedService.callFunctionB(paramsB, meta);
+		expect(enhancedService.callFunctionA.name).toBe('callFunctionA');
+		expect(enhancedService.callFunctionB.name).toBe('callFunctionB');
 		expect(callFunctionA.mock.calls).toHaveLength(1);
 		expect(callFunctionA.mock.calls[0]).toEqual([paramsA, meta]);
 		expect(callFunctionB.mock.calls).toHaveLength(1);
