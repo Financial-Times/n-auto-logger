@@ -18,6 +18,17 @@ describe('autoLogAction', () => {
 		});
 	});
 
+	it('returns an enhanced function with a configurable .name same as callFunction', async () => {
+		const callFunction = () => null;
+		const enhancedFunction = autoLogAction(callFunction);
+		expect(enhancedFunction.name).toEqual(callFunction.name);
+		Object.defineProperty(enhancedFunction, 'name', {
+			value: 'test',
+			configurable: true,
+		});
+		expect(enhancedFunction.name).toBe('test');
+	});
+
 	describe('async function', () => {
 		it('should invoke callFunction correctly', async () => {
 			const callFunction = jest.fn(() => Promise.resolve('foo'));
