@@ -44,6 +44,7 @@ exports[`autoLogOp logs correctly operation failure of async function 3`] = `
 Array [
   Array [
     Object {
+      "category": "CUSTOM_ERROR",
       "message": "foo",
       "status": 500,
     },
@@ -95,6 +96,7 @@ exports[`autoLogOp logs correctly operation failure of non-async function 3`] = 
 Array [
   Array [
     Object {
+      "category": "CUSTOM_ERROR",
       "message": "foo",
       "status": 500,
     },

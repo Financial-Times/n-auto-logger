@@ -1,8 +1,14 @@
 import express from 'express';
 import request from 'supertest';
+import compose from 'compose-function';
 
 import logger, { autoLogAction } from '../index';
-import { autoLogOp, autoLogOps } from '../operation';
+import {
+	toMiddleware,
+	toMiddlewares,
+	autoLogOp,
+	autoLogOps,
+} from '../operation';
 
 jest.mock('@financial-times/n-logger');
 
@@ -16,7 +22,7 @@ describe('autoLogOp', () => {
 			const operationFunction = (meta, req, res) => {
 				res.status(200).send(meta);
 			};
-			const middleware = autoLogOp(operationFunction);
+			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 			const app = express();
 			app.use('/', middleware);
 			const res = await request(app).get('/');
@@ -28,7 +34,7 @@ describe('autoLogOp', () => {
 			const operationFunction = async (meta, req, res) => {
 				res.status(200).send(meta);
 			};
-			const middleware = autoLogOp(operationFunction);
+			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 			const app = express();
 			app.use('/', middleware);
 			const res = await request(app).get('/');
@@ -47,7 +53,7 @@ describe('autoLogOp', () => {
 				res.status(err.status).send(err);
 			};
 			/* eslint-enable no-unused-vars */
-			const middleware = autoLogOp(operationFunction);
+			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 			const app = express();
 			app.use('/', middleware, errorHanlder);
 			const res = await request(app).get('/');
@@ -66,7 +72,7 @@ describe('autoLogOp', () => {
 				res.status(err.status).send(err);
 			};
 			/* eslint-enable no-unused-vars */
-			const middleware = autoLogOp(operationFunction);
+			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 			const app = express();
 			app.use('/', middleware, errorHanlder);
 			const res = await request(app).get('/');
@@ -82,7 +88,8 @@ describe('autoLogOp', () => {
 				const operationFunction = async meta => {
 					await autoLogAction(callFunction)(null, meta);
 				};
-				await autoLogOp(operationFunction)();
+				const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
+				await middleware();
 				expect(logger.info.mock.calls).toMatchSnapshot();
 			});
 
@@ -91,7 +98,8 @@ describe('autoLogOp', () => {
 				const operationFunction = meta => {
 					autoLogAction(callFunction)(null, meta);
 				};
-				await autoLogOp(operationFunction)();
+				const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
+				await middleware();
 				expect(logger.info.mock.calls).toMatchSnapshot();
 			});
 
@@ -106,9 +114,9 @@ describe('autoLogOp', () => {
 				const operationFunction = async (meta, req, res) => {
 					res.status(200).send(meta);
 				};
-				const operationMiddleware = autoLogOp(operationFunction);
+				const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 				const app = express();
-				app.use('/', metaMiddleware, operationMiddleware);
+				app.use('/', metaMiddleware, middleware);
 				const res = await request(app).get('/');
 				expect(res.statusCode).toBe(200);
 				expect(res.body).toMatchSnapshot();
@@ -117,10 +125,14 @@ describe('autoLogOp', () => {
 		});
 
 		describe('operation failure of', () => {
-			it('non-async function', () => {
+			it('non-async function', async () => {
+				const errorInstance = {
+					status: 500,
+					message: 'foo',
+					category: 'CUSTOM_ERROR',
+				};
 				const callFunction = () => {
-					const e = { status: 500, message: 'foo' };
-					throw e;
+					throw errorInstance;
 				};
 				const operationFunction = (meta, req, res, next) => {
 					try {
@@ -131,16 +143,24 @@ describe('autoLogOp', () => {
 					}
 				};
 				const next = jest.fn();
-				autoLogOp(operationFunction)(null, null, next);
-				expect(logger.info.mock.calls).toMatchSnapshot();
-				expect(logger.error.mock.calls).toMatchSnapshot();
-				expect(next.mock.calls).toMatchSnapshot();
+				try {
+					await autoLogOp(operationFunction)(null, null, null, next);
+				} catch (e) {
+					expect(e).toBe(errorInstance);
+					expect(logger.info.mock.calls).toMatchSnapshot();
+					expect(logger.error.mock.calls).toMatchSnapshot();
+					expect(next.mock.calls).toMatchSnapshot();
+				}
 			});
 
 			it('async function', async () => {
+				const errorInstance = {
+					status: 500,
+					message: 'foo',
+					category: 'CUSTOM_ERROR',
+				};
 				const callFunction = () => {
-					const e = { status: 500, message: 'foo' };
-					throw e;
+					throw errorInstance;
 				};
 				const operationFunction = async (meta, req, res, next) => {
 					try {
@@ -151,10 +171,14 @@ describe('autoLogOp', () => {
 					}
 				};
 				const next = jest.fn();
-				await autoLogOp(operationFunction)(null, null, next);
-				expect(logger.info.mock.calls).toMatchSnapshot();
-				expect(logger.error.mock.calls).toMatchSnapshot();
-				expect(next.mock.calls).toMatchSnapshot();
+				try {
+					await autoLogOp(operationFunction)(null, null, null, next);
+				} catch (e) {
+					expect(e).toBe(errorInstance);
+					expect(logger.info.mock.calls).toMatchSnapshot();
+					expect(logger.error.mock.calls).toMatchSnapshot();
+					expect(next.mock.calls).toMatchSnapshot();
+				}
 			});
 		});
 	});
@@ -172,7 +196,7 @@ describe('autoLogOps', () => {
 		const operationFunctionB = (meta, req, res) => {
 			res.status(200).send(meta);
 		};
-		const enhancedController = autoLogOps({
+		const enhancedController = compose(toMiddlewares, autoLogOps)({
 			operationFunctionA,
 			operationFunctionB,
 		});
