@@ -12,8 +12,9 @@ auto log function calls in operation/action model with a single line of code, ba
 - [quickstart](#quickstart)
 - [install](#install)
 - [usage](#usage)
-   * [action function signature](#action-function-signature)
+   * [action function format](#action-function-format)
    * [operation function format](#operation-function-format)
+   * [use with other enhancers](#use-with-other-enhancers)
    * [default filtered fields](#default-filtered-fields)
    * [reserved filed override](#reserved-field-override)
    * [test stub](#test-stub)
@@ -43,16 +44,17 @@ import {
 // auto log a function of its start, success/failure state with function name as `action`
 const result = autoLogAction(someFunction)(args: Object, meta?: Object);
 ```
-> more details on [action function signature](#action-function-signature)
 
 ```js
 // auto log multiple functions wrapped in an object
 const APIService = autoLogActions({ methodA, methodB, methodC });
 ```
 
+> more details on [action function format](#action-function-format)
+
 ```js
-// auto log success/failure express middleware/controller as an operation function 
-// function name would be logged as `operation`, and available in meta
+// auto log an operation function of its start, success/failure state with function name as `operation`
+// further converted to middleware/controller with `toMiddleware`
 const operationFunction = (meta, req, res, next) => {
   try {
     next();
@@ -62,20 +64,27 @@ const operationFunction = (meta, req, res, next) => {
   }
 };
 export compose(toMiddleware, autoLogOp)(operationFunction) 
-// or export toMiddleware(autoLogOp(operationFunction));
 ```
-> more details on [operation function format](#operation-function-format)
 
 ```js
 // auto log multiple operation functions wrapped in an object as controller
 const someController = compose(toMiddlewares, autoLogOps)({ operationFunctionA, operationFuncitonB });
 ```
 
+> more details on [operation function format](#operation-function-format)
+
 ```js
-// autoLogOp with autoLogAction/autoLogActions
+// auto log operation and action together
 const operationFunction = async (meta, req, res, next) => {
-  const data = await APIService.methodA(params, meta); // from autoLogActions
-  next();
+  try {
+    // import the APIService enhanced by autoLogActions
+    // `operationFunction.name` would be recorded in `meta` and passed down here
+    const data = await APIService.methodA(params, meta);
+    next();
+  } catch(e) {
+    next(e);
+    throw e;
+  }
 };
 export toMiddleware(autoLogOp(operationFunction));
 
@@ -83,22 +92,25 @@ app.use(someMiddleware)
 ```
 
 ```js
-// log operation and adhoc actions, autoLogAction(someFunction) is recommended
-const event = loggerEvent(meta);
-
-try {
-    event.action('someAction').success();
-    event.success();
-} catch(e) {
-    event.failure(e);
-}
+// set key names of fields to be muted in .env to reduce log for development or filter fields in production
+LOGGER_MUTE_FIELDS=transactionId, userId
 ```
 
 
 ```js
-// set key names of fields to be muted in .env to reduce log for development or filter fields in production
-LOGGER_MUTE_FIELDS=transactionId, userId
+// if you really need to log operation and adhoc actions
+const event = loggerEvent(meta);
+
+try {
+    event.action('someAction').start();
+    await someAction();
+    event.action('someAction').success();
+} catch(e) {
+    event.action('someAction').failure(e);
+}
 ```
+
+> `autoLogAction` is the cleaner solution
 
 ## install
 ```shell
@@ -107,7 +119,7 @@ npm install @financial-times/n-auto-logger
 
 ## usage
 
-### action function signature
+### action function format
 
 `n-auto-logger` allows two objects as the args of the autoLogged function so that values can be logged with corresponding key names.
 ```js
@@ -149,32 +161,31 @@ const operationFunction = (meta, req, res, next) => {
 }
 ```
 
-> `autologOp` would return an operation function, so that other enhancers can be further chained before `toMiddleware`
+### use with other enhancers
+
+`autoLogOp` would return an operation function, so that other enhancers can be further chained before `toMiddleware`
+
+```js
+export default compose(toMiddleware, autoMetricsOp, autoLogOp)(operationFunction);
+export default compose(toMiddlewares, autoMetricsOps, autoLogOps)(operationBundle);
+export default compose(autoMetricsAction, autoLogAction)(callFunction);
+export default compose(autoMetricsActions, autoLogActions('service-name'))(callFunctionBundle);
+```
 
 ### default filtered fields
 `user, handler, _locals` fields in `error` or `meta` object would not be logged by default.
 
 ```js
 // sensitive personal data could be put in meta.user and would not be logged
-const meta = { operation, user: { id, email } };
-const event = eventLogger(meta);
+const meta = { ...meta, user: { id, email } };
 
 // UI but not debugger facing data could be put in error.user and would not be logged
 // e.g. app error status (> API call error status), user message (> error message from API for debugging)
-const error = { status, message, user: { status, message } };
-event.failure(error);
+throw NError({ status, message }).extend({ user: { status, message } });
 ````
 ```js
 // .handler field would not be logged, as it is only useful for error handler
-  try {
-    throw nError({
-      status: 404,
-      handler: 'REDIRECT_TO_INDEX',
-    });
-  } catch (e) {
-    event.failure(e);
-    next(e);
-  }
+throw nError({ status: 404 }).extend({ handler: 'REDIRECT_TO_INDEX' });
 ```
 ```js
 // _locals field would not be logged as it is verbose and not relevant to debug
@@ -227,7 +238,7 @@ logger.error = jest.fn();
 ## example
 [enhanced api service example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/apis/newspaper-info-svc.js)
 
-[controller example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/routes/delivery-address/controller.js)
+[enhanced controller example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/routes/delivery-address/controller.js)
 
 ## development
 * `make install` or `yarn`
