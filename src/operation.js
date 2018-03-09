@@ -42,9 +42,6 @@ export const toMiddleware = operationFunction => {
 	return convertedFunction;
 };
 
-export const autoLogOpToMiddleware = operationFunction =>
-	toMiddleware(autoLogOp(operationFunction));
-
 export const autoLogOps = operationBundle => {
 	const enhanced = {};
 	Object.keys(operationBundle).forEach(methodName => {
@@ -70,6 +67,3 @@ export const toMiddlewares = operationBundle => {
 	});
 	return converted;
 };
-
-export const autoLogOpsToMiddlewares = operationBundle =>
-	toMiddlewares(autoLogOps(operationBundle));

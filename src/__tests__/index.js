@@ -5,8 +5,6 @@ import logger, {
 	autoLogOps,
 	toMiddleware,
 	toMiddlewares,
-	autoLogOpToMiddleware,
-	autoLogOpsToMiddlewares,
 	loggerEvent,
 } from '../index';
 
@@ -37,14 +35,6 @@ describe('n-auto-logger exports', () => {
 
 	it('toMiddlewares', () => {
 		expect(typeof toMiddlewares).toBe('function');
-	});
-
-	it('autoLogOpToMiddleware', () => {
-		expect(typeof autoLogOpToMiddleware).toBe('function');
-	});
-
-	it('autoLogOpsToMiddlewares', () => {
-		expect(typeof autoLogOpsToMiddlewares).toBe('function');
 	});
 
 	it('loggerEvent', () => {

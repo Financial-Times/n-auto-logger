@@ -5,8 +5,6 @@ export {
 	autoLogOps,
 	toMiddleware,
 	toMiddlewares,
-	autoLogOpToMiddleware,
-	autoLogOpsToMiddlewares,
 } from './operation';
 export { autoLogAction, autoLogActions } from './action';
 export { loggerEvent } from './event';

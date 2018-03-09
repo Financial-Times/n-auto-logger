@@ -1,12 +1,13 @@
 import express from 'express';
 import request from 'supertest';
+import compose from 'compose-function';
 
 import logger, { autoLogAction } from '../index';
 import {
 	autoLogOp,
 	autoLogOps,
-	autoLogOpToMiddleware,
-	autoLogOpsToMiddlewares,
+	toMiddleware,
+	toMiddlewares,
 } from '../operation';
 
 jest.mock('@financial-times/n-logger');
@@ -32,7 +33,7 @@ describe('autoLogOp and toMiddleware', () => {
 			const operationFunction = (meta, req, res) => {
 				res.status(200).send(meta);
 			};
-			const middleware = autoLogOpToMiddleware(operationFunction);
+			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 			const app = express();
 			app.use('/', middleware);
 			const res = await request(app).get('/');
@@ -44,7 +45,7 @@ describe('autoLogOp and toMiddleware', () => {
 			const operationFunction = async (meta, req, res) => {
 				res.status(200).send(meta);
 			};
-			const middleware = autoLogOpToMiddleware(operationFunction);
+			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 			const app = express();
 			app.use('/', middleware);
 			const res = await request(app).get('/');
@@ -58,7 +59,7 @@ describe('autoLogOp and toMiddleware', () => {
 				next(e);
 				throw e;
 			};
-			const middleware = autoLogOpToMiddleware(operationFunction);
+			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 			const app = express();
 			app.use('/', middleware, commonErrorHandler);
 			const res = await request(app).get('/');
@@ -72,7 +73,7 @@ describe('autoLogOp and toMiddleware', () => {
 				next(e);
 				throw e;
 			};
-			const middleware = autoLogOpToMiddleware(operationFunction);
+			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 			const app = express();
 			app.use('/', middleware, commonErrorHandler);
 			const res = await request(app).get('/');
@@ -88,7 +89,7 @@ describe('autoLogOp and toMiddleware', () => {
 				const operationFunction = async meta => {
 					await autoLogAction(callFunction)(null, meta);
 				};
-				const middleware = autoLogOpToMiddleware(operationFunction);
+				const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 				await middleware();
 				expect(logger.info.mock.calls).toMatchSnapshot();
 			});
@@ -98,7 +99,7 @@ describe('autoLogOp and toMiddleware', () => {
 				const operationFunction = meta => {
 					autoLogAction(callFunction)(null, meta);
 				};
-				const middleware = autoLogOpToMiddleware(operationFunction);
+				const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 				await middleware();
 				expect(logger.info.mock.calls).toMatchSnapshot();
 			});
@@ -114,7 +115,7 @@ describe('autoLogOp and toMiddleware', () => {
 				const operationFunction = async (meta, req, res) => {
 					res.status(200).send(meta);
 				};
-				const middleware = autoLogOpToMiddleware(operationFunction);
+				const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 				const app = express();
 				app.use('/', metaMiddleware, middleware);
 				const res = await request(app).get('/');
@@ -219,7 +220,7 @@ describe('autoLogOpsToMiddlewares', () => {
 		const operationFunctionB = (meta, req, res) => {
 			res.status(200).send(meta);
 		};
-		const enhancedController = autoLogOpsToMiddlewares({
+		const enhancedController = compose(toMiddlewares, autoLogOps)({
 			operationFunctionA,
 			operationFunctionB,
 		});
