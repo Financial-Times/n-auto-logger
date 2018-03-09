@@ -192,6 +192,7 @@ function(err, req, res, next) {
 * `action` default to `callFunction.name`
 * `category` default to `FETCH_RESPONSE_ERROR/FETCH_NETWORK_ERROR/NODE_SYSTEM_ERROR/CUSTOM_ERROR`
 * `type` was used to specify the unique error type for debugging and error handling by convention
+* `stack` used in Error or NError to store the stack trace
 * `result` default to `success/failure`
 
 ### test stub
