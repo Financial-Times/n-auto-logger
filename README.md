@@ -54,16 +54,9 @@ const APIService = autoLogActions({ methodA, methodB, methodC });
 
 ```js
 // auto log an operation function of its start, success/failure state with function name as `operation`
-// further converted to middleware/controller with `toMiddleware`
-const operationFunction = (meta, req, res, next) => {
-  try {
-    next();
-  } catch(e) {
-    next(e);
-    throw e; // remember to throw in catch block so that failure can be logged correctly
-  }
-};
-export compose(toMiddleware, autoLogOp)(operationFunction) 
+const operationFunction = (meta, req, res, next) => { /* try-catch-next-throw */ };
+
+export default compose(toMiddleware, autoLogOp)(operationFunction) 
 ```
 
 ```js
@@ -87,8 +80,6 @@ const operationFunction = async (meta, req, res, next) => {
   }
 };
 export toMiddleware(autoLogOp(operationFunction));
-
-app.use(someMiddleware)
 ```
 
 ```js
