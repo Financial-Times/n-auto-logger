@@ -4,6 +4,11 @@ import { RESULTS } from '../constants';
 
 jest.mock('@financial-times/n-logger');
 
+/*
+	compatibility test with n-auto-metrics
+	https://github.com/Financial-Times/n-auto-metrics/blob/master/src/__tests__/action.js
+ */
+
 describe('autoLogAction', () => {
 	afterEach(() => {
 		jest.resetAllMocks();

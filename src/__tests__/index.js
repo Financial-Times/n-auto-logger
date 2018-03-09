@@ -3,6 +3,10 @@ import logger, {
 	autoLogActions,
 	autoLogOp,
 	autoLogOps,
+	toMiddleware,
+	toMiddlewares,
+	autoLogOpToMiddleware,
+	autoLogOpsToMiddlewares,
 	loggerEvent,
 } from '../index';
 
@@ -25,6 +29,22 @@ describe('n-auto-logger exports', () => {
 
 	it('autoLogOps', () => {
 		expect(typeof autoLogOps).toBe('function');
+	});
+
+	it('toMiddleware', () => {
+		expect(typeof toMiddleware).toBe('function');
+	});
+
+	it('toMiddlewares', () => {
+		expect(typeof toMiddlewares).toBe('function');
+	});
+
+	it('autoLogOpToMiddleware', () => {
+		expect(typeof autoLogOpToMiddleware).toBe('function');
+	});
+
+	it('autoLogOpsToMiddlewares', () => {
+		expect(typeof autoLogOpsToMiddlewares).toBe('function');
 	});
 
 	it('loggerEvent', () => {

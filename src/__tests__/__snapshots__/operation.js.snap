@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`autoLogOp logs correctly operation failure of async function 1`] = `
+exports[`autoLogOp and toMiddleware logs correctly operation failure of async function 1`] = `
 Array [
   Array [
     Object {
@@ -16,59 +16,7 @@ Array [
 ]
 `;
 
-exports[`autoLogOp logs correctly operation failure of async function 2`] = `
-Array [
-  Array [
-    Object {
-      "action": "callFunction",
-      "category": "CUSTOM_ERROR",
-      "message": "foo",
-      "operation": "operationFunction",
-      "result": "failure",
-      "status": 500,
-    },
-  ],
-  Array [
-    Object {
-      "category": "CUSTOM_ERROR",
-      "message": "foo",
-      "operation": "operationFunction",
-      "result": "failure",
-      "status": 500,
-    },
-  ],
-]
-`;
-
-exports[`autoLogOp logs correctly operation failure of async function 3`] = `
-Array [
-  Array [
-    Object {
-      "category": "CUSTOM_ERROR",
-      "message": "foo",
-      "status": 500,
-    },
-  ],
-]
-`;
-
-exports[`autoLogOp logs correctly operation failure of non-async function 1`] = `
-Array [
-  Array [
-    Object {
-      "operation": "operationFunction",
-    },
-  ],
-  Array [
-    Object {
-      "action": "callFunction",
-      "operation": "operationFunction",
-    },
-  ],
-]
-`;
-
-exports[`autoLogOp logs correctly operation failure of non-async function 2`] = `
+exports[`autoLogOp and toMiddleware logs correctly operation failure of async function 2`] = `
 Array [
   Array [
     Object {
@@ -92,7 +40,7 @@ Array [
 ]
 `;
 
-exports[`autoLogOp logs correctly operation failure of non-async function 3`] = `
+exports[`autoLogOp and toMiddleware logs correctly operation failure of async function 3`] = `
 Array [
   Array [
     Object {
@@ -104,7 +52,59 @@ Array [
 ]
 `;
 
-exports[`autoLogOp logs correctly operation success of async function with async sub actions 1`] = `
+exports[`autoLogOp and toMiddleware logs correctly operation failure of non-async function 1`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+    },
+  ],
+  Array [
+    Object {
+      "action": "callFunction",
+      "operation": "operationFunction",
+    },
+  ],
+]
+`;
+
+exports[`autoLogOp and toMiddleware logs correctly operation failure of non-async function 2`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "category": "CUSTOM_ERROR",
+      "message": "foo",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 500,
+    },
+  ],
+  Array [
+    Object {
+      "category": "CUSTOM_ERROR",
+      "message": "foo",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 500,
+    },
+  ],
+]
+`;
+
+exports[`autoLogOp and toMiddleware logs correctly operation failure of non-async function 3`] = `
+Array [
+  Array [
+    Object {
+      "category": "CUSTOM_ERROR",
+      "message": "foo",
+      "status": 500,
+    },
+  ],
+]
+`;
+
+exports[`autoLogOp and toMiddleware logs correctly operation success of async function with async sub actions 1`] = `
 Array [
   Array [
     Object {
@@ -133,7 +133,7 @@ Array [
 ]
 `;
 
-exports[`autoLogOp logs correctly operation success of non-async function with non async sub actions 1`] = `
+exports[`autoLogOp and toMiddleware logs correctly operation success of non-async function with non async sub actions 1`] = `
 Array [
   Array [
     Object {
@@ -162,14 +162,14 @@ Array [
 ]
 `;
 
-exports[`autoLogOp logs correctly operation success of req.meta from previous middlewares 1`] = `
+exports[`autoLogOp and toMiddleware logs correctly operation success of req.meta from previous middlewares 1`] = `
 Object {
   "operation": "operationFunction",
   "transactionId": "xxxx-xxxx",
 }
 `;
 
-exports[`autoLogOp logs correctly operation success of req.meta from previous middlewares 2`] = `
+exports[`autoLogOp and toMiddleware logs correctly operation success of req.meta from previous middlewares 2`] = `
 Array [
   Array [
     Object {
@@ -188,12 +188,6 @@ Array [
 `;
 
 exports[`autoLogOps decorate each method correctly 1`] = `
-Object {
-  "operation": "operationFunctionA",
-}
-`;
-
-exports[`autoLogOps decorate each method correctly 2`] = `
 Array [
   Array [
     Object {
@@ -206,11 +200,55 @@ Array [
       "result": "success",
     },
   ],
+  Array [
+    Object {
+      "operation": "operationFunctionB",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionB",
+      "result": "success",
+    },
+  ],
 ]
 `;
 
-exports[`autoLogOps decorate each method correctly 3`] = `
+exports[`autoLogOpsToMiddlewares decorate each method correctly 1`] = `
+Object {
+  "operation": "operationFunctionA",
+}
+`;
+
+exports[`autoLogOpsToMiddlewares decorate each method correctly 2`] = `
 Object {
   "operation": "operationFunctionB",
 }
+`;
+
+exports[`autoLogOpsToMiddlewares decorate each method correctly 3`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunctionA",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionA",
+      "result": "success",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionB",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionB",
+      "result": "success",
+    },
+  ],
+]
 `;
