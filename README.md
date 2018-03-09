@@ -74,7 +74,7 @@ const operationFunction = async (meta, req, res, next) => {
     throw e;
   }
 };
-export toMiddleware(autoLogOp(operationFunction));
+export default toMiddleware(autoLogOp(operationFunction));
 ```
 
 > more details on [use with other enhancers](#use-with-other-enhancers)
