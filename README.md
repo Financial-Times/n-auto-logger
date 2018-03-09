@@ -13,8 +13,8 @@ auto log function calls in operation/action model with a single line of code, ba
 - [install](#install)
 - [usage](#usage)
    * [action function signature](#action-function-signature)
-   * [operation function error handling](#operation-function-error-handling)
-   * [filter user/handler field](#filter-userhandler-field)
+   * [operation function format](#operation-function-format)
+   * [default filtered fields](#default-filtered-fields)
    * [reserved filed override](#reserved-field-override)
    * [test stub](#test-stub)
 - [built-in](#built-in)
@@ -33,6 +33,8 @@ import {
   autoLogActions, 
   autoLogOp,
   autoLogOps,
+  toMiddleware,
+  toMiddlewares,
   loggerEvent,
 } from '@financial-times/n-auto-logger';
 ```
@@ -59,22 +61,23 @@ const operationFunction = (meta, req, res, next) => {
     throw e; // remember to throw in catch block so that failure can be logged correctly
   }
 };
-export autoLogOp(operationFunction);
+export compose(toMiddleware, autoLogOp)(operationFunction) 
+// or export toMiddleware(autoLogOp(operationFunction));
 ```
-> more details on [operation function error handling](#operation-function-error-handling)
+> more details on [operation function format](#operation-function-format)
 
 ```js
 // auto log multiple operation functions wrapped in an object as controller
-const someController = autoLogOps({ operationFunctionA, operationFuncitonB });
+const someController = compose(toMiddlewares, autoLogOps)({ operationFunctionA, operationFuncitonB });
 ```
 
 ```js
-// log both operation and actions together
+// autoLogOp with autoLogAction/autoLogActions
 const operationFunction = async (meta, req, res, next) => {
   const data = await APIService.methodA(params, meta); // from autoLogActions
   next();
 };
-export autoLogOp(operationFunction);
+export toMiddleware(autoLogOp(operationFunction));
 
 app.use(someMiddleware)
 ```
@@ -125,33 +128,44 @@ const someFunction = (mandatory: Object, optional?: Object ={}) => {
 
 > The package would throw Errors if function signature is incorrect for `autoLogAction`.
 
-### operation function error handling
+### operation function format
 
-### filter user/handler field
+The operation function use the pattern of `try-catch-next-throw`:
+
 ```js
-// data under `user` field in meta wouldn't be logged, sensitive personal data could be put here
+(meta, req, res, next) => {
+  try{
+    // main code
+    // functions that can potentially throw errors
+    // without the try-catch-next-throw pattern those errors may not be next to error handler
+  } catch(e) {
+      // ensure the error would be handled by the error handler, 
+      // or you can write the error handling code in the catch block
+      next(e);
+      // further throw the error to the higher order enhancer function
+      // error caught in the enhancer function would then be parsed and logged
+      throw(e);
+  }
+}
+```
+
+> `autologOp` would return an operation function, so that other enhancers can be further chained before `toMiddleware`
+
+### default filtered fields
+`user, handler, _locals` fields in `error` or `meta` object would not be logged by default.
+
+```js
+// sensitive personal data could be put in meta.user and would not be logged
 const meta = { operation, user: { id, email } };
 const event = eventLogger(meta);
 
-// data under `user` field in error wouldn't be logged, message to be rendered on UI could be put here
-const error = { status, message, user: { message } };
+// UI but not debugger facing data could be put in error.user and would not be logged
+// e.g. app error status (> API call error status), user message (> error message from API for debugging)
+const error = { status, message, user: { status, message } };
 event.failure(error);
-
-// both the above filter built-in
-const someFunction = (args, { metaA, user }) => {
-  try {
-    //...
-    someCall(user);
-    //...
-  } catch (e) {
-    e.user = { message: 'some message to be displayed on UI' };
-    throw e;
-  }
-}
-autoLogAction(someFunction)(args, meta);
 ````
 ```js
-// .handler field wouldn't be recorded in logger, as it is only useful for error handler
+// .handler field would not be logged, as it is only useful for error handler
   try {
     throw nError({
       status: 404,
@@ -161,13 +175,23 @@ autoLogAction(someFunction)(args, meta);
     event.failure(e);
     next(e);
   }
-````
+```
+```js
+// _locals field would not be logged as it is verbose and not relevant to debug
+// in case you didn't clone the error object in error handler
+function(err, req, res, next) {
+  const e = {...err}; // clone the error object to avoid mutate the input
+  res.render('template', e); // res.render is not a pure function, it would assign _locals to e
+}
+```
 
 ### reserved field override
 `n-auto-logger` will append values to following reserved fields automatically, the values would be overriden by the key value of the same name in your `args/params/meta` or error object, be cautious not to override them unintentionally.
 * `operation` default to `operationFunction.name`
+* `service` default to name of the service the action belongs to if you are using [n-auto-metrics](https://github.com/Financial-Times/n-auto-metrics)
 * `action` default to `callFunction.name`
 * `category` default to `FETCH_RESPONSE_ERROR/FETCH_NETWORK_ERROR/NODE_SYSTEM_ERROR/CUSTOM_ERROR`
+* `type` was used to specify the unique error type for debugging and error handling by convention
 * `result` default to `success/failure`
 
 ### test stub
@@ -175,7 +199,13 @@ autoLogAction(someFunction)(args, meta);
 ```js
 import logger from '@financial-times/n-auto-logger'; // the underlying logger instance (`n-logger`)
 
+// sinon sandbox
 sandbox.stub(logger);
+
+// jest
+logger.info = jest.fn();
+logger.warn = jest.fn();
+logger.error = jest.fn();
 ```
 
 ## built-in
@@ -194,8 +224,6 @@ sandbox.stub(logger);
 `n-auto-logger` would trim any empty fields and method fields in the input meta or error objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields or extend Error object with methods.
 
 ## example
-[before/after](example/EXAMPLE.md)
-
 [enhanced api service example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/apis/newspaper-info-svc.js)
 
 [controller example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/routes/delivery-address/controller.js)
