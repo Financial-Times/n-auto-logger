@@ -133,7 +133,7 @@ const someFunction = (mandatory: Object, optional?: Object ={}) => {
 The operation function use the pattern of `try-catch-next-throw`:
 
 ```js
-(meta, req, res, next) => {
+const operationFunction = (meta, req, res, next) => {
   try{
     // main code
     // functions that can potentially throw errors
