@@ -36,16 +36,13 @@ import {
   autoLogOps,
   toMiddleware,
   toMiddlewares,
-  loggerEvent,
 } from '@financial-times/n-auto-logger';
 ```
 
 ```js
 // auto log a function of its start, success/failure state with function name as `action`
 const result = autoLogAction(someFunction)(args: Object, meta?: Object);
-```
 
-```js
 // auto log multiple functions wrapped in an object
 const APIService = autoLogActions({ methodA, methodB, methodC });
 ```
@@ -56,10 +53,8 @@ const APIService = autoLogActions({ methodA, methodB, methodC });
 // auto log an operation function of its start, success/failure state with function name as `operation`
 const operationFunction = (meta, req, res, next) => { /* try-catch-next-throw */ };
 
-export default compose(toMiddleware, autoLogOp)(operationFunction) 
-```
+const someMiddleware = compose(toMiddleware, autoLogOp)(operationFunction) 
 
-```js
 // auto log multiple operation functions wrapped in an object as controller
 const someController = compose(toMiddlewares, autoLogOps)({ operationFunctionA, operationFuncitonB });
 ```
@@ -82,26 +77,12 @@ const operationFunction = async (meta, req, res, next) => {
 export toMiddleware(autoLogOp(operationFunction));
 ```
 
+> more details on [use with other enhancers](#use-with-other-enhancers)
+
 ```js
 // set key names of fields to be muted in .env to reduce log for development or filter fields in production
 LOGGER_MUTE_FIELDS=transactionId, userId
 ```
-
-
-```js
-// if you really need to log operation and adhoc actions
-const event = loggerEvent(meta);
-
-try {
-    event.action('someAction').start();
-    await someAction();
-    event.action('someAction').success();
-} catch(e) {
-    event.action('someAction').failure(e);
-}
-```
-
-> `autoLogAction` is the cleaner solution
 
 ## install
 ```shell
