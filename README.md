@@ -141,7 +141,7 @@ const operationFunction = (meta, req, res, next) => {
 export default compose(toMiddleware, autoMetricsOp, autoLogOp)(operationFunction);
 export default compose(toMiddlewares, autoMetricsOps, autoLogOps)(operationBundle);
 export default compose(autoMetricsAction, autoLogAction)(callFunction);
-export default compose(autoMetricsActions, autoLogActions('service-name'))(callFunctionBundle);
+export default compose(autoMetricsActions('service-name'), autoLogActions)(callFunctionBundle);
 ```
 
 ### default filtered fields
