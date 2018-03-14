@@ -3,8 +3,9 @@ import NError, {
 	isFetchError,
 	parseFetchError,
 } from '@financial-times/n-error';
+import { onlyValues, removeObjectKeys } from '@financial-times/n-utils';
 
-import { onlyValues, removeObjectKeys, fieldStringToArray } from './utils';
+import { fieldStringToArray } from './utils';
 import { CATEGORIES, ALWAYS_MUTTED, UNMUTTABLE, RESULTS } from './constants';
 
 // TODO: consider logics to decide default logger level based on status

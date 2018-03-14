@@ -17,6 +17,7 @@
   "dependencies": {
     "@financial-times/n-error": "^0.2.3",
     "@financial-times/n-logger": "^5.5.11",
+    "@financial-times/n-utils": "^0.0.1",
     "node-fetch": "^2.0.0"
   },
   "devDependencies": {

@@ -1,5 +1,7 @@
 import logger from '@financial-times/n-logger';
-import { onlyValues, removeObjectKeys, fieldStringToArray } from './utils';
+import { onlyValues, removeObjectKeys } from '@financial-times/n-utils';
+
+import { fieldStringToArray } from './utils';
 import failureLogger from './failure';
 import { RESULTS, ALWAYS_MUTTED } from './constants';
 

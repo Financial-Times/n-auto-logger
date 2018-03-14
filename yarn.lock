@@ -103,6 +103,10 @@
     request "^2.83.0"
     winston "^2.4.0"
 
+"@financial-times/n-utils@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@financial-times/n-utils/-/n-utils-0.0.1.tgz#5884cf63d5525c8c2e6dd849df9b1b465037345f"
+
 "@financial-times/secret-squirrel@^2.6.0":
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/@financial-times/secret-squirrel/-/secret-squirrel-2.7.0.tgz#02da48bfa1f892331e03aab1bef3fa0ce9a7d650"
