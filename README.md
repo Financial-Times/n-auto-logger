@@ -145,7 +145,7 @@ export default compose(autoMetricsActions('service-name'), autoLogActions)(callF
 ```
 
 ### default filtered fields
-`user, handler, _locals` fields in `error` or `meta` object would not be logged by default.
+`user`, `handler`, `_locals` fields in `error` or `meta` object would not be logged by default.
 
 ```js
 // sensitive personal data could be put in meta.user and would not be logged
@@ -175,6 +175,7 @@ function(err, req, res, next) {
 * `action` default to `callFunction.name`
 * `category` default to `FETCH_RESPONSE_ERROR/FETCH_NETWORK_ERROR/NODE_SYSTEM_ERROR/CUSTOM_ERROR`
 * `type` was used to specify the unique error type for debugging and error handling by convention
+* `status` in error object would be recorded for service action call failure
 * `stack` used in Error or NError to store the stack trace
 * `result` default to `success/failure`
 
