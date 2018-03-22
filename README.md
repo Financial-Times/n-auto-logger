@@ -1,8 +1,8 @@
 # n-auto-logger 
 
 [![npm version](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger.svg)](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger)
-![npm](https://img.shields.io/npm/dm/%40financial-times%2Fn-auto-logger.svg)
 ![gzip size](http://img.badgesize.io/https://unpkg.com/@financial-times/n-auto-logger?compression=gzip)
+![npm download](https://img.shields.io/npm/dm/%40financial-times%2Fn-auto-logger.svg)
 
 [![CircleCI](https://circleci.com/gh/Financial-Times/n-auto-logger.svg?style=shield)](https://circleci.com/gh/Financial-Times/n-auto-logger)
 [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-auto-logger/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-auto-logger?branch=master)
