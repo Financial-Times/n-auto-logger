@@ -15,13 +15,14 @@
     "prepush": "make lint unit-test && make verify -j3"
   },
   "dependencies": {
-    "@financial-times/n-error": "^1.0.1",
+    "@financial-times/n-error": "^1.1.5",
     "@financial-times/n-logger": "^5.5.11",
     "@financial-times/n-utils": "^0.1.0",
     "node-fetch": "^2.0.0"
   },
   "devDependencies": {
     "@financial-times/n-gage": "^1.19.3",
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.1",
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -39,11 +40,7 @@
     "jest": "^22.1.4",
     "nodemon": "^1.14.11",
     "prettier": "^1.10.2",
-    "supertest": "^3.0.0",
-    "uglifyjs-webpack-plugin": "^1.2.4",
-    "webpack": "^4.2.0",
-    "webpack-cli": "^2.0.12",
-    "webpack-node-externals": "^1.6.0"
+    "supertest": "^3.0.0"
   },
   "engines": {
     "node": ">=6.1.0"
