@@ -225,5 +225,4 @@ logger.error = jest.fn();
 * `yarn watch` to automatically correct code format on saving src
 
 ## todos
-* minified output with webpack/uglify/prepack with dist/index.min.js tested, [bundlesize badge](https://unpkg.com/#/)
 * logger coverage measurement in test
