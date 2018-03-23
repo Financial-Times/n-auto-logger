@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger.svg)](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger)
 ![gzip size](http://img.badgesize.io/https://unpkg.com/@financial-times/n-auto-logger?compression=gzip)
-![npm download](https://img.shields.io/npm/dm/%40financial-times%2Fn-auto-logger.svg)
+![npm download](https://img.shields.io/npm/dm/@financial-times/n-auto-logger.svg)
 ![node version](https://img.shields.io/node/v/@financial-times/n-auto-logger.svg)
 
 
