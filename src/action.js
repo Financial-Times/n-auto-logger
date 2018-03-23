@@ -54,6 +54,12 @@ export const autoLogActions = helperStandardService => {
 	Object.keys(helperStandardService).forEach(methodName => {
 		const enhancedMethod = (paramsOrArgs, meta) =>
 			autoLogAction(helperStandardService[methodName])(paramsOrArgs, meta);
+		// ensure the methodName passed to autoLogAction if it is created by function creator or anonymously
+		Object.defineProperty(helperStandardService[methodName], 'name', {
+			value: methodName,
+			configurable: true,
+		});
+		// ensure name appended to be read for other individual enhancer that doesn't access object[methodName]
 		Object.defineProperty(enhancedMethod, 'name', {
 			value: methodName,
 			configurable: true,

@@ -173,16 +173,8 @@ describe('autoLogActions', () => {
 		await enhancedService.callFunctionB(paramsB, meta);
 		expect(enhancedService.callFunctionA.name).toBe('callFunctionA');
 		expect(enhancedService.callFunctionB.name).toBe('callFunctionB');
-		expect(callFunctionA.mock.calls).toHaveLength(1);
-		expect(callFunctionA.mock.calls[0]).toEqual([paramsA, meta]);
-		expect(callFunctionB.mock.calls).toHaveLength(1);
-		expect(callFunctionB.mock.calls[0]).toEqual([paramsB, meta]);
-		expect(logger.info.mock.calls).toHaveLength(4);
-		expect(logger.info.mock.calls[1][0]).toEqual({
-			...meta,
-			...paramsA,
-			action: 'mockConstructor',
-			result: RESULTS.SUCCESS,
-		});
+		expect(callFunctionA.mock.calls).toMatchSnapshot();
+		expect(callFunctionB.mock.calls).toMatchSnapshot();
+		expect(logger.info.mock.calls).toMatchSnapshot();
 	});
 });

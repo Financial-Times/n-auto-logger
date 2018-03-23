@@ -101,3 +101,64 @@ Array [
   ],
 ]
 `;
+
+exports[`autoLogActions decorate each method correctly 1`] = `
+Array [
+  Array [
+    Object {
+      "test": "a",
+    },
+    Object {
+      "operation": "test",
+    },
+  ],
+]
+`;
+
+exports[`autoLogActions decorate each method correctly 2`] = `
+Array [
+  Array [
+    Object {
+      "test": "b",
+    },
+    Object {
+      "operation": "test",
+    },
+  ],
+]
+`;
+
+exports[`autoLogActions decorate each method correctly 3`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunctionA",
+      "operation": "test",
+      "test": "a",
+    },
+  ],
+  Array [
+    Object {
+      "action": "callFunctionA",
+      "operation": "test",
+      "result": "success",
+      "test": "a",
+    },
+  ],
+  Array [
+    Object {
+      "action": "callFunctionB",
+      "operation": "test",
+      "test": "b",
+    },
+  ],
+  Array [
+    Object {
+      "action": "callFunctionB",
+      "operation": "test",
+      "result": "success",
+      "test": "b",
+    },
+  ],
+]
+`;
