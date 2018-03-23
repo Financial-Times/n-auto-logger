@@ -59,6 +59,10 @@ export const toMiddlewares = operationBundle => {
 	const converted = {};
 	Object.keys(operationBundle).forEach(methodName => {
 		const convertedMethod = toMiddleware(operationBundle[methodName]);
+		Object.defineProperty(operationBundle[methodName], 'name', {
+			value: methodName,
+			configurable: true,
+		});
 		Object.defineProperty(convertedMethod, 'name', {
 			value: methodName,
 			configurable: true,
