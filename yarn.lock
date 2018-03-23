@@ -62,9 +62,9 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@financial-times/n-error@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@financial-times/n-error/-/n-error-1.0.3.tgz#81d04f29eefad091c44cf8036468a99a7f4bdfb6"
+"@financial-times/n-error@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@financial-times/n-error/-/n-error-1.0.4.tgz#bad2b6d55c11e5c739c0de0639cbf03e6b6aa231"
   dependencies:
     "@financial-times/n-utils" "^0.0.2"
     camelcase "^4.1.0"
