@@ -201,6 +201,34 @@ describe('autoLogOps', () => {
 			operationFunctionA,
 			operationFunctionB,
 		});
+		expect(enhancedOperations.operationFunctionA.name).toBe(
+			'operationFunctionA',
+		);
+		expect(enhancedOperations.operationFunctionB.name).toBe(
+			'operationFunctionB',
+		);
+		const next = jest.fn();
+		await enhancedOperations.operationFunctionA(null, null, null, next);
+		await enhancedOperations.operationFunctionB(null, null, null, next);
+		expect(logger.info.mock.calls).toMatchSnapshot();
+	});
+
+	it('set anonymous function names as per property name correctly', async () => {
+		const createOperationFunction = () => (meta, req, res, next) => {
+			next(meta);
+		};
+		const operationFunctionA = createOperationFunction();
+		const operationFunctionB = createOperationFunction();
+		const enhancedOperations = autoLogOps({
+			operationFunctionA,
+			operationFunctionB,
+		});
+		expect(enhancedOperations.operationFunctionA.name).toBe(
+			'operationFunctionA',
+		);
+		expect(enhancedOperations.operationFunctionB.name).toBe(
+			'operationFunctionB',
+		);
 		const next = jest.fn();
 		await enhancedOperations.operationFunctionA(null, null, null, next);
 		await enhancedOperations.operationFunctionB(null, null, null, next);
@@ -224,6 +252,40 @@ describe('autoLogOpsToMiddlewares', () => {
 			operationFunctionA,
 			operationFunctionB,
 		});
+		expect(enhancedController.operationFunctionA.name).toBe(
+			'operationFunctionA',
+		);
+		expect(enhancedController.operationFunctionB.name).toBe(
+			'operationFunctionB',
+		);
+		const app = express();
+		app.use('/a', enhancedController.operationFunctionA);
+		app.use('/b', enhancedController.operationFunctionB);
+		const resA = await request(app).get('/a');
+		expect(resA.statusCode).toBe(200);
+		expect(resA.body).toMatchSnapshot();
+		const resB = await request(app).get('/b');
+		expect(resB.statusCode).toBe(200);
+		expect(resB.body).toMatchSnapshot();
+		expect(logger.info.mock.calls).toMatchSnapshot();
+	});
+
+	it('set anonymous function names as per property name correctly', async () => {
+		const createOperationFunction = () => (meta, req, res) => {
+			res.status(200).send(meta);
+		};
+		const operationFunctionA = createOperationFunction();
+		const operationFunctionB = createOperationFunction();
+		const enhancedController = compose(toMiddlewares, autoLogOps)({
+			operationFunctionA,
+			operationFunctionB,
+		});
+		expect(enhancedController.operationFunctionA.name).toBe(
+			'operationFunctionA',
+		);
+		expect(enhancedController.operationFunctionB.name).toBe(
+			'operationFunctionB',
+		);
 		const app = express();
 		app.use('/a', enhancedController.operationFunctionA);
 		app.use('/b', enhancedController.operationFunctionB);

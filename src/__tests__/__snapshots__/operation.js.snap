@@ -214,6 +214,33 @@ Array [
 ]
 `;
 
+exports[`autoLogOps set anonymous function names as per property name correctly 1`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunctionA",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionA",
+      "result": "success",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionB",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionB",
+      "result": "success",
+    },
+  ],
+]
+`;
+
 exports[`autoLogOpsToMiddlewares decorate each method correctly 1`] = `
 Object {
   "operation": "operationFunctionA",
@@ -227,6 +254,45 @@ Object {
 `;
 
 exports[`autoLogOpsToMiddlewares decorate each method correctly 3`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunctionA",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionA",
+      "result": "success",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionB",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunctionB",
+      "result": "success",
+    },
+  ],
+]
+`;
+
+exports[`autoLogOpsToMiddlewares set anonymous function names as per property name correctly 1`] = `
+Object {
+  "operation": "operationFunctionA",
+}
+`;
+
+exports[`autoLogOpsToMiddlewares set anonymous function names as per property name correctly 2`] = `
+Object {
+  "operation": "operationFunctionB",
+}
+`;
+
+exports[`autoLogOpsToMiddlewares set anonymous function names as per property name correctly 3`] = `
 Array [
   Array [
     Object {
