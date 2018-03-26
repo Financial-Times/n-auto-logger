@@ -23,8 +23,8 @@
   "devDependencies": {
     "@financial-times/n-gage": "^1.19.3",
     "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.1",
-    "babel-loader": "^7.1.4",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "compose-function": "^3.0.3",

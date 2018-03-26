@@ -46,6 +46,10 @@ export const autoLogOps = operationBundle => {
 	const enhanced = {};
 	Object.keys(operationBundle).forEach(methodName => {
 		const enhancedMethod = autoLogOp(operationBundle[methodName]);
+		Object.defineProperty(operationBundle[methodName], 'name', {
+			value: methodName,
+			configurable: true,
+		});
 		Object.defineProperty(enhancedMethod, 'name', {
 			value: methodName,
 			configurable: true,
