@@ -166,6 +166,16 @@ describe('toMiddleware', () => {
 			expect(res.statusCode).toBe(200);
 			expect(res.body).toEqual({ operation: 'operationFunction' });
 		});
+
+		it('controller kind function set res.rendered', async () => {
+			const operationFunction = (meta, req, res) => {
+				res.rendered = true;
+			};
+			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
+			const next = jest.fn();
+			await middleware({}, {}, next);
+			expect(next.mock.calls).toHaveLength(0);
+		});
 	});
 
 	describe('handle the thrown error correctly of', () => {
