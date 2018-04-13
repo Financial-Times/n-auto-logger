@@ -17,19 +17,133 @@ const commonErrorHandler = (err, req, res, next) => {
 	res.status(err.status).send(err);
 };
 /* eslint-enable no-unused-vars */
+const commonErrorInstance = { status: 404, message: 'Not Found' };
+const errorOperationFunction = () => {
+	throw commonErrorInstance;
+};
 
 /*
 	compatibility test with n-auto-metrics
 	https://github.com/Financial-Times/n-auto-metrics/blob/master/src/__tests__/operation.js
  */
 
-describe('autoLogOp and toMiddleware', () => {
+describe('autoLogOp', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
 
-	describe('returns a valid express middleware', () => {
-		it('for non-async function', async () => {
+	describe('returns a valid operation function', () => {
+		it('with the original funciton name', () => {
+			const operationFunction = () => {};
+			const enhanced = autoLogOp(operationFunction);
+			expect(enhanced.name).toBe(operationFunction.name);
+		});
+
+		it('the standard argument length', () => {
+			const operationFunction = () => {};
+			const enhanced = autoLogOp(operationFunction);
+			expect(enhanced).toHaveLength(3);
+		});
+
+		it('executes correctly', () => {
+			const callFunction = jest.fn();
+			const operationFunction = () => {
+				callFunction();
+			};
+			const enhanced = autoLogOp(operationFunction);
+			enhanced();
+			expect(callFunction.mock.calls).toHaveLength(1);
+			enhanced();
+			expect(callFunction.mock.calls).toHaveLength(2);
+		});
+
+		it('throws error correctly', async () => {
+			const operationFunction = errorOperationFunction;
+			const enhanced = autoLogOp(operationFunction);
+			try {
+				await enhanced();
+			} catch (e) {
+				expect(e).toBe(commonErrorInstance);
+			}
+		});
+	});
+
+	describe('logs operation correctly with autoLogAction when', () => {
+		describe('success of', () => {
+			it('async function with async sub actions', async () => {
+				const callFunction = () => Promise.resolve('foo');
+				const operationFunction = async meta => {
+					await autoLogAction(callFunction)(null, meta);
+				};
+				const enhanced = autoLogOp(operationFunction);
+				await enhanced();
+				expect(logger.info.mock.calls).toMatchSnapshot();
+			});
+
+			it('non-async function with non async sub actions', async () => {
+				const callFunction = () => {};
+				const operationFunction = meta => {
+					autoLogAction(callFunction)(null, meta);
+				};
+				const enhanced = autoLogOp(operationFunction);
+				await enhanced();
+				expect(logger.info.mock.calls).toMatchSnapshot();
+			});
+		});
+
+		describe('failure of', () => {
+			it('non-async function', async () => {
+				const callFunction = () => {
+					throw commonErrorInstance;
+				};
+				const operationFunction = meta => {
+					try {
+						autoLogAction(callFunction)(null, meta);
+					} catch (e) {
+						throw e;
+					}
+				};
+				const enhanced = autoLogOp(operationFunction);
+				try {
+					await enhanced();
+				} catch (e) {
+					expect(logger.info.mock.calls).toMatchSnapshot();
+					expect(logger.warn.mock.calls).toMatchSnapshot();
+					expect(logger.error.mock.calls).toMatchSnapshot();
+				}
+			});
+
+			it('async function', async () => {
+				const callFunction = () => {
+					throw commonErrorInstance;
+				};
+				const operationFunction = async meta => {
+					try {
+						await autoLogAction(callFunction)(null, meta);
+					} catch (e) {
+						throw e;
+					}
+				};
+				const enhanced = autoLogOp(operationFunction);
+				try {
+					await enhanced();
+				} catch (e) {
+					expect(logger.info.mock.calls).toMatchSnapshot();
+					expect(logger.warn.mock.calls).toMatchSnapshot();
+					expect(logger.error.mock.calls).toMatchSnapshot();
+				}
+			});
+		});
+	});
+});
+
+describe('toMiddleware', () => {
+	afterEach(() => {
+		jest.resetAllMocks();
+	});
+
+	describe('converts operation function to a valid express middleware when input', () => {
+		it('non-async function', async () => {
 			const operationFunction = (meta, req, res) => {
 				res.status(200).send(meta);
 			};
@@ -41,7 +155,7 @@ describe('autoLogOp and toMiddleware', () => {
 			expect(res.body).toEqual({ operation: 'operationFunction' });
 		});
 
-		it('for async function', async () => {
+		it('async function', async () => {
 			const operationFunction = async (meta, req, res) => {
 				res.status(200).send(meta);
 			};
@@ -52,80 +166,118 @@ describe('autoLogOp and toMiddleware', () => {
 			expect(res.statusCode).toBe(200);
 			expect(res.body).toEqual({ operation: 'operationFunction' });
 		});
+	});
 
-		it('for non-async function throwing error', async () => {
-			const operationFunction = (meta, req, res, next) => {
-				const e = { status: 404, message: 'Not Found' };
-				next(e);
-				throw e;
+	describe('handle the thrown error correctly of', () => {
+		it('non-async function not calling res', async () => {
+			const operationFunction = () => {
+				throw commonErrorInstance;
 			};
 			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
+			const res = { headersSent: false };
+			const next = jest.fn();
+			await middleware(null, res, next);
+			expect(next.mock.calls).toMatchSnapshot();
 			const app = express();
 			app.use('/', middleware, commonErrorHandler);
-			const res = await request(app).get('/');
-			expect(res.statusCode).toBe(404);
-			expect(res.body.message).toBe('Not Found');
+			const response = await request(app).get('/');
+			expect(response.statusCode).toBe(404);
+			expect(response.body.message).toBe('Not Found');
 		});
 
-		it('for async function throwing error', async () => {
-			const operationFunction = async (meta, req, res, next) => {
-				const e = { status: 404, message: 'Not Found' };
-				next(e);
-				throw e;
+		it('non-async function calling res', async () => {
+			const operationFunction = (meta, req, res) => {
+				try {
+					throw commonErrorInstance;
+				} catch (e) {
+					res.status(500).send('internal server error');
+				}
 			};
 			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
+			const res = {
+				status: () => {},
+				send: () => {},
+				headersSent: true,
+			};
+			const next = jest.fn();
+			await middleware(null, res, next);
+			expect(next.mock.calls).toHaveLength(0);
 			const app = express();
 			app.use('/', middleware, commonErrorHandler);
-			const res = await request(app).get('/');
-			expect(res.statusCode).toBe(404);
-			expect(res.body.message).toBe('Not Found');
+			const response = await request(app).get('/');
+			expect(response.statusCode).toBe(500);
+			expect(response.text).toBe('internal server error');
+		});
+
+		it('async function not calling res', async () => {
+			const operationFunction = async () => {
+				throw commonErrorInstance;
+			};
+			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
+			const res = { headersSent: false };
+			const next = jest.fn();
+			await middleware(null, res, next);
+			expect(next.mock.calls).toMatchSnapshot();
+			const app = express();
+			app.use('/', middleware, commonErrorHandler);
+			const response = await request(app).get('/');
+			expect(response.statusCode).toBe(404);
+			expect(response.body.message).toBe('Not Found');
+		});
+
+		it('async function calling res', async () => {
+			const operationFunction = async (meta, req, res) => {
+				try {
+					throw commonErrorInstance;
+				} catch (e) {
+					res.status(500).send('internal server error');
+				}
+			};
+			const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
+			const res = {
+				status: () => {},
+				send: () => {},
+				headersSent: true,
+			};
+			const next = jest.fn();
+			await middleware(null, res, next);
+			expect(next.mock.calls).toHaveLength(0);
+			const app = express();
+			app.use('/', middleware, commonErrorHandler);
+			const response = await request(app).get('/');
+			expect(response.statusCode).toBe(500);
+			expect(response.text).toBe('internal server error');
 		});
 	});
 
-	describe('logs correctly', () => {
-		describe('operation success of', () => {
+	describe('triggers autoLogOp enhanced operation function correctly of', () => {
+		describe('success', () => {
 			it('async function with async sub actions', async () => {
 				const callFunction = () => Promise.resolve('foo');
 				const operationFunction = async meta => {
 					await autoLogAction(callFunction)(null, meta);
 				};
 				const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
-				await middleware();
+				const app = express();
+				app.use('/', middleware);
+				await request(app).get('/');
 				expect(logger.info.mock.calls).toMatchSnapshot();
 			});
 
-			it('non-async function with non async sub actions', async () => {
+			it('non-async function with non-async sub actions', async () => {
 				const callFunction = () => {};
 				const operationFunction = meta => {
 					autoLogAction(callFunction)(null, meta);
 				};
 				const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
-				await middleware();
-				expect(logger.info.mock.calls).toMatchSnapshot();
-			});
-
-			it('req.meta from previous middlewares', async () => {
-				const metaMiddleware = (req, res, next) => {
-					req.meta = {
-						...req.meta,
-						transactionId: 'xxxx-xxxx',
-					};
-					next();
-				};
-				const operationFunction = async (meta, req, res) => {
-					res.status(200).send(meta);
-				};
-				const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
 				const app = express();
-				app.use('/', metaMiddleware, middleware);
-				const res = await request(app).get('/');
-				expect(res.statusCode).toBe(200);
-				expect(res.body).toMatchSnapshot();
+				app.use('/', middleware);
+				await request(app).get('/');
 				expect(logger.info.mock.calls).toMatchSnapshot();
 			});
 		});
 
-		describe('operation failure of', () => {
+		describe('failure of', () => {
 			it('non-async function', async () => {
 				const errorInstance = {
 					status: 500,
@@ -135,23 +287,20 @@ describe('autoLogOp and toMiddleware', () => {
 				const callFunction = () => {
 					throw errorInstance;
 				};
-				const operationFunction = (meta, req, res, next) => {
+				const operationFunction = meta => {
 					try {
 						autoLogAction(callFunction)(null, meta);
 					} catch (e) {
-						next(e);
 						throw e;
 					}
 				};
-				const next = jest.fn();
-				try {
-					await autoLogOp(operationFunction)(null, null, null, next);
-				} catch (e) {
-					expect(e).toBe(errorInstance);
-					expect(logger.info.mock.calls).toMatchSnapshot();
-					expect(logger.error.mock.calls).toMatchSnapshot();
-					expect(next.mock.calls).toMatchSnapshot();
-				}
+				const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
+				const app = express();
+				app.use('/', middleware);
+				await request(app).get('/');
+				expect(logger.info.mock.calls).toMatchSnapshot();
+				expect(logger.warn.mock.calls).toMatchSnapshot();
+				expect(logger.error.mock.calls).toMatchSnapshot();
 			});
 
 			it('async function', async () => {
@@ -163,25 +312,48 @@ describe('autoLogOp and toMiddleware', () => {
 				const callFunction = () => {
 					throw errorInstance;
 				};
-				const operationFunction = async (meta, req, res, next) => {
+				const operationFunction = async meta => {
 					try {
 						await autoLogAction(callFunction)(null, meta);
 					} catch (e) {
-						next(e);
 						throw e;
 					}
 				};
-				const next = jest.fn();
-				try {
-					await autoLogOp(operationFunction)(null, null, null, next);
-				} catch (e) {
-					expect(e).toBe(errorInstance);
-					expect(logger.info.mock.calls).toMatchSnapshot();
-					expect(logger.error.mock.calls).toMatchSnapshot();
-					expect(next.mock.calls).toMatchSnapshot();
-				}
+				const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
+				const app = express();
+				app.use('/', middleware);
+				await request(app).get('/');
+				expect(logger.info.mock.calls).toMatchSnapshot();
+				expect(logger.warn.mock.calls).toMatchSnapshot();
+				expect(logger.error.mock.calls).toMatchSnapshot();
 			});
 		});
+	});
+});
+
+describe('autoLogOp and toMiddleware', () => {
+	afterEach(() => {
+		jest.resetAllMocks();
+	});
+
+	it('logs meta from previous middleware correctly', async () => {
+		const metaMiddleware = (req, res, next) => {
+			req.meta = {
+				...req.meta,
+				transactionId: 'xxxx-xxxx',
+			};
+			next();
+		};
+		const operationFunction = async (meta, req, res) => {
+			res.status(200).send(meta);
+		};
+		const middleware = compose(toMiddleware, autoLogOp)(operationFunction);
+		const app = express();
+		app.use('/', metaMiddleware, middleware);
+		const res = await request(app).get('/');
+		expect(res.statusCode).toBe(200);
+		expect(res.body).toMatchSnapshot();
+		expect(logger.info.mock.calls).toMatchSnapshot();
 	});
 });
 
@@ -191,47 +363,31 @@ describe('autoLogOps', () => {
 	});
 
 	it('decorate each method correctly', async () => {
-		const operationFunctionA = (meta, req, res, next) => {
-			next(meta);
-		};
-		const operationFunctionB = (meta, req, res, next) => {
-			next(meta);
-		};
-		const enhancedOperations = autoLogOps({
+		const operationFunctionA = () => {};
+		const operationFunctionB = () => {};
+		const enhanced = autoLogOps({
 			operationFunctionA,
 			operationFunctionB,
 		});
-		expect(enhancedOperations.operationFunctionA.name).toBe(
-			'operationFunctionA',
-		);
-		expect(enhancedOperations.operationFunctionB.name).toBe(
-			'operationFunctionB',
-		);
-		const next = jest.fn();
-		await enhancedOperations.operationFunctionA(null, null, null, next);
-		await enhancedOperations.operationFunctionB(null, null, null, next);
+		expect(enhanced.operationFunctionA.name).toBe('operationFunctionA');
+		expect(enhanced.operationFunctionB.name).toBe('operationFunctionB');
+		await enhanced.operationFunctionA();
+		await enhanced.operationFunctionB();
 		expect(logger.info.mock.calls).toMatchSnapshot();
 	});
 
 	it('set anonymous function names as per property name correctly', async () => {
-		const createOperationFunction = () => (meta, req, res, next) => {
-			next(meta);
-		};
+		const createOperationFunction = () => () => {};
 		const operationFunctionA = createOperationFunction();
 		const operationFunctionB = createOperationFunction();
-		const enhancedOperations = autoLogOps({
+		const enhanced = autoLogOps({
 			operationFunctionA,
 			operationFunctionB,
 		});
-		expect(enhancedOperations.operationFunctionA.name).toBe(
-			'operationFunctionA',
-		);
-		expect(enhancedOperations.operationFunctionB.name).toBe(
-			'operationFunctionB',
-		);
-		const next = jest.fn();
-		await enhancedOperations.operationFunctionA(null, null, null, next);
-		await enhancedOperations.operationFunctionB(null, null, null, next);
+		expect(enhanced.operationFunctionA.name).toBe('operationFunctionA');
+		expect(enhanced.operationFunctionB.name).toBe('operationFunctionB');
+		await enhanced.operationFunctionA();
+		await enhanced.operationFunctionB();
 		expect(logger.info.mock.calls).toMatchSnapshot();
 	});
 });
@@ -296,5 +452,54 @@ describe('autoLogOpsToMiddlewares', () => {
 		expect(resB.statusCode).toBe(200);
 		expect(resB.body).toMatchSnapshot();
 		expect(logger.info.mock.calls).toMatchSnapshot();
+	});
+
+	describe('log serial middleware in correct order for', () => {
+		it('non-async functions success', async () => {
+			const operationFunctionA = () => {};
+			const operationFunctionB = () => {};
+			const operationFunctionC = (meta, req, res) => {
+				res.status(200).send(meta);
+			};
+			const enhanced = compose(toMiddlewares, autoLogOps)({
+				operationFunctionA,
+				operationFunctionB,
+				operationFunctionC,
+			});
+			const app = express();
+			app.use(
+				'/',
+				enhanced.operationFunctionA,
+				enhanced.operationFunctionB,
+				enhanced.operationFunctionC,
+			);
+			const res = await request(app).get('/');
+			expect(res.statusCode).toBe(200);
+			expect(logger.info.mock.calls).toMatchSnapshot();
+		});
+
+		it('non-async function failure', async () => {
+			const operationFunctionA = () => {};
+			const operationFunctionB = errorOperationFunction;
+			const operationFunctionC = (req, res) => {
+				res.status(200).send('hello world');
+			};
+			const enhanced = compose(toMiddlewares, autoLogOps)({
+				operationFunctionA,
+				operationFunctionB,
+				operationFunctionC,
+			});
+			const app = express();
+			app.use(
+				'/',
+				enhanced.operationFunctionA,
+				enhanced.operationFunctionB,
+				enhanced.operationFunctionC,
+			);
+			const res = await request(app).get('/');
+			expect(res.statusCode).toBe(404);
+			expect(logger.info.mock.calls).toMatchSnapshot();
+			expect(logger.warn.mock.calls).toMatchSnapshot();
+		});
 	});
 });

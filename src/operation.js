@@ -1,19 +1,17 @@
 import loggerEvent from './event';
 
 export const autoLogOp = operationFunction => {
-	const enhancedFunction = async (meta, req, res, next) => {
+	const enhancedFunction = async (meta, req, res) => {
 		const operation = operationFunction.name;
 		const m = {
 			operation,
-			...(req && Object.prototype.hasOwnProperty.call(req, 'meta')
-				? req.meta
-				: {}),
+			...(req && req.meta ? req.meta : {}),
 			...meta,
 		};
 		const event = loggerEvent(m);
 
 		try {
-			await operationFunction(m, req, res, next);
+			await operationFunction(m, req, res);
 			event.success();
 		} catch (e) {
 			event.failure(e);
@@ -30,9 +28,14 @@ export const autoLogOp = operationFunction => {
 export const toMiddleware = operationFunction => {
 	const convertedFunction = async (req, res, next) => {
 		try {
-			await operationFunction({}, req, res, next);
+			await operationFunction({}, req, res);
+			if (!res.headersSent) {
+				next();
+			}
 		} catch (e) {
-			// do nothing
+			if (!res.headersSent) {
+				next(e);
+			}
 		}
 	};
 	Object.defineProperty(convertedFunction, 'name', {
