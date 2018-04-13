@@ -167,7 +167,7 @@ describe('toMiddleware', () => {
 			expect(res.body).toEqual({ operation: 'operationFunction' });
 		});
 
-		it('controller kind function set res.rendered', async () => {
+		it('function set res.rendered', async () => {
 			const operationFunction = (meta, req, res) => {
 				res.rendered = true;
 			};
