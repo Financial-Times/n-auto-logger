@@ -58,7 +58,7 @@ const APIService = autoLogActions({ methodA, methodB, methodC });
 
 ```js
 // auto log an operation function of its start, success/failure state with function name as `operation`
-const operationFunction = (meta, req, res, next) => { /* try-catch-next-throw */ };
+const operationFunction = (meta, req, res) => { /* try-catch-throw */ };
 
 const someMiddleware = compose(toMiddleware, autoLogOp)(operationFunction) 
 
@@ -67,22 +67,6 @@ const someController = compose(toMiddlewares, autoLogOps)({ operationFunctionA, 
 ```
 
 > more details on [operation function format](#operation-function-format)
-
-```js
-// auto log operation and action together
-const operationFunction = async (meta, req, res, next) => {
-  try {
-    // import the APIService enhanced by autoLogActions
-    // `operationFunction.name` would be recorded in `meta` and passed down here
-    const data = await APIService.methodA(params, meta);
-    next();
-  } catch(e) {
-    next(e);
-    throw e;
-  }
-};
-export default toMiddleware(autoLogOp(operationFunction));
-```
 
 > more details on [use with other enhancers](#use-with-other-enhancers)
 
@@ -121,23 +105,21 @@ const someFunction = (mandatory: Object, optional?: Object ={}) => {
 
 ### operation function format
 
-The operation function use the pattern of `try-catch-next-throw`:
+`const operationFunction = (meta, req, res) => {}`:
 
 ```js
-const operationFunction = (meta, req, res, next) => {
-  try{
-    // main code
-    // functions that can potentially throw errors
-    // without the try-catch-next-throw pattern those errors may not be next to error handler
+// auto log operation and action together
+const operationFunction = async (meta, req, res) => {
+  try {
+    // import the APIService enhanced by autoLogActions
+    // `operationFunction.name` would be recorded in `meta` and passed down here
+    const data = await APIService.methodA(params, meta);
+    // do something with data
   } catch(e) {
-      // ensure the error would be handled by the error handler, 
-      // or you can write the error handling code in the catch block
-      next(e);
-      // further throw the error to the higher order enhancer function
-      // error caught in the enhancer function would then be parsed and logged
-      throw(e);
+    throw e;
   }
-}
+};
+export default toMiddleware(autoLogOp(operationFunction));
 ```
 
 ### use with other enhancers
