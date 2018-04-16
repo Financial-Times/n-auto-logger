@@ -6,6 +6,7 @@ import logger, {
 	toMiddleware,
 	toMiddlewares,
 	loggerEvent,
+	enhancedRender,
 } from '../index';
 
 describe('n-auto-logger exports', () => {
@@ -39,5 +40,9 @@ describe('n-auto-logger exports', () => {
 
 	it('loggerEvent', () => {
 		expect(typeof loggerEvent).toBe('function');
+	});
+
+	it('enhancedRender', () => {
+		expect(typeof enhancedRender).toBe('function');
 	});
 });
