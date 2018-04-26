@@ -1,13 +1,9 @@
-import logger from '@financial-times/n-logger';
-
+export { default } from '@financial-times/n-logger';
 export {
-	autoLogOp,
-	autoLogOps,
+	enhancedRender,
 	toMiddleware,
-	toMiddlewares,
-} from './operation';
+} from '@financial-times/n-express-enhancer';
+
+export { default as logOperation } from './operation';
 export { autoLogAction, autoLogActions } from './action';
 export { loggerEvent } from './event';
-export { default as enhancedRender } from './renderer';
-
-export default logger;
