@@ -54,7 +54,7 @@ Array [
   ],
   Array [
     Object {
-      "operation": "errorOperationFunction",
+      "operation": "operationFunctionB",
     },
   ],
 ]
@@ -66,7 +66,7 @@ Array [
     Object {
       "category": "CUSTOM_ERROR",
       "message": "Not Found",
-      "operation": "errorOperationFunction",
+      "operation": "operationFunctionB",
       "result": "failure",
       "status": 404,
     },
@@ -164,7 +164,7 @@ Array [
 ]
 `;
 
-exports[`logOperation when input operation function logs operation correctly with autoLogAction when failure of async function 1`] = `
+exports[`logOperation when input operation function logs operation correctly with logAction when failure of async function 1`] = `
 Array [
   Array [
     Object {
@@ -180,49 +180,7 @@ Array [
 ]
 `;
 
-exports[`logOperation when input operation function logs operation correctly with autoLogAction when failure of async function 2`] = `
-Array [
-  Array [
-    Object {
-      "action": "callFunction",
-      "category": "CUSTOM_ERROR",
-      "message": "Not Found",
-      "operation": "operationFunction",
-      "result": "failure",
-      "status": 404,
-    },
-  ],
-  Array [
-    Object {
-      "category": "CUSTOM_ERROR",
-      "message": "Not Found",
-      "operation": "operationFunction",
-      "result": "failure",
-      "status": 404,
-    },
-  ],
-]
-`;
-
-exports[`logOperation when input operation function logs operation correctly with autoLogAction when failure of async function 3`] = `Array []`;
-
-exports[`logOperation when input operation function logs operation correctly with autoLogAction when failure of non-async function 1`] = `
-Array [
-  Array [
-    Object {
-      "operation": "operationFunction",
-    },
-  ],
-  Array [
-    Object {
-      "action": "callFunction",
-      "operation": "operationFunction",
-    },
-  ],
-]
-`;
-
-exports[`logOperation when input operation function logs operation correctly with autoLogAction when failure of non-async function 2`] = `
+exports[`logOperation when input operation function logs operation correctly with logAction when failure of async function 2`] = `
 Array [
   Array [
     Object {
@@ -246,9 +204,51 @@ Array [
 ]
 `;
 
-exports[`logOperation when input operation function logs operation correctly with autoLogAction when failure of non-async function 3`] = `Array []`;
+exports[`logOperation when input operation function logs operation correctly with logAction when failure of async function 3`] = `Array []`;
 
-exports[`logOperation when input operation function logs operation correctly with autoLogAction when success of async function with async sub actions 1`] = `
+exports[`logOperation when input operation function logs operation correctly with logAction when failure of non-async function 1`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+    },
+  ],
+  Array [
+    Object {
+      "action": "callFunction",
+      "operation": "operationFunction",
+    },
+  ],
+]
+`;
+
+exports[`logOperation when input operation function logs operation correctly with logAction when failure of non-async function 2`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "category": "CUSTOM_ERROR",
+      "message": "Not Found",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 404,
+    },
+  ],
+  Array [
+    Object {
+      "category": "CUSTOM_ERROR",
+      "message": "Not Found",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 404,
+    },
+  ],
+]
+`;
+
+exports[`logOperation when input operation function logs operation correctly with logAction when failure of non-async function 3`] = `Array []`;
+
+exports[`logOperation when input operation function logs operation correctly with logAction when success of async function with async sub actions 1`] = `
 Array [
   Array [
     Object {
@@ -277,7 +277,7 @@ Array [
 ]
 `;
 
-exports[`logOperation when input operation function logs operation correctly with autoLogAction when success of non-async function with non async sub actions 1`] = `
+exports[`logOperation when input operation function logs operation correctly with logAction when success of non-async function with non async sub actions 1`] = `
 Array [
   Array [
     Object {

@@ -1,108 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`autoLogAction args format should log error if input arg meta is specified but not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
-
-exports[`autoLogAction args format should log error if input arg params is not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
-
-exports[`autoLogAction args format should throw error if there're more than 2 args 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
-
-exports[`autoLogAction async function should invoke callFunction correctly 1`] = `
-Array [
-  Array [
-    Object {
-      "test": "a",
-    },
-    Object {
-      "meta": "b",
-    },
-  ],
-]
-`;
-
-exports[`autoLogAction async function should log callFunction failure correctly and throw the original exception 1`] = `
-Array [
-  Array [
-    Object {
-      "action": "callFunction",
-      "category": "CUSTOM_ERROR",
-      "message": "bar",
-      "meta": "b",
-      "result": "failure",
-      "test": "a",
-    },
-  ],
-]
-`;
-
-exports[`autoLogAction async function should log callFunction success correctly 1`] = `
-Array [
-  Array [
-    Object {
-      "action": "callFunction",
-      "meta": "b",
-      "test": "a",
-    },
-  ],
-  Array [
-    Object {
-      "action": "callFunction",
-      "meta": "b",
-      "result": "success",
-      "test": "a",
-    },
-  ],
-]
-`;
-
-exports[`autoLogAction non-async function should invoke callFunction correctly 1`] = `
-Array [
-  Array [
-    Object {
-      "test": "a",
-    },
-    Object {
-      "meta": "b",
-    },
-  ],
-]
-`;
-
-exports[`autoLogAction non-async function should log callFunction failure correctly and throw the original exception 1`] = `
-Array [
-  Array [
-    Object {
-      "action": "callFunction",
-      "category": "CUSTOM_ERROR",
-      "message": "bar",
-      "meta": "b",
-      "result": "failure",
-      "test": "a",
-    },
-  ],
-]
-`;
-
-exports[`autoLogAction non-async function should log callFunction success correctly 1`] = `
-Array [
-  Array [
-    Object {
-      "action": "callFunction",
-      "meta": "b",
-      "test": "a",
-    },
-  ],
-  Array [
-    Object {
-      "action": "callFunction",
-      "meta": "b",
-      "result": "success",
-      "test": "a",
-    },
-  ],
-]
-`;
-
-exports[`autoLogActions decorate each method correctly 1`] = `
+exports[`logAction when input function bundle decorate each method correctly 1`] = `
 Array [
   Array [
     Object {
@@ -115,7 +13,7 @@ Array [
 ]
 `;
 
-exports[`autoLogActions decorate each method correctly 2`] = `
+exports[`logAction when input function bundle decorate each method correctly 2`] = `
 Array [
   Array [
     Object {
@@ -128,7 +26,7 @@ Array [
 ]
 `;
 
-exports[`autoLogActions decorate each method correctly 3`] = `
+exports[`logAction when input function bundle decorate each method correctly 3`] = `
 Array [
   Array [
     Object {
@@ -158,6 +56,108 @@ Array [
       "operation": "test",
       "result": "success",
       "test": "b",
+    },
+  ],
+]
+`;
+
+exports[`logAction when input individual function args format should log error if input arg meta is specified but not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
+
+exports[`logAction when input individual function args format should log error if input arg params is not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
+
+exports[`logAction when input individual function args format should throw error if there're more than 2 args 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
+
+exports[`logAction when input individual function async function should invoke callFunction correctly 1`] = `
+Array [
+  Array [
+    Object {
+      "test": "a",
+    },
+    Object {
+      "meta": "b",
+    },
+  ],
+]
+`;
+
+exports[`logAction when input individual function async function should log callFunction failure correctly and throw the original exception 1`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "category": "CUSTOM_ERROR",
+      "message": "bar",
+      "meta": "b",
+      "result": "failure",
+      "test": "a",
+    },
+  ],
+]
+`;
+
+exports[`logAction when input individual function async function should log callFunction success correctly 1`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "meta": "b",
+      "test": "a",
+    },
+  ],
+  Array [
+    Object {
+      "action": "callFunction",
+      "meta": "b",
+      "result": "success",
+      "test": "a",
+    },
+  ],
+]
+`;
+
+exports[`logAction when input individual function non-async function should invoke callFunction correctly 1`] = `
+Array [
+  Array [
+    Object {
+      "test": "a",
+    },
+    Object {
+      "meta": "b",
+    },
+  ],
+]
+`;
+
+exports[`logAction when input individual function non-async function should log callFunction failure correctly and throw the original exception 1`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "category": "CUSTOM_ERROR",
+      "message": "bar",
+      "meta": "b",
+      "result": "failure",
+      "test": "a",
+    },
+  ],
+]
+`;
+
+exports[`logAction when input individual function non-async function should log callFunction success correctly 1`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "meta": "b",
+      "test": "a",
+    },
+  ],
+  Array [
+    Object {
+      "action": "callFunction",
+      "meta": "b",
+      "result": "success",
+      "test": "a",
     },
   ],
 ]

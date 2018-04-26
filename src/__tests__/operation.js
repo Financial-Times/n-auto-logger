@@ -2,7 +2,7 @@ import express from 'express';
 import request from 'supertest';
 import compose from 'compose-function';
 
-import logger, { autoLogAction, toMiddleware } from '../index';
+import logger, { logAction, toMiddleware } from '../index';
 import logOperation from '../operation';
 
 jest.mock('@financial-times/n-logger');
@@ -57,12 +57,12 @@ describe('logOperation when input operation function', () => {
 		});
 	});
 
-	describe('logs operation correctly with autoLogAction when', () => {
+	describe('logs operation correctly with logAction when', () => {
 		describe('success of', () => {
 			it('async function with async sub actions', async () => {
 				const callFunction = () => Promise.resolve('foo');
 				const operationFunction = async meta => {
-					await autoLogAction(callFunction)(null, meta);
+					await logAction(callFunction)(null, meta);
 				};
 				const enhanced = logOperation(operationFunction);
 				await enhanced();
@@ -72,7 +72,7 @@ describe('logOperation when input operation function', () => {
 			it('non-async function with non async sub actions', async () => {
 				const callFunction = () => {};
 				const operationFunction = meta => {
-					autoLogAction(callFunction)(null, meta);
+					logAction(callFunction)(null, meta);
 				};
 				const enhanced = logOperation(operationFunction);
 				await enhanced();
@@ -87,7 +87,7 @@ describe('logOperation when input operation function', () => {
 				};
 				const operationFunction = meta => {
 					try {
-						autoLogAction(callFunction)(null, meta);
+						logAction(callFunction)(null, meta);
 					} catch (e) {
 						throw e;
 					}
@@ -108,7 +108,7 @@ describe('logOperation when input operation function', () => {
 				};
 				const operationFunction = async meta => {
 					try {
-						await autoLogAction(callFunction)(null, meta);
+						await logAction(callFunction)(null, meta);
 					} catch (e) {
 						throw e;
 					}

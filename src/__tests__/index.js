@@ -1,9 +1,8 @@
 import logger, {
-	autoLogAction,
-	autoLogActions,
+	loggerEvent,
+	logAction,
 	logOperation,
 	toMiddleware,
-	loggerEvent,
 	enhancedRender,
 } from '../index';
 
@@ -12,12 +11,12 @@ describe('n-auto-logger exports', () => {
 		expect(typeof logger).toBe('object');
 	});
 
-	it('autoLogAction', () => {
-		expect(typeof autoLogAction).toBe('function');
+	it('loggerEvent', () => {
+		expect(typeof loggerEvent).toBe('function');
 	});
 
-	it('autoLogActions', () => {
-		expect(typeof autoLogActions).toBe('function');
+	it('logAction', () => {
+		expect(typeof logAction).toBe('function');
 	});
 
 	it('logOperation', () => {
@@ -26,10 +25,6 @@ describe('n-auto-logger exports', () => {
 
 	it('toMiddleware', () => {
 		expect(typeof toMiddleware).toBe('function');
-	});
-
-	it('loggerEvent', () => {
-		expect(typeof loggerEvent).toBe('function');
 	});
 
 	it('enhancedRender', () => {

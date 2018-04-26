@@ -1,5 +1,5 @@
 import logger from '../index';
-import { autoLogAction, autoLogActions } from '../action';
+import logAction from '../action';
 import { RESULTS } from '../constants';
 
 jest.mock('@financial-times/n-logger');
@@ -9,14 +9,14 @@ jest.mock('@financial-times/n-logger');
 	https://github.com/Financial-Times/n-auto-metrics/blob/master/src/__tests__/action.js
  */
 
-describe('autoLogAction', () => {
+describe('logAction when input individual function', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
 
 	it('logs callFunction name as action name', async () => {
 		const callFunction = () => null;
-		autoLogAction(callFunction)();
+		logAction(callFunction)();
 		expect(logger.info.mock.calls[1][0]).toEqual({
 			action: 'callFunction',
 			result: RESULTS.SUCCESS,
@@ -25,7 +25,7 @@ describe('autoLogAction', () => {
 
 	it('returns an enhanced function with a configurable .name same as callFunction', async () => {
 		const callFunction = () => null;
-		const enhancedFunction = autoLogAction(callFunction);
+		const enhancedFunction = logAction(callFunction);
 		expect(enhancedFunction.name).toEqual(callFunction.name);
 		Object.defineProperty(enhancedFunction, 'name', {
 			value: 'test',
@@ -39,7 +39,7 @@ describe('autoLogAction', () => {
 			const callFunction = jest.fn(() => Promise.resolve('foo'));
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
-			const result = await autoLogAction(callFunction)(params, meta);
+			const result = await logAction(callFunction)(params, meta);
 			expect(callFunction.mock.calls).toMatchSnapshot();
 			const expectedResult = await callFunction(params, meta);
 			expect(result).toBe(expectedResult);
@@ -49,7 +49,7 @@ describe('autoLogAction', () => {
 			const callFunction = () => Promise.resolve('foo');
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
-			await autoLogAction(callFunction)(params, meta);
+			await logAction(callFunction)(params, meta);
 			expect(logger.info.mock.calls).toMatchSnapshot();
 		});
 
@@ -61,7 +61,7 @@ describe('autoLogAction', () => {
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
 			try {
-				await autoLogAction(callFunction)(params, meta);
+				await logAction(callFunction)(params, meta);
 			} catch (e) {
 				expect(e).toBe(errorInstance);
 				expect(logger.error.mock.calls).toMatchSnapshot();
@@ -74,7 +74,7 @@ describe('autoLogAction', () => {
 			const callFunction = jest.fn(() => 'foo');
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
-			const result = autoLogAction(callFunction)(params, meta);
+			const result = logAction(callFunction)(params, meta);
 			expect(callFunction.mock.calls).toMatchSnapshot();
 			const expectedResult = callFunction(params, meta);
 			expect(result).toBe(expectedResult);
@@ -84,7 +84,7 @@ describe('autoLogAction', () => {
 			const callFunction = () => 'foo';
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
-			autoLogAction(callFunction)(params, meta);
+			logAction(callFunction)(params, meta);
 			expect(logger.info.mock.calls).toMatchSnapshot();
 		});
 
@@ -96,7 +96,7 @@ describe('autoLogAction', () => {
 			const params = { test: 'a' };
 			const meta = { meta: 'b' };
 			try {
-				autoLogAction(callFunction)(params, meta);
+				logAction(callFunction)(params, meta);
 			} catch (e) {
 				expect(e).toBe(errorInstance);
 				expect(logger.error.mock.calls).toHaveLength(1);
@@ -108,7 +108,7 @@ describe('autoLogAction', () => {
 	describe('args format', () => {
 		it('should support lazy callFunction signature in one object or no meta', async () => {
 			const callFunction = () => null;
-			const enhanced = args => autoLogAction(callFunction)(args);
+			const enhanced = args => logAction(callFunction)(args);
 			const params = { a: 'foo' };
 			const meta = { b: 'bar' };
 			const args = { ...params, ...meta };
@@ -132,7 +132,7 @@ describe('autoLogAction', () => {
 			const params = { a: 'test' };
 			const meta = { b: 'k' };
 			const random = 'test';
-			const execution = () => autoLogAction(callFunction)(params, meta, random);
+			const execution = () => logAction(callFunction)(params, meta, random);
 			expect(execution).toThrowErrorMatchingSnapshot();
 		});
 
@@ -140,7 +140,7 @@ describe('autoLogAction', () => {
 			const callFunction = () => null;
 			const params = 'test';
 			const meta = { b: 'k' };
-			const execution = () => autoLogAction(callFunction)(params, meta);
+			const execution = () => logAction(callFunction)(params, meta);
 			expect(execution).toThrowErrorMatchingSnapshot();
 		});
 
@@ -148,13 +148,13 @@ describe('autoLogAction', () => {
 			const callFunction = () => null;
 			const params = { a: 'foo' };
 			const meta = 'bar';
-			const execution = () => autoLogAction(callFunction)(params, meta);
+			const execution = () => logAction(callFunction)(params, meta);
 			expect(execution).toThrowErrorMatchingSnapshot();
 		});
 	});
 });
 
-describe('autoLogActions', () => {
+describe('logAction when input function bundle', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
@@ -162,7 +162,7 @@ describe('autoLogActions', () => {
 	it('decorate each method correctly', async () => {
 		const callFunctionA = jest.fn();
 		const callFunctionB = jest.fn();
-		const enhancedService = autoLogActions({
+		const enhancedService = logAction({
 			callFunctionA,
 			callFunctionB,
 		});
