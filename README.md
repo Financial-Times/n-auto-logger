@@ -36,22 +36,15 @@ auto log function calls in operation/action model with a single line of code, ba
 
 ## quickstart
 ```js
-import { 
-  autoLogAction, 
-  autoLogActions, 
-  autoLogOp,
-  autoLogOps,
-  toMiddleware,
-  toMiddlewares,
-} from '@financial-times/n-auto-logger';
+import { logAction, logOperation, toMiddleware } from '@financial-times/n-auto-logger';
 ```
 
 ```js
 // auto log a function of its start, success/failure state with function name as `action`
-const result = autoLogAction(someFunction)(args: Object, meta?: Object);
+const result = logAction(someFunction)(args: Object, meta?: Object);
 
 // auto log multiple functions wrapped in an object
-const APIService = autoLogActions({ methodA, methodB, methodC });
+const APIService = logAction({ methodA, methodB, methodC });
 ```
 
 > more details on [action function format](#action-function-format)
@@ -60,10 +53,10 @@ const APIService = autoLogActions({ methodA, methodB, methodC });
 // auto log an operation function of its start, success/failure state with function name as `operation`
 const operationFunction = (meta, req, res) => { /* try-catch-throw */ };
 
-const someMiddleware = compose(toMiddleware, autoLogOp)(operationFunction) 
+const someMiddleware = compose(toMiddleware, logOperation)(operationFunction) 
 
-// auto log multiple operation functions wrapped in an object as controller
-const someController = compose(toMiddlewares, autoLogOps)({ operationFunctionA, operationFuncitonB });
+// auto log multiple operation functions wrapped in an object
+const someController = compose(toMiddleware, logOperation)({ operationFunctionA, operationFuncitonB });
 ```
 
 > more details on [operation function format](#operation-function-format)
@@ -88,8 +81,8 @@ npm install @financial-times/n-auto-logger
 ```js
 // you can auto log the call with meta, even if it is not mandatory to the function
 const someFunction = ({ argsA, argsB }) => {};
-autoLogAction(someFunction)(args, meta);
-autoLogAction(someFunction)(argsAndMeta);
+logAction(someFunction)(args, meta);
+logAction(someFunction)(argsAndMeta);
 
 // if you need to pass certain meta in the function call
 const someFunction = ({ paramsA, paramsB }, { metaA, metaB }) => {};
@@ -101,7 +94,7 @@ const someFunction = (mandatory: Object, optional?: Object ={}) => {
 };
 ```
 
-> The package would throw Errors if function signature is incorrect for `autoLogAction`.
+> The package would throw Errors if function signature is incorrect for `logAction`.
 
 ### operation function format
 
@@ -111,7 +104,7 @@ const someFunction = (mandatory: Object, optional?: Object ={}) => {
 // auto log operation and action together
 const operationFunction = async (meta, req, res) => {
   try {
-    // import the APIService enhanced by autoLogActions
+    // import the APIService enhanced by logAction
     // `operationFunction.name` would be recorded in `meta` and passed down here
     const data = await APIService.methodA(params, meta);
     // do something with data
@@ -119,18 +112,18 @@ const operationFunction = async (meta, req, res) => {
     throw e;
   }
 };
-export default toMiddleware(autoLogOp(operationFunction));
+export default toMiddleware(logOperation(operationFunction));
 ```
 
 ### use with other enhancers
 
-`autoLogOp` would return an operation function, so that other enhancers can be further chained before `toMiddleware`
+`logOperation` would return an operation function, so that other enhancers can be further chained before `toMiddleware`
 
 ```js
-export default compose(toMiddleware, autoMetricsOp, autoLogOp)(operationFunction);
-export default compose(toMiddlewares, autoMetricsOps, autoLogOps)(operationBundle);
-export default compose(autoMetricsAction, autoLogAction)(callFunction);
-export default compose(autoMetricsActions('service-name'), autoLogActions)(callFunctionBundle);
+export default compose(toMiddleware, autoMetricsOp, logOperation)(operationFunction);
+export default compose(toMiddlewares, autoMetricsOps, logOperation)(operationBundle);
+export default compose(autoMetricsAction, logAction)(callFunction);
+export default compose(autoMetricsActions('service-name'), logAction)(callFunctionBundle);
 ```
 
 ### default filtered fields
