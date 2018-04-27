@@ -36,10 +36,8 @@ auto log function calls in operation/action model with a single line of code, ba
 
 ## quickstart
 ```js
-import { logAction, logOperation, toMiddleware } from '@financial-times/n-auto-logger';
-```
+import { logAction } from '@financial-times/n-auto-logger';
 
-```js
 // auto log a function of its start, success/failure state with function name as `action`
 const result = logAction(someFunction)(args: Object, meta?: Object);
 
@@ -50,9 +48,10 @@ const APIService = logAction({ methodA, methodB, methodC });
 > more details on [action function format](#action-function-format)
 
 ```js
+import { logOperation, toMiddleware } from '@financial-times/n-auto-logger';
+
 // auto log an operation function of its start, success/failure state with function name as `operation`
 const operationFunction = (meta, req, res) => { /* try-catch-throw */ };
-
 const someMiddleware = compose(toMiddleware, logOperation)(operationFunction) 
 
 // auto log multiple operation functions wrapped in an object
@@ -121,7 +120,7 @@ export default toMiddleware(logOperation(operationFunction));
 
 ```js
 export default compose(toMiddleware, autoMetricsOp, logOperation)(operationFunction);
-export default compose(toMiddlewares, autoMetricsOps, logOperation)(operationBundle);
+export default compose(toMiddleware, autoMetricsOps, logOperation)(operationBundle);
 export default compose(autoMetricsAction, logAction)(callFunction);
 export default compose(autoMetricsActions('service-name'), logAction)(callFunctionBundle);
 ```
