@@ -72,6 +72,7 @@ export default compose(
   operationFuncitonB 
 }); // operation function bundle
 ```
+> check [use res.render](https://github.com/Financial-Times/n-express-enhancer#use-resrender)
 
 > more details on [operation function](https://github.com/financial-Times/n-express-enhancer#operatoin-function)
 
