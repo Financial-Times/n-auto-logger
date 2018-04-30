@@ -45,7 +45,7 @@ const result = logAction(someFunction)(params, meta); // action function
 export default compose(
  addMeta({ service: 'service-name' }), // optional
  logAction,
- )({ 
+)({ 
  methodA, 
  methodB, 
  methodC 
