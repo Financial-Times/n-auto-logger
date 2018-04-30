@@ -19,9 +19,6 @@ auto log function calls in operation/action model with a single line of code, ba
 - [quickstart](#quickstart)
 - [install](#install)
 - [usage](#usage)
-   * [action function format](#action-function-format)
-   * [operation function format](#operation-function-format)
-   * [use with other enhancers](#use-with-other-enhancers)
    * [default filtered fields](#default-filtered-fields)
    * [reserved filed override](#reserved-field-override)
    * [test stub](#test-stub)
@@ -29,7 +26,6 @@ auto log function calls in operation/action model with a single line of code, ba
    * [out-of-box error parsing support](#out-of-box-error-parsing-support)
    * [clean up log object](#clean-up-log-object)
 - [example](#example)
-- [development](#development)
 - [todos](#todos)
 
 <br>
@@ -45,7 +41,7 @@ const result = logAction(someFunction)(args: Object, meta?: Object);
 const APIService = logAction({ methodA, methodB, methodC });
 ```
 
-> more details on [action function format](#action-function-format)
+> more details on [action function](https://github.com/financial-Times/n-express-enhancer#action-function)
 
 ```js
 import { logOperation, toMiddleware } from '@financial-times/n-auto-logger';
@@ -58,9 +54,9 @@ const someMiddleware = compose(toMiddleware, logOperation)(operationFunction)
 const someController = compose(toMiddleware, logOperation)({ operationFunctionA, operationFuncitonB });
 ```
 
-> more details on [operation function format](#operation-function-format)
+> more details on [operation function](https://github.com/financial-Times/n-express-enhancer#operatoin-function)
 
-> more details on [use with other enhancers](#use-with-other-enhancers)
+> more details on [chain with other enhancers](https://github.com/Financial-Times/n-express-enhancer/blob/master/README.md#chain-a-series-of-enhancers)
 
 ```js
 // set key names of fields to be muted in .env to reduce log for development or filter fields in production
@@ -193,11 +189,6 @@ logger.error = jest.fn();
 [enhanced api service example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/apis/newspaper-info-svc.js)
 
 [enhanced controller example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/routes/delivery-address/controller.js)
-
-## development
-* `make install` or `yarn`
-* `yarn test --watch` to automatically run test on changing src
-* `yarn watch` to automatically correct code format on saving src
 
 ## todos
 * logger coverage measurement in test
