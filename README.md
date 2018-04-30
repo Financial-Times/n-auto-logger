@@ -14,8 +14,6 @@
 
 an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log function calls automatically with the operation/action model
 
-<br>
-
 - [quickstart](#quickstart)
   * [logAction](#logaction)
   * [logOperation](#logoperation)
