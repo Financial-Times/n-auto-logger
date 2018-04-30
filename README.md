@@ -16,9 +16,9 @@ auto log function calls in operation/action model with a single line of code, ba
 
 <br>
 
-- [quickstart](#quickstart)
-- [install](#install)
 - [usage](#usage)
+- [install](#install)
+- [gotcha](#usage)
    * [default filtered fields](#default-filtered-fields)
    * [reserved filed override](#reserved-field-override)
    * [test stub](#test-stub)
@@ -68,7 +68,7 @@ LOGGER_MUTE_FIELDS=transactionId, userId
 npm install @financial-times/n-auto-logger
 ```
 
-## usage
+## gotcha
 
 ### action function format
 
