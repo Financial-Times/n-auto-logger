@@ -16,50 +16,71 @@ auto log function calls in operation/action model with a single line of code, ba
 
 <br>
 
-- [usage](#usage)
+- [quickstart](#quickstart)
+  * [logAction](#logaction)
+  * [logOperation](#logoperation)
+  * [LOGGER_MUTE_FIELDS](#logger-mute-fields)
 - [install](#install)
-- [gotcha](#usage)
-   * [default filtered fields](#default-filtered-fields)
-   * [reserved filed override](#reserved-field-override)
-   * [test stub](#test-stub)
+- [gotcha](#gotcha)
+  * [default filtered fields](#default-filtered-fields)
+  * [reserved field override](#reserved-field-override)
+  * [test stub](#test-stub)
 - [built-in](#built-in)
-   * [out-of-box error parsing support](#out-of-box-error-parsing-support)
-   * [clean up log object](#clean-up-log-object)
+  * [out-of-box error parsing support](#out-of-box-error-parsing-support)
+  * [clean up log object](#clean-up-log-object)
 - [example](#example)
 - [todos](#todos)
 
 <br>
 
 ## quickstart
+
+### logAction
+
+automatically log the start, success/failure state with necessary metadata including function name as `action`, it can be applied to both individual action function or an action function bundle
+
 ```js
 import { logAction } from '@financial-times/n-auto-logger';
-
-// auto log a function of its start, success/failure state with function name as `action`
-const result = logAction(someFunction)(args: Object, meta?: Object);
-
-// auto log multiple functions wrapped in an object
-const APIService = logAction({ methodA, methodB, methodC });
+// apply to individual action function
+const result = logAction(someFunction)(params, meta);
+// apply to action function bundle
+export default logAction({ 
+  methodA, 
+  methodB, 
+  methodC 
+});
 ```
 
 > more details on [action function](https://github.com/financial-Times/n-express-enhancer#action-function)
 
+### logOperation
+
+automatically log the start, success/failure state with necessary metadata including function name as `operation`, it can be applied to both individual operation function or an operation function bundle
+
 ```js
 import { logOperation, toMiddleware } from '@financial-times/n-auto-logger';
-
-// auto log an operation function of its start, success/failure state with function name as `operation`
+// apply to operation function
 const operationFunction = (meta, req, res) => { /* try-catch-throw */ };
-const someMiddleware = compose(toMiddleware, logOperation)(operationFunction) 
-
-// auto log multiple operation functions wrapped in an object
-const someController = compose(toMiddleware, logOperation)({ operationFunctionA, operationFuncitonB });
+const someMiddleware = compose(toMiddleware, logOperation)(operationFunction);
+// apply to operation function bundle
+export default compose(
+  toMiddleware, 
+  logOperation
+)({ 
+  operationFunctionA, 
+  operationFuncitonB 
+});
 ```
 
 > more details on [operation function](https://github.com/financial-Times/n-express-enhancer#operatoin-function)
 
 > more details on [chain with other enhancers](https://github.com/Financial-Times/n-express-enhancer/blob/master/README.md#chain-a-series-of-enhancers)
 
+### LOGGER_MUTE_FIELDS
+
+set key names of fields to be muted in .env to reduce log for development or filter fields in production
+
 ```js
-// set key names of fields to be muted in .env to reduce log for development or filter fields in production
 LOGGER_MUTE_FIELDS=transactionId, userId
 ```
 
@@ -69,57 +90,6 @@ npm install @financial-times/n-auto-logger
 ```
 
 ## gotcha
-
-### action function format
-
-`n-auto-logger` allows two objects as the args of the autoLogged function so that values can be logged with corresponding key names.
-```js
-// you can auto log the call with meta, even if it is not mandatory to the function
-const someFunction = ({ argsA, argsB }) => {};
-logAction(someFunction)(args, meta);
-logAction(someFunction)(argsAndMeta);
-
-// if you need to pass certain meta in the function call
-const someFunction = ({ paramsA, paramsB }, { metaA, metaB }) => {};
-
-// if you need to do input params validation (e.g. before an API call)
-const someFunction = (mandatory: Object, optional?: Object ={}) => {
-  validate(mandatory);
-  // ...
-};
-```
-
-> The package would throw Errors if function signature is incorrect for `logAction`.
-
-### operation function format
-
-`const operationFunction = (meta, req, res) => {}`:
-
-```js
-// auto log operation and action together
-const operationFunction = async (meta, req, res) => {
-  try {
-    // import the APIService enhanced by logAction
-    // `operationFunction.name` would be recorded in `meta` and passed down here
-    const data = await APIService.methodA(params, meta);
-    // do something with data
-  } catch(e) {
-    throw e;
-  }
-};
-export default toMiddleware(logOperation(operationFunction));
-```
-
-### use with other enhancers
-
-`logOperation` would return an operation function, so that other enhancers can be further chained before `toMiddleware`
-
-```js
-export default compose(toMiddleware, autoMetricsOp, logOperation)(operationFunction);
-export default compose(toMiddleware, autoMetricsOps, logOperation)(operationBundle);
-export default compose(autoMetricsAction, logAction)(callFunction);
-export default compose(autoMetricsActions('service-name'), logAction)(callFunctionBundle);
-```
 
 ### default filtered fields
 `user`, `handler`, `_locals` fields in `error` or `meta` object would not be logged by default.
@@ -157,6 +127,8 @@ function(err, req, res, next) {
 * `result` default to `success/failure`
 
 ### test stub
+
+stub the logger instance instead of the whole module
 
 ```js
 import logger from '@financial-times/n-auto-logger'; // the underlying logger instance (`n-logger`)
