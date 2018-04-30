@@ -1,6 +1,7 @@
 export { default } from '@financial-times/n-logger';
 export {
 	toMiddleware,
+	addMeta,
 	enhancedRender,
 	compose,
 } from '@financial-times/n-express-enhancer';

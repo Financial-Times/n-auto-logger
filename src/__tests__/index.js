@@ -3,6 +3,7 @@ import logger, {
 	logAction,
 	logOperation,
 	toMiddleware,
+	addMeta,
 	enhancedRender,
 	compose,
 } from '../index';
@@ -26,6 +27,10 @@ describe('n-auto-logger exports', () => {
 
 	it('toMiddleware', () => {
 		expect(typeof toMiddleware).toBe('function');
+	});
+
+	it('addMeta', () => {
+		expect(typeof addMeta).toBe('function');
 	});
 
 	it('enhancedRender', () => {
