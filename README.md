@@ -16,21 +16,22 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 
 <br>
 
-- [quickstart](#quickstart)
+- [Quickstart](#quickstart)
   * [logAction](#logaction)
   * [logOperation](#logoperation)
   * [mute logger fields](#mute-logger-fields)
-- [install](#install)
-- [gotcha](#gotcha)
+- [Install](#install)
+- [Gotcha](#gotcha)
   * [default filtered fields](#default-filtered-fields)
   * [reserved field override](#reserved-field-override)
   * [test stub](#test-stub)
   * [out-of-box error parsing support](#out-of-box-error-parsing-support)
   * [clean up log object](#clean-up-log-object)
+- [Licence](#licence)
 
 <br>
 
-## quickstart
+## Quickstart
 
 ### logAction
 
@@ -84,12 +85,12 @@ set key names of fields to be muted in .env to reduce log for development or fil
 LOGGER_MUTE_FIELDS=transactionId, userId
 ```
 
-## install
+## Install
 ```shell
 npm install @financial-times/n-auto-logger
 ```
 
-## gotcha
+## Gotcha
 
 ### default filtered fields
 `user`, `handler`, `_locals` fields in `error` or `meta` object would not be logged by default.
@@ -159,3 +160,6 @@ logger.error = jest.fn();
 ### clean up log object
 
 `n-auto-logger` would trim any empty fields and method fields in the input meta or error objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields or extend Error object with methods.
+
+## Licence
+[MIT](/LICENSE)
