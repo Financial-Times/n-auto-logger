@@ -2,8 +2,6 @@
 
 an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log function calls automatically with the operation/action model
 
-<br>
-
 [![npm version](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger.svg)](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger)
 ![npm download](https://img.shields.io/npm/dm/@financial-times/n-auto-logger.svg)
 ![node version](https://img.shields.io/node/v/@financial-times/n-auto-logger.svg)
@@ -15,6 +13,8 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Financial-Times/n-auto-logger/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Financial-Times/n-auto-logger/?branch=master)
 [![Dependencies](https://david-dm.org/Financial-Times/n-auto-logger.svg)](https://david-dm.org/Financial-Times/n-auto-logger)
 [![devDependencies](https://david-dm.org/Financial-Times/n-auto-logger/dev-status.svg)](https://david-dm.org/Financial-Times/n-auto-logger?type=dev)
+
+<br>
 
 - [quickstart](#quickstart)
   * [logAction](#logaction)
