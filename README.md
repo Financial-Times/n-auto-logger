@@ -38,14 +38,17 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 automatically log the start, success/failure state with necessary metadata including function name as `action`, it can be applied to both individual action function or an action function bundle.
 
 ```js
-import { logAction } from '@financial-times/n-auto-logger';
+import { logAction, addMeta, compose } from '@financial-times/n-auto-logger';
 
 const result = logAction(someFunction)(params, meta); // action function
 
-export default logAction({ 
-  methodA, 
-  methodB, 
-  methodC 
+export default compose(
+ addMeta({ service: 'service-name' }), // optional
+ logAction,
+ )({ 
+ methodA, 
+ methodB, 
+ methodC 
 }); // action function bundle
 ```
 
@@ -65,11 +68,11 @@ const someMiddleware = compose(
 )(operationFunction);
 
 export default compose(
-  toMiddleware, 
-  logOperation
+ toMiddleware, 
+ logOperation
 )({ 
-  operationFunctionA, 
-  operationFuncitonB 
+ operationFunctionA, 
+ operationFuncitonB 
 }); // operation function bundle
 ```
 > check [use res.render](https://github.com/Financial-Times/n-express-enhancer#use-resrender)
