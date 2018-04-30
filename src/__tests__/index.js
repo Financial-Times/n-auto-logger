@@ -4,6 +4,7 @@ import logger, {
 	logOperation,
 	toMiddleware,
 	enhancedRender,
+	compose,
 } from '../index';
 
 describe('n-auto-logger exports', () => {
@@ -29,5 +30,9 @@ describe('n-auto-logger exports', () => {
 
 	it('enhancedRender', () => {
 		expect(typeof enhancedRender).toBe('function');
+	});
+
+	it('compose', () => {
+		expect(typeof compose).toBe('function');
 	});
 });

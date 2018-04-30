@@ -2,6 +2,7 @@ export { default } from '@financial-times/n-logger';
 export {
 	toMiddleware,
 	enhancedRender,
+	compose,
 } from '@financial-times/n-express-enhancer';
 
 export { loggerEvent } from './event';

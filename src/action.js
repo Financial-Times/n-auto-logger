@@ -1,7 +1,6 @@
-import { createEnhancer } from '@financial-times/n-express-enhancer';
+import { createEnhancer, isPromise } from '@financial-times/n-express-enhancer';
 
 import loggerEvent from './event';
-import { isPromise } from './utils';
 
 const logAction = actionFunction => (paramsOrArgs, meta, ...excessive) => {
 	if (
