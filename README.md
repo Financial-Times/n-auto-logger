@@ -25,11 +25,8 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
   * [default filtered fields](#default-filtered-fields)
   * [reserved field override](#reserved-field-override)
   * [test stub](#test-stub)
-- [built-in](#built-in)
   * [out-of-box error parsing support](#out-of-box-error-parsing-support)
   * [clean up log object](#clean-up-log-object)
-- [example](#example)
-- [todos](#todos)
 
 <br>
 
@@ -150,8 +147,6 @@ logger.warn = jest.fn();
 logger.error = jest.fn();
 ```
 
-## built-in
-
 ### out-of-box error parsing support
 
 `n-auto-logger` would parse different forms of the following error objects to logger-suitable format automatically([detail](src/failure.js)), while it still logs plain object and string message.
@@ -164,11 +159,3 @@ logger.error = jest.fn();
 ### clean up log object
 
 `n-auto-logger` would trim any empty fields and method fields in the input meta or error objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields or extend Error object with methods.
-
-## example
-[enhanced api service example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/apis/newspaper-info-svc.js)
-
-[enhanced controller example](https://github.com/Financial-Times/newspaper-mma/blob/master/server/routes/delivery-address/controller.js)
-
-## todos
-* logger coverage measurement in test
