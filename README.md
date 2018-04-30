@@ -12,14 +12,14 @@
 [![Dependencies](https://david-dm.org/Financial-Times/n-auto-logger.svg)](https://david-dm.org/Financial-Times/n-auto-logger)
 [![devDependencies](https://david-dm.org/Financial-Times/n-auto-logger/dev-status.svg)](https://david-dm.org/Financial-Times/n-auto-logger?type=dev)
 
-auto log function calls in operation/action model with a single line of code, based on [n-logger](https://github.com/Financial-Times/n-logger)
+an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log function calls automatically with the operation/action model
 
 <br>
 
 - [quickstart](#quickstart)
   * [logAction](#logaction)
   * [logOperation](#logoperation)
-  * [LOGGER_MUTE_FIELDS](#logger-mute-fields)
+  * [mute logger fields](#mute-logger-fields)
 - [install](#install)
 - [gotcha](#gotcha)
   * [default filtered fields](#default-filtered-fields)
@@ -37,48 +37,51 @@ auto log function calls in operation/action model with a single line of code, ba
 
 ### logAction
 
-automatically log the start, success/failure state with necessary metadata including function name as `action`, it can be applied to both individual action function or an action function bundle
+automatically log the start, success/failure state with necessary metadata including function name as `action`, it can be applied to both individual action function or an action function bundle.
 
 ```js
 import { logAction } from '@financial-times/n-auto-logger';
-// apply to individual action function
-const result = logAction(someFunction)(params, meta);
-// apply to action function bundle
+
+const result = logAction(someFunction)(params, meta); // action function
+
 export default logAction({ 
   methodA, 
   methodB, 
   methodC 
-});
+}); // action function bundle
 ```
 
 > more details on [action function](https://github.com/financial-Times/n-express-enhancer#action-function)
 
 ### logOperation
 
-automatically log the start, success/failure state with necessary metadata including function name as `operation`, it can be applied to both individual operation function or an operation function bundle
+automatically log the start, success/failure state with necessary metadata including function name as `operation`, it can be applied to both individual operation function or an operation function bundle.
 
 ```js
-import { logOperation, toMiddleware } from '@financial-times/n-auto-logger';
-// apply to operation function
-const operationFunction = (meta, req, res) => { /* try-catch-throw */ };
-const someMiddleware = compose(toMiddleware, logOperation)(operationFunction);
-// apply to operation function bundle
+import { logOperation, toMiddleware, compose } from '@financial-times/n-auto-logger';
+
+const operationFunction = (meta, req, res) => {}; // operation function
+const someMiddleware = compose(
+ toMiddleware, 
+ logOperation
+)(operationFunction);
+
 export default compose(
   toMiddleware, 
   logOperation
 )({ 
   operationFunctionA, 
   operationFuncitonB 
-});
+}); // operation function bundle
 ```
 
 > more details on [operation function](https://github.com/financial-Times/n-express-enhancer#operatoin-function)
 
 > more details on [chain with other enhancers](https://github.com/Financial-Times/n-express-enhancer/blob/master/README.md#chain-a-series-of-enhancers)
 
-### LOGGER_MUTE_FIELDS
+### mute logger fields
 
-set key names of fields to be muted in .env to reduce log for development or filter fields in production
+set key names of fields to be muted in .env to reduce log for development or filter fields in production.
 
 ```js
 LOGGER_MUTE_FIELDS=transactionId, userId
@@ -94,20 +97,25 @@ npm install @financial-times/n-auto-logger
 ### default filtered fields
 `user`, `handler`, `_locals` fields in `error` or `meta` object would not be logged by default.
 
+sensitive personal data could be put in `meta.user` and would not be logged
 ```js
-// sensitive personal data could be put in meta.user and would not be logged
 const meta = { ...meta, user: { id, email } };
+```
 
-// UI but not debugger facing data could be put in error.user and would not be logged
-// e.g. app error status (> API call error status), user message (> error message from API for debugging)
-throw NError({ status, message }).extend({ user: { status, message } });
-````
+UI but not debugger facing data could be put in `error.user` and would not be logged
+e.g. app error status (> API call error status), user message (> error message from API for debugging)
+
 ```js
-// .handler field would not be logged, as it is only useful for error handler
+throw nError({ status, message }).extend({ user: { status, message } });
+````
+
+`.handler` field would not be logged, as it is only useful for error handler
+```js
 throw nError({ status: 404 }).extend({ handler: 'REDIRECT_TO_INDEX' });
 ```
+
+`_locals` field would not be logged as it is verbose and not relevant to debug
 ```js
-// _locals field would not be logged as it is verbose and not relevant to debug
 // in case you didn't clone the error object in error handler
 function(err, req, res, next) {
   const e = {...err}; // clone the error object to avoid mutate the input
