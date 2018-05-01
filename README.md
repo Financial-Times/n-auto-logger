@@ -22,11 +22,11 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
   * [mute logger fields](#mute-logger-fields)
 - [Install](#install)
 - [Gotcha](#gotcha)
-  * [default filtered fields](#default-filtered-fields)
-  * [reserved field override](#reserved-field-override)
-  * [test stub](#test-stub)
-  * [out-of-box error parsing support](#out-of-box-error-parsing-support)
+  * [reserved fields](#reserved-fields)
+  * [ignored fields](#ignored-fields)
+  * [out-of-box error parsing](#out-of-box-error-parsing)
   * [clean up log object](#clean-up-log-object)
+  * [test stub](#test-stub)
 - [Licence](#licence)
 
 <br>
@@ -96,8 +96,23 @@ npm install @financial-times/n-auto-logger
 
 ## Gotcha
 
-### default filtered fields
-`user`, `handler`, `_locals` fields in `error` or `meta` object would not be logged by default.
+### reserved fields
+`n-auto-logger` will append values to following reserved fields automatically, the values would be overriden by the key value of the same name in your `args/params/meta` or error object, be cautious not to override them unintentionally.
+
+| fields    | default                                                                            | convention used in     |
+|-----------|------------------------------------------------------------------------------------|------------------------|
+| operation | operationFunction.name                                                             | n-auto-logger/metrics  |
+| action    | actionFunction.name                                                                | n-auto-logger/metrics  |
+| service   | addMeta({ service: 'service-name' })                                               | n-auto-metrics         |
+| result    | 'success'<br>'failure'                                                                | n-auto-logger          |
+| category  | 'FETCH_RESPONSE_ERROR'<br>'FETCH_NETWORK_ERROR'<br>'NODE_SYSTEM_ERROR'<br>'CUSTOM_ERROR' | n-auto-metrics/n-error |
+| type      | specify the unique error type for debugging and error handling                     | n-auto-metrics/n-error |
+| status    | recorded for service action call failure                                           | n-error/n-api-factory  |
+| stack     | error stack trace                                                                  | n-error                |
+
+
+### ignored fields
+`user`, `handler`, `_locals` fields from `error` or `meta` object would not be logged by default.
 
 sensitive personal data could be put in `meta.user` and would not be logged
 ```js
@@ -125,16 +140,18 @@ function(err, req, res, next) {
 }
 ```
 
-### reserved field override
-`n-auto-logger` will append values to following reserved fields automatically, the values would be overriden by the key value of the same name in your `args/params/meta` or error object, be cautious not to override them unintentionally.
-* `operation` default to `operationFunction.name`
-* `service` default to name of the service the action belongs to if you are using [n-auto-metrics](https://github.com/Financial-Times/n-auto-metrics)
-* `action` default to `callFunction.name`
-* `category` default to `FETCH_RESPONSE_ERROR/FETCH_NETWORK_ERROR/NODE_SYSTEM_ERROR/CUSTOM_ERROR`
-* `type` was used to specify the unique error type for debugging and error handling by convention
-* `status` in error object would be recorded for service action call failure
-* `stack` used in Error or NError to store the stack trace
-* `result` default to `success/failure`
+### out-of-box error parsing
+
+`n-auto-logger` would parse different forms of the following error objects to logger-suitable format automatically([detail](src/failure.js)), while it still logs plain object and string message.
+* Fetch Response Error `content-type`:`application/json`,`text/plain`,`text/html`
+* Fetch (Network) Error
+* Node native Error objects
+* Custom objects extends native Error object
+* [NError](https://github.com/Financial-Times/n-error)
+
+### clean up log object
+
+`n-auto-logger` would trim any empty fields and method fields in the input meta or error objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields or extend Error object with methods.
 
 ### test stub
 
@@ -151,19 +168,6 @@ logger.info = jest.fn();
 logger.warn = jest.fn();
 logger.error = jest.fn();
 ```
-
-### out-of-box error parsing support
-
-`n-auto-logger` would parse different forms of the following error objects to logger-suitable format automatically([detail](src/failure.js)), while it still logs plain object and string message.
-* Fetch Response Error `content-type`:`application/json`,`text/plain`,`text/html`
-* Fetch (Network) Error
-* Node native Error objects
-* Custom objects extends native Error object
-* [NError](https://github.com/Financial-Times/n-error)
-
-### clean up log object
-
-`n-auto-logger` would trim any empty fields and method fields in the input meta or error objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields or extend Error object with methods.
 
 ## Licence
 [MIT](/LICENSE)
