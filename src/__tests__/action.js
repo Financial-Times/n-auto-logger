@@ -4,12 +4,7 @@ import { RESULTS } from '../constants';
 
 jest.mock('@financial-times/n-logger');
 
-/*
-	compatibility test with n-auto-metrics
-	https://github.com/Financial-Times/n-auto-metrics/blob/master/src/__tests__/action.js
- */
-
-describe('logAction when input individual function', () => {
+describe('logAction', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
@@ -21,17 +16,6 @@ describe('logAction when input individual function', () => {
 			action: 'callFunction',
 			result: RESULTS.SUCCESS,
 		});
-	});
-
-	it('returns an enhanced function with a configurable .name same as callFunction', async () => {
-		const callFunction = () => null;
-		const enhancedFunction = logAction(callFunction);
-		expect(enhancedFunction.name).toEqual(callFunction.name);
-		Object.defineProperty(enhancedFunction, 'name', {
-			value: 'test',
-			configurable: true,
-		});
-		expect(enhancedFunction.name).toBe('test');
 	});
 
 	describe('async function', () => {
@@ -151,30 +135,5 @@ describe('logAction when input individual function', () => {
 			const execution = () => logAction(callFunction)(params, meta);
 			expect(execution).toThrowErrorMatchingSnapshot();
 		});
-	});
-});
-
-describe('logAction when input function bundle', () => {
-	afterEach(() => {
-		jest.resetAllMocks();
-	});
-
-	it('decorate each method correctly', async () => {
-		const callFunctionA = jest.fn();
-		const callFunctionB = jest.fn();
-		const enhancedService = logAction({
-			callFunctionA,
-			callFunctionB,
-		});
-		const paramsA = { test: 'a' };
-		const paramsB = { test: 'b' };
-		const meta = { operation: 'test' };
-		await enhancedService.callFunctionA(paramsA, meta);
-		await enhancedService.callFunctionB(paramsB, meta);
-		expect(enhancedService.callFunctionA.name).toBe('callFunctionA');
-		expect(enhancedService.callFunctionB.name).toBe('callFunctionB');
-		expect(callFunctionA.mock.calls).toMatchSnapshot();
-		expect(callFunctionB.mock.calls).toMatchSnapshot();
-		expect(logger.info.mock.calls).toMatchSnapshot();
 	});
 });

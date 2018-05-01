@@ -1,73 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`logAction when input function bundle decorate each method correctly 1`] = `
-Array [
-  Array [
-    Object {
-      "test": "a",
-    },
-    Object {
-      "operation": "test",
-    },
-  ],
-]
-`;
+exports[`logAction args format should log error if input arg meta is specified but not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
 
-exports[`logAction when input function bundle decorate each method correctly 2`] = `
-Array [
-  Array [
-    Object {
-      "test": "b",
-    },
-    Object {
-      "operation": "test",
-    },
-  ],
-]
-`;
+exports[`logAction args format should log error if input arg params is not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
 
-exports[`logAction when input function bundle decorate each method correctly 3`] = `
-Array [
-  Array [
-    Object {
-      "action": "callFunctionA",
-      "operation": "test",
-      "test": "a",
-    },
-  ],
-  Array [
-    Object {
-      "action": "callFunctionA",
-      "operation": "test",
-      "result": "success",
-      "test": "a",
-    },
-  ],
-  Array [
-    Object {
-      "action": "callFunctionB",
-      "operation": "test",
-      "test": "b",
-    },
-  ],
-  Array [
-    Object {
-      "action": "callFunctionB",
-      "operation": "test",
-      "result": "success",
-      "test": "b",
-    },
-  ],
-]
-`;
+exports[`logAction args format should throw error if there're more than 2 args 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
 
-exports[`logAction when input individual function args format should log error if input arg meta is specified but not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
-
-exports[`logAction when input individual function args format should log error if input arg params is not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
-
-exports[`logAction when input individual function args format should throw error if there're more than 2 args 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
-
-exports[`logAction when input individual function async function should invoke callFunction correctly 1`] = `
+exports[`logAction async function should invoke callFunction correctly 1`] = `
 Array [
   Array [
     Object {
@@ -80,7 +19,7 @@ Array [
 ]
 `;
 
-exports[`logAction when input individual function async function should log callFunction failure correctly and throw the original exception 1`] = `
+exports[`logAction async function should log callFunction failure correctly and throw the original exception 1`] = `
 Array [
   Array [
     Object {
@@ -95,7 +34,7 @@ Array [
 ]
 `;
 
-exports[`logAction when input individual function async function should log callFunction success correctly 1`] = `
+exports[`logAction async function should log callFunction success correctly 1`] = `
 Array [
   Array [
     Object {
@@ -115,7 +54,7 @@ Array [
 ]
 `;
 
-exports[`logAction when input individual function non-async function should invoke callFunction correctly 1`] = `
+exports[`logAction non-async function should invoke callFunction correctly 1`] = `
 Array [
   Array [
     Object {
@@ -128,7 +67,7 @@ Array [
 ]
 `;
 
-exports[`logAction when input individual function non-async function should log callFunction failure correctly and throw the original exception 1`] = `
+exports[`logAction non-async function should log callFunction failure correctly and throw the original exception 1`] = `
 Array [
   Array [
     Object {
@@ -143,7 +82,7 @@ Array [
 ]
 `;
 
-exports[`logAction when input individual function non-async function should log callFunction success correctly 1`] = `
+exports[`logAction non-async function should log callFunction success correctly 1`] = `
 Array [
   Array [
     Object {

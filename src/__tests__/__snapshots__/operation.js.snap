@@ -1,44 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`logOperation and toMiddleware when input funciton bundle decorate each method correctly 1`] = `
-Object {
-  "operation": "operationFunctionA",
-}
-`;
-
-exports[`logOperation and toMiddleware when input funciton bundle decorate each method correctly 2`] = `
-Object {
-  "operation": "operationFunctionB",
-}
-`;
-
-exports[`logOperation and toMiddleware when input funciton bundle decorate each method correctly 3`] = `
-Array [
-  Array [
-    Object {
-      "operation": "operationFunctionA",
-    },
-  ],
-  Array [
-    Object {
-      "operation": "operationFunctionA",
-      "result": "success",
-    },
-  ],
-  Array [
-    Object {
-      "operation": "operationFunctionB",
-    },
-  ],
-  Array [
-    Object {
-      "operation": "operationFunctionB",
-      "result": "success",
-    },
-  ],
-]
-`;
-
 exports[`logOperation and toMiddleware when input funciton bundle log serial middleware in correct order for non-async function failure 1`] = `
 Array [
   Array [
@@ -137,34 +98,7 @@ Array [
 ]
 `;
 
-exports[`logOperation when input function bundle decorate each method correctly 1`] = `
-Array [
-  Array [
-    Object {
-      "operation": "operationFunctionA",
-    },
-  ],
-  Array [
-    Object {
-      "operation": "operationFunctionA",
-      "result": "success",
-    },
-  ],
-  Array [
-    Object {
-      "operation": "operationFunctionB",
-    },
-  ],
-  Array [
-    Object {
-      "operation": "operationFunctionB",
-      "result": "success",
-    },
-  ],
-]
-`;
-
-exports[`logOperation when input operation function logs operation correctly with logAction when failure of async function 1`] = `
+exports[`logOperation logs operation correctly combined with logAction when failure of async function 1`] = `
 Array [
   Array [
     Object {
@@ -180,7 +114,7 @@ Array [
 ]
 `;
 
-exports[`logOperation when input operation function logs operation correctly with logAction when failure of async function 2`] = `
+exports[`logOperation logs operation correctly combined with logAction when failure of async function 2`] = `
 Array [
   Array [
     Object {
@@ -204,9 +138,9 @@ Array [
 ]
 `;
 
-exports[`logOperation when input operation function logs operation correctly with logAction when failure of async function 3`] = `Array []`;
+exports[`logOperation logs operation correctly combined with logAction when failure of async function 3`] = `Array []`;
 
-exports[`logOperation when input operation function logs operation correctly with logAction when failure of non-async function 1`] = `
+exports[`logOperation logs operation correctly combined with logAction when failure of non-async function 1`] = `
 Array [
   Array [
     Object {
@@ -222,7 +156,7 @@ Array [
 ]
 `;
 
-exports[`logOperation when input operation function logs operation correctly with logAction when failure of non-async function 2`] = `
+exports[`logOperation logs operation correctly combined with logAction when failure of non-async function 2`] = `
 Array [
   Array [
     Object {
@@ -246,9 +180,9 @@ Array [
 ]
 `;
 
-exports[`logOperation when input operation function logs operation correctly with logAction when failure of non-async function 3`] = `Array []`;
+exports[`logOperation logs operation correctly combined with logAction when failure of non-async function 3`] = `Array []`;
 
-exports[`logOperation when input operation function logs operation correctly with logAction when success of async function with async sub actions 1`] = `
+exports[`logOperation logs operation correctly combined with logAction when success of async function with async sub actions 1`] = `
 Array [
   Array [
     Object {
@@ -277,7 +211,7 @@ Array [
 ]
 `;
 
-exports[`logOperation when input operation function logs operation correctly with logAction when success of non-async function with non async sub actions 1`] = `
+exports[`logOperation logs operation correctly combined with logAction when success of non-async function with non async sub actions 1`] = `
 Array [
   Array [
     Object {

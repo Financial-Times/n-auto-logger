@@ -17,12 +17,7 @@ const errorOperationFunction = () => {
 	throw commonErrorInstance;
 };
 
-/*
-	compatibility test with n-auto-metrics
-	https://github.com/Financial-Times/n-auto-metrics/blob/master/src/__tests__/operation.js
- */
-
-describe('logOperation when input operation function', () => {
+describe('logOperation', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
@@ -32,18 +27,6 @@ describe('logOperation when input operation function', () => {
 			const operationFunction = () => {};
 			const enhanced = logOperation(operationFunction);
 			expect(enhanced).toHaveLength(3);
-		});
-
-		it('executes correctly', () => {
-			const callFunction = jest.fn();
-			const operationFunction = () => {
-				callFunction();
-			};
-			const enhanced = logOperation(operationFunction);
-			enhanced();
-			expect(callFunction.mock.calls).toHaveLength(1);
-			enhanced();
-			expect(callFunction.mock.calls).toHaveLength(2);
 		});
 
 		it('throws error correctly', async () => {
@@ -57,7 +40,7 @@ describe('logOperation when input operation function', () => {
 		});
 	});
 
-	describe('logs operation correctly with logAction when', () => {
+	describe('logs operation correctly combined with logAction when', () => {
 		describe('success of', () => {
 			it('async function with async sub actions', async () => {
 				const callFunction = () => Promise.resolve('foo');
@@ -126,24 +109,6 @@ describe('logOperation when input operation function', () => {
 	});
 });
 
-describe('logOperation when input function bundle', () => {
-	afterEach(() => {
-		jest.resetAllMocks();
-	});
-
-	it('decorate each method correctly', async () => {
-		const operationFunctionA = () => {};
-		const operationFunctionB = () => {};
-		const enhanced = logOperation({
-			operationFunctionA,
-			operationFunctionB,
-		});
-		await enhanced.operationFunctionA();
-		await enhanced.operationFunctionB();
-		expect(logger.info.mock.calls).toMatchSnapshot();
-	});
-});
-
 describe('logOperation and toMiddleware when input individual function', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
@@ -173,29 +138,6 @@ describe('logOperation and toMiddleware when input individual function', () => {
 describe('logOperation and toMiddleware when input funciton bundle', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
-	});
-
-	it('decorate each method correctly', async () => {
-		const operationFunctionA = (meta, req, res) => {
-			res.status(200).send(meta);
-		};
-		const operationFunctionB = (meta, req, res) => {
-			res.status(200).send(meta);
-		};
-		const enhancedController = compose(toMiddleware, logOperation)({
-			operationFunctionA,
-			operationFunctionB,
-		});
-		const app = express();
-		app.use('/a', enhancedController.operationFunctionA);
-		app.use('/b', enhancedController.operationFunctionB);
-		const resA = await request(app).get('/a');
-		expect(resA.statusCode).toBe(200);
-		expect(resA.body).toMatchSnapshot();
-		const resB = await request(app).get('/b');
-		expect(resB.statusCode).toBe(200);
-		expect(resB.body).toMatchSnapshot();
-		expect(logger.info.mock.calls).toMatchSnapshot();
 	});
 
 	describe('log serial middleware in correct order for', () => {
