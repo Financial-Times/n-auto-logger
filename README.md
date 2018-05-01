@@ -24,9 +24,9 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 - [Gotcha](#gotcha)
   * [reserved fields](#reserved-fields)
   * [ignored fields](#ignored-fields)
-  * [out-of-box error parsing](#out-of-box-error-parsing)
-  * [clean up log object](#clean-up-log-object)
-  * [test stub](#test-stub)
+  * [error auto parse](#error-auto-parse)
+  * [log auto trim](#log-auto-trim)
+  * [mute logger in test](#mute-logger-in-test)
 - [Licence](#licence)
 
 <br>
@@ -140,20 +140,21 @@ function(err, req, res, next) {
 }
 ```
 
-### out-of-box error parsing
+### error auto parse
 
 `n-auto-logger` would parse different forms of the following error objects to logger-suitable format automatically([detail](src/failure.js)), while it still logs plain object and string message.
+
 * Fetch Response Error `content-type`:`application/json`,`text/plain`,`text/html`
 * Fetch (Network) Error
 * Node native Error objects
 * Custom objects extends native Error object
 * [NError](https://github.com/Financial-Times/n-error)
 
-### clean up log object
+### log auto trim
 
 `n-auto-logger` would trim any empty fields and method fields in the input meta or error objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields or extend Error object with methods.
 
-### test stub
+### mute logger in test
 
 stub the logger instance instead of the whole module
 
