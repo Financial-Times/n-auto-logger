@@ -2,6 +2,7 @@ import logger, {
 	loggerEvent,
 	logAction,
 	logOperation,
+	addTransactionId,
 	toMiddleware,
 	addMeta,
 	enhancedRender,
@@ -27,6 +28,10 @@ describe('n-auto-logger exports', () => {
 
 	it('toMiddleware', () => {
 		expect(typeof toMiddleware).toBe('function');
+	});
+
+	it('addTransactionId', () => {
+		expect(typeof addTransactionId).toBe('function');
 	});
 
 	it('addMeta', () => {
