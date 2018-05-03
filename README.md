@@ -39,12 +39,12 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 automatically log the start, success/failure state with necessary metadata including function name as `action`, it can be applied to both individual action function or an action function bundle.
 
 ```js
-import { logAction, addMeta, compose } from '@financial-times/n-auto-logger';
+import { logAction, tagService, compose } from '@financial-times/n-auto-logger';
 
 const result = logAction(someFunction)(params, meta); // action function
 
 export default compose(
- addMeta({ service: 'service-name' }), // optional
+ tagService('service-name'), // optional
  logAction,
 )({ 
  methodA, 
@@ -119,7 +119,7 @@ npm install @financial-times/n-auto-logger
 |-----------|------------------------------------------------------------------------------------|------------------------|
 | operation | operationFunction.name                                                             | n-auto-logger/metrics  |
 | action    | actionFunction.name                                                                | n-auto-logger/metrics  |
-| service   | addMeta({ service: 'service-name' })                                               | n-auto-metrics         |
+| service   | tagService('service-name')                                                         | n-auto-metrics         |
 | result    | 'success'<br>'failure'                                                                | n-auto-logger          |
 | category  | 'FETCH_RESPONSE_ERROR'<br>'FETCH_NETWORK_ERROR'<br>'NODE_SYSTEM_ERROR'<br>'CUSTOM_ERROR' | n-auto-metrics/n-error |
 | type      | specify the unique error type for debugging and error handling                     | n-auto-metrics/n-error |
