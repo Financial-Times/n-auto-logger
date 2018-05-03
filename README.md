@@ -19,6 +19,7 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 - [Quickstart](#quickstart)
   * [logAction](#logaction)
   * [logOperation](#logoperation)
+  * [addTransactionId](#addtransactionid)
   * [mute logger fields](#mute-logger-fields)
 - [Install](#install)
 - [Gotcha](#gotcha)
@@ -80,6 +81,21 @@ export default compose(
 > more details on [operation function](https://github.com/financial-Times/n-express-enhancer#operatoin-function)
 
 > more details on [chain with other enhancers](https://github.com/Financial-Times/n-express-enhancer/blob/master/README.md#chain-a-series-of-enhancers)
+
+### addTransactionId
+
+use the addTransactionId to ensure the logs are easy to thread when debugging, and this would work well with [n-api-factory](https://github.com/Financial-Times/n-api-factory) to pass it to up stream services.
+
+```js
+import { addTransactionId } from '@financial-times/n-auto-logger';
+
+// you might want to exclude `__*` path from log
+app.use(/^\/(?!_{2}).*$/, [
+ // use it before any other middleware to be logged
+ addTransactionId,
+ //...other middlewares
+]);
+```
 
 ### mute logger fields
 
