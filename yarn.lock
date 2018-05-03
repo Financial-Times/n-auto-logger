@@ -101,9 +101,9 @@
     isomorphic-fetch "^2.2.1"
     node-fetch "^2.0.0"
 
-"@financial-times/n-express-enhancer@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@financial-times/n-express-enhancer/-/n-express-enhancer-1.4.0.tgz#ba2ee482d7e51b3e4d7f1b0eaed6d3f315542b86"
+"@financial-times/n-express-enhancer@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@financial-times/n-express-enhancer/-/n-express-enhancer-1.5.0.tgz#e60c57852a3d045ae32ebca124aefb92bacb0b67"
   dependencies:
     compose-function "^3.0.3"
 

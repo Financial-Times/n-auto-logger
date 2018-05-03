@@ -4,7 +4,7 @@ import logger, {
 	logOperation,
 	addTransactionId,
 	toMiddleware,
-	addMeta,
+	tagService,
 	enhancedRender,
 	compose,
 } from '../index';
@@ -34,8 +34,8 @@ describe('n-auto-logger exports', () => {
 		expect(typeof addTransactionId).toBe('function');
 	});
 
-	it('addMeta', () => {
-		expect(typeof addMeta).toBe('function');
+	it('tagService', () => {
+		expect(typeof tagService).toBe('function');
 	});
 
 	it('enhancedRender', () => {
