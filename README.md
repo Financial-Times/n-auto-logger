@@ -1,6 +1,6 @@
 # n-auto-logger 
 
-an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log function calls automatically with the operation/action model
+an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log function calls automatically with the operation/action model, based on [n-logger](https://github.com/Financial-Times/n-logger)
 
 [![npm version](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger.svg)](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger)
 ![npm download](https://img.shields.io/npm/dm/@financial-times/n-auto-logger.svg)
