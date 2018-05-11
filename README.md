@@ -21,6 +21,7 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
   * [logOperation](#logoperation)
   * [addTransactionId](#addtransactionid)
   * [mute logger fields](#mute-logger-fields)
+  * [auto log level](#auto-log-level)
 - [Install](#install)
 - [Gotcha](#gotcha)
   * [reserved fields](#reserved-fields)
@@ -104,6 +105,18 @@ set key names of fields to be muted in .env to reduce log for development or fil
 ```js
 LOGGER_MUTE_FIELDS=transactionId, userId
 ```
+
+### auto log level
+
+set auto log level in `.env` with 3 options: `verbose`(default) | `concise` | `error`.
+
+```js
+AUTO_LOG_LEVEL=concise
+```
+
+* `verbose` would log every stage(start, success/failure) of operation and action
+* `concise` would log success/failure of operation and only failure of action
+* `error` would log only failure of operation and action
 
 ## Install
 ```shell
