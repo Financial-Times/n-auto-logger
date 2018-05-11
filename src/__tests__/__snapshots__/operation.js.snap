@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`logOperation and toMiddleware when input funciton bundle log serial middleware in correct order for non-async function failure 1`] = `
+exports[`logOperation and toMiddleware log serial middleware in correct order for non-async function failure 1`] = `
 Array [
   Array [
     Object {
@@ -21,7 +21,7 @@ Array [
 ]
 `;
 
-exports[`logOperation and toMiddleware when input funciton bundle log serial middleware in correct order for non-async function failure 2`] = `
+exports[`logOperation and toMiddleware log serial middleware in correct order for non-async function failure 2`] = `
 Array [
   Array [
     Object {
@@ -35,7 +35,7 @@ Array [
 ]
 `;
 
-exports[`logOperation and toMiddleware when input funciton bundle log serial middleware in correct order for non-async functions success 1`] = `
+exports[`logOperation and toMiddleware log serial middleware in correct order for non-async functions success 1`] = `
 Array [
   Array [
     Object {
@@ -73,14 +73,14 @@ Array [
 ]
 `;
 
-exports[`logOperation and toMiddleware when input individual function logs meta from previous middleware correctly 1`] = `
+exports[`logOperation and toMiddleware logs meta from previous middleware correctly 1`] = `
 Object {
   "operation": "operationFunction",
   "transactionId": "xxxx-xxxx",
 }
 `;
 
-exports[`logOperation and toMiddleware when input individual function logs meta from previous middleware correctly 2`] = `
+exports[`logOperation and toMiddleware logs meta from previous middleware correctly 2`] = `
 Array [
   Array [
     Object {

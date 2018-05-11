@@ -1,6 +1,7 @@
 import { createEnhancer, isPromise } from '@financial-times/n-express-enhancer';
 
-import loggerEvent from './event';
+import { createEventLogger } from './event';
+import { LOG_LEVELS } from './constants';
 
 const logAction = actionFunction => (paramsOrArgs, meta, ...excessive) => {
 	if (
@@ -15,30 +16,32 @@ const logAction = actionFunction => (paramsOrArgs, meta, ...excessive) => {
 		);
 	}
 
-	const event = loggerEvent({
+	const event = createEventLogger({
 		...meta,
 		action: actionFunction.name,
 		...paramsOrArgs,
 	});
+	const { AUTO_LOG_LEVEL = LOG_LEVELS.verbose } = process.env;
+	if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.start();
 
 	try {
 		const call = actionFunction(paramsOrArgs, meta);
 		if (isPromise(call)) {
 			return call
 				.then(data => {
-					event.success();
+					if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.success();
 					return data;
 				})
 				.catch(e => {
-					event.failure(e);
+					if (AUTO_LOG_LEVEL !== LOG_LEVELS.error) event.failure(e);
 					throw e;
 				});
 		}
 		const data = call;
-		event.success();
+		if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.success();
 		return data;
 	} catch (e) {
-		event.failure(e);
+		if (AUTO_LOG_LEVEL !== LOG_LEVELS.error) event.failure(e);
 		throw e;
 	}
 };

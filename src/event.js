@@ -7,7 +7,7 @@ import { RESULTS, ALWAYS_MUTTED } from './constants';
 
 // TODO: support deepTrimObject / deepOnlyValues
 // N-LOGGER would flatten nested object and logout their leave values
-const createEventLogger = meta => {
+export const createEventLogger = meta => {
 	const loggerMuteFields = [
 		...fieldStringToArray(process.env.LOGGER_MUTE_FIELDS),
 		...ALWAYS_MUTTED,
@@ -19,7 +19,6 @@ const createEventLogger = meta => {
 		success: data =>
 			logger.info(onlyValues({ ...event, result: RESULTS.SUCCESS, data })),
 		failure: error => failureLogger(event)(error),
-		action: action => createEventLogger({ ...event, action }),
 	};
 };
 

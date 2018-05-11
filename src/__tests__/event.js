@@ -96,44 +96,4 @@ describe('loggerEvent', () => {
 			expect(logger.info.mock.calls[0][0]).toEqual(commonTrimmedMeta);
 		});
 	});
-
-	describe('.action()', () => {
-		it('.start() creates logger.info()', () => {
-			const event = loggerEvent(commonMeta);
-			event.action('someAction').start();
-			expect(logger.info.mock.calls).toHaveLength(2);
-			expect(logger.info.mock.calls[1][0]).toEqual({
-				...commonTrimmedMeta,
-				action: 'someAction',
-			});
-		});
-
-		it('.success() creates logger.info()', () => {
-			const event = loggerEvent(commonMeta);
-			event.action('someAction').success({ returnData: 'someReturnData' });
-			expect(logger.info.mock.calls).toHaveLength(2);
-			expect(logger.info.mock.calls[1][0]).toEqual({
-				...commonTrimmedMeta,
-				action: 'someAction',
-				result: RESULTS.SUCCESS,
-				data: { returnData: 'someReturnData' },
-			});
-		});
-
-		it('.failure() fires failureLogger', () => {
-			const event = loggerEvent(commonMeta);
-			event
-				.action('someAction')
-				.failure({ status: 400, reason: 'some action error message' });
-			expect(logger.info.mock.calls).toHaveLength(1);
-			expect(logger.warn.mock.calls[0][0]).toEqual({
-				...commonTrimmedMeta,
-				category: CATEGORIES.CUSTOM_ERROR,
-				status: 400,
-				action: 'someAction',
-				result: RESULTS.FAILURE,
-				reason: 'some action error message',
-			});
-		});
-	});
 });

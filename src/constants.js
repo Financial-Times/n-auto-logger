@@ -7,3 +7,9 @@ export const RESULTS = {
 	SUCCESS: 'success',
 	FAILURE: 'failure',
 };
+
+export const LOG_LEVELS = {
+	verbose: 'verbose',
+	concise: 'concise',
+	error: 'error',
+};

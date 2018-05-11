@@ -109,7 +109,7 @@ describe('logOperation', () => {
 	});
 });
 
-describe('logOperation and toMiddleware when input individual function', () => {
+describe('logOperation and toMiddleware', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
@@ -132,12 +132,6 @@ describe('logOperation and toMiddleware when input individual function', () => {
 		expect(res.statusCode).toBe(200);
 		expect(res.body).toMatchSnapshot();
 		expect(logger.info.mock.calls).toMatchSnapshot();
-	});
-});
-
-describe('logOperation and toMiddleware when input funciton bundle', () => {
-	afterEach(() => {
-		jest.resetAllMocks();
 	});
 
 	describe('log serial middleware in correct order for', () => {

@@ -1,6 +1,7 @@
 import { createEnhancer } from '@financial-times/n-express-enhancer';
 
-import loggerEvent from './event';
+import { createEventLogger } from './event';
+import { LOG_LEVELS } from './constants';
 
 export const logOperation = operationFunction => async (meta, req, res) => {
 	const operation = operationFunction.name;
@@ -9,11 +10,13 @@ export const logOperation = operationFunction => async (meta, req, res) => {
 		...(req && req.meta ? req.meta : {}),
 		...meta,
 	};
-	const event = loggerEvent(m);
+	const event = createEventLogger(m);
+	const { AUTO_LOG_LEVEL = LOG_LEVELS.verbose } = process.env;
+	if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.start();
 
 	try {
 		await operationFunction(m, req, res);
-		event.success();
+		if (AUTO_LOG_LEVEL !== LOG_LEVELS.error) event.success();
 	} catch (e) {
 		event.failure(e);
 		throw e;
