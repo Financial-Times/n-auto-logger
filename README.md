@@ -118,6 +118,8 @@ AUTO_LOG_LEVEL=concise
 * `concise` would log success/failure of operation and only failure of action
 * `error` would log only failure of operation and action
 
+You can override the ENV_VAR with a flag value as well if you would like to switch log level in production for debugging.
+
 ## Install
 ```shell
 npm install @financial-times/n-auto-logger
