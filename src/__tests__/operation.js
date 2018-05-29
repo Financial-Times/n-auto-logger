@@ -125,7 +125,10 @@ describe('logOperation and toMiddleware', () => {
 		const operationFunction = async (meta, req, res) => {
 			res.status(200).send(meta);
 		};
-		const middleware = compose(toMiddleware, logOperation)(operationFunction);
+		const middleware = compose(
+			toMiddleware,
+			logOperation,
+		)(operationFunction);
 		const app = express();
 		app.use('/', metaMiddleware, middleware);
 		const res = await request(app).get('/');
@@ -141,7 +144,10 @@ describe('logOperation and toMiddleware', () => {
 			const operationFunctionC = (meta, req, res) => {
 				res.status(200).send(meta);
 			};
-			const enhanced = compose(toMiddleware, logOperation)({
+			const enhanced = compose(
+				toMiddleware,
+				logOperation,
+			)({
 				operationFunctionA,
 				operationFunctionB,
 				operationFunctionC,
@@ -164,7 +170,10 @@ describe('logOperation and toMiddleware', () => {
 			const operationFunctionC = (req, res) => {
 				res.status(200).send('hello world');
 			};
-			const enhanced = compose(toMiddleware, logOperation)({
+			const enhanced = compose(
+				toMiddleware,
+				logOperation,
+			)({
 				operationFunctionA,
 				operationFunctionB,
 				operationFunctionC,
