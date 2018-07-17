@@ -5,6 +5,7 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 [![npm version](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger.svg)](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger)
 ![npm download](https://img.shields.io/npm/dm/@financial-times/n-auto-logger.svg)
 ![node version](https://img.shields.io/node/v/@financial-times/n-auto-logger.svg)
+[![gitter chat](https://badges.gitter.im/Financial-Times/n-auto-logger.svg)](https://gitter.im/Financial-Times/n-auto-logger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 [![CircleCI](https://circleci.com/gh/Financial-Times/n-auto-logger.svg?style=shield)](https://circleci.com/gh/Financial-Times/n-auto-logger)
