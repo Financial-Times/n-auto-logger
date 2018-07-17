@@ -5,6 +5,7 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 [![npm version](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger.svg)](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger)
 ![npm download](https://img.shields.io/npm/dm/@financial-times/n-auto-logger.svg)
 ![node version](https://img.shields.io/node/v/@financial-times/n-auto-logger.svg)
+[![gitter chat](https://badges.gitter.im/Financial-Times/n-auto-logger.svg)](https://gitter.im/Financial-Times/n-auto-logger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 [![CircleCI](https://circleci.com/gh/Financial-Times/n-auto-logger.svg?style=shield)](https://circleci.com/gh/Financial-Times/n-auto-logger)
@@ -12,7 +13,7 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 [![Known Vulnerabilities](https://snyk.io/test/github/Financial-Times/n-auto-logger/badge.svg)](https://snyk.io/test/github/Financial-Times/n-auto-logger)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Financial-Times/n-auto-logger/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Financial-Times/n-auto-logger/?branch=master)
 [![Dependencies](https://david-dm.org/Financial-Times/n-auto-logger.svg)](https://david-dm.org/Financial-Times/n-auto-logger)
-[![devDependencies](https://david-dm.org/Financial-Times/n-auto-logger/dev-status.svg)](https://david-dm.org/Financial-Times/n-auto-logger?type=dev) [![Join the chat at https://gitter.im/Financial-Times/n-auto-logger](https://badges.gitter.im/Financial-Times/n-auto-logger.svg)](https://gitter.im/Financial-Times/n-auto-logger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![devDependencies](https://david-dm.org/Financial-Times/n-auto-logger/dev-status.svg)](https://david-dm.org/Financial-Times/n-auto-logger?type=dev)
 
 <br>
 
