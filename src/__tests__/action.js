@@ -111,6 +111,15 @@ describe('logAction', () => {
 			});
 		});
 
+		it('should log callFunction with lazy signature correctly', async () => {
+			const callFunction = ({ paramA, meta }) => ({ paramA, ...meta });
+			const enhanced = logAction(callFunction);
+			const params = { paramA: 'foo' };
+			const meta = { b: 'bar' };
+			await enhanced({ ...params, meta });
+			expect(logger.info.mock.calls).toMatchSnapshot();
+		});
+
 		it("should throw error if there're more than 2 args", () => {
 			const callFunction = () => null;
 			const params = { a: 'test' };

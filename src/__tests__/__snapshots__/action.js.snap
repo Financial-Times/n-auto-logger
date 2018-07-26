@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`logAction args format should log callFunction with lazy signature correctly 1`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "b": "bar",
+      "paramA": "foo",
+    },
+  ],
+  Array [
+    Object {
+      "action": "callFunction",
+      "b": "bar",
+      "paramA": "foo",
+      "result": "success",
+    },
+  ],
+]
+`;
+
 exports[`logAction args format should log error if input arg meta is specified but not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
 
 exports[`logAction args format should log error if input arg params is not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
