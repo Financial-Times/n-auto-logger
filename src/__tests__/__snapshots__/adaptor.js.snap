@@ -12,20 +12,16 @@ Array [
   Array [
     Object {
       "action": "actionFunction",
-      "meta": Object {
-        "userId": "mock-id",
-      },
       "paramA": "a",
+      "userId": "mock-id",
     },
   ],
   Array [
     Object {
       "action": "actionFunction",
-      "meta": Object {
-        "userId": "mock-id",
-      },
       "paramA": "a",
       "result": "success",
+      "userId": "mock-id",
     },
   ],
 ]

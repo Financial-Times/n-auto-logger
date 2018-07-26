@@ -16,12 +16,16 @@ const logAction = actionFunction => (paramsOrArgs, meta, ...excessive) => {
 		);
 	}
 
+	const { meta: metaInArgs, ...params } = paramsOrArgs || {};
+
 	const event = createEventLogger({
 		...meta,
 		action: actionFunction.name,
-		...paramsOrArgs,
+		...params,
+		...metaInArgs,
 	});
 	const { AUTO_LOG_LEVEL = LOG_LEVELS.verbose } = process.env;
+
 	if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.start();
 
 	try {
