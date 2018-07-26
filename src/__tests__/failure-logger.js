@@ -2,7 +2,7 @@ import logger from '@financial-times/n-logger';
 import nError from '@financial-times/n-error';
 import { Response, Headers, FetchError } from 'node-fetch';
 
-import failureLogger from '../failure';
+import failureLogger from '../failure-logger';
 import { CATEGORIES } from '../constants';
 import { assertErrorLog } from '../utils';
 

@@ -2,11 +2,9 @@ import logger from '@financial-times/n-logger';
 import { onlyValues, removeObjectKeys } from '@financial-times/n-utils';
 
 import { fieldStringToArray } from './utils';
-import failureLogger from './failure';
+import failureLogger from './failure-logger';
 import { RESULTS, ALWAYS_MUTTED } from './constants';
 
-// TODO: support deepTrimObject / deepOnlyValues
-// N-LOGGER would flatten nested object and logout their leave values
 export const createEventLogger = meta => {
 	const loggerMuteFields = [
 		...fieldStringToArray(process.env.LOGGER_MUTE_FIELDS),
