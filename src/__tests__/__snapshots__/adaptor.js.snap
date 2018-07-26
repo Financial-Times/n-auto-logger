@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`adaptor recognise and enhance action function correctly 1`] = `
+Object {
+  "paramA": "a",
+  "userId": "mock-id",
+}
+`;
+
+exports[`adaptor recognise and enhance action function correctly 2`] = `
+Array [
+  Array [
+    Object {
+      "action": "actionFunction",
+      "meta": Object {
+        "userId": "mock-id",
+      },
+      "paramA": "a",
+    },
+  ],
+  Array [
+    Object {
+      "action": "actionFunction",
+      "meta": Object {
+        "userId": "mock-id",
+      },
+      "paramA": "a",
+      "result": "success",
+    },
+  ],
+]
+`;
+
+exports[`adaptor recognise and enhance operation function correctly 1`] = `
+Object {
+  "operation": "operationFunction",
+  "userId": "mock-id",
+}
+`;
+
+exports[`adaptor recognise and enhance operation function correctly 2`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+      "userId": "mock-id",
+    },
+  ],
+  Array [
+    Object {
+      "operation": "operationFunction",
+      "result": "success",
+      "userId": "mock-id",
+    },
+  ],
+]
+`;
