@@ -1,5 +1,3 @@
-import { createEnhancer } from '@financial-times/n-express-enhancer';
-
 import { createEventLogger } from './event';
 import { LOG_LEVELS } from './constants';
 
@@ -23,4 +21,4 @@ export const logOperation = operationFunction => async (meta, req, res) => {
 	}
 };
 
-export default createEnhancer(logOperation);
+export default logOperation;

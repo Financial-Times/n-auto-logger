@@ -9,5 +9,5 @@ export {
 export { loggerEvent } from './event';
 export { default as logAction } from './action';
 export { default as logOperation } from './operation';
-export { default as logging } from './adaptor';
+export { default as autoLog } from './enhancer';
 export { default as addTransactionId } from './transaction-id';

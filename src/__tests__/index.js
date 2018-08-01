@@ -2,7 +2,7 @@ import logger, {
 	loggerEvent,
 	logAction,
 	logOperation,
-	logging,
+	autoLog,
 	addTransactionId,
 	toMiddleware,
 	tagService,
@@ -27,8 +27,8 @@ describe('n-auto-logger exports', () => {
 		expect(typeof logOperation).toBe('function');
 	});
 
-	it('logging', () => {
-		expect(typeof logging).toBe('function');
+	it('autoLog', () => {
+		expect(typeof autoLog).toBe('function');
 	});
 
 	it('toMiddleware', () => {
