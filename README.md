@@ -18,8 +18,8 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 <br>
 
 - [Quickstart](#quickstart)
-  * [logAction](#logaction)
-  * [logOperation](#logoperation)
+  * [autoLog an action](#autolog-an-action)
+  * [autoLog an operation](#autolog-an-operation)
   * [addTransactionId](#addtransactionid)
   * [mute logger fields](#mute-logger-fields)
   * [auto log level](#auto-log-level)
@@ -36,18 +36,18 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 
 ## Quickstart
 
-### logAction
+### autoLog an action
 
 automatically log the start, success/failure state with necessary metadata including function name as `action`, it can be applied to both individual action function or an action function bundle.
 
 ```js
-import { logAction, tagService, compose } from '@financial-times/n-auto-logger';
+import { autoLog, tagService, compose } from '@financial-times/n-auto-logger';
 
-const result = logAction(someFunction)(params, meta); // action function
+const result = autoLog(someFunction)({...params, meta}); // action function
 
 export default compose(
  tagService('service-name'), // optional
- logAction,
+ autoLog,
 )({ 
  methodA, 
  methodB, 
@@ -57,22 +57,22 @@ export default compose(
 
 > more details on [action function](https://github.com/financial-Times/n-express-enhancer#action-function)
 
-### logOperation
+### autoLog an Operation
 
 automatically log the start, success/failure state with necessary metadata including function name as `operation`, it can be applied to both individual operation function or an operation function bundle.
 
 ```js
-import { logOperation, toMiddleware, compose } from '@financial-times/n-auto-logger';
+import { autoLog, toMiddleware, compose } from '@financial-times/n-auto-logger';
 
 const operationFunction = (meta, req, res) => {}; // operation function
 const someMiddleware = compose(
  toMiddleware, 
- logOperation
+ autoLog
 )(operationFunction);
 
 export default compose(
  toMiddleware, 
- logOperation
+ autoLog
 )({ 
  operationFunctionA, 
  operationFuncitonB 
