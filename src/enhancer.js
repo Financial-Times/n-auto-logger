@@ -6,11 +6,11 @@ import {
 import logAction from './action';
 import logOperation from './operation';
 
-const logging = createEnhancer(
+const autoLog = createEnhancer(
 	actionOperationAdaptor({
 		actionEnhancer: logAction,
 		operationEnhancer: logOperation,
 	}),
 );
 
-export default logging;
+export default autoLog;
