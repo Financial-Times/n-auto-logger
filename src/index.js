@@ -6,8 +6,8 @@ export {
 	compose,
 } from '@financial-times/n-express-enhancer';
 
-export { loggerEvent } from './event';
-export { default as logAction } from './action';
-export { default as logOperation } from './operation';
-export { default as autoLog } from './enhancer';
+export { loggerEvent } from './event-logger';
+export { default as logAction } from './action-enhancement';
+export { default as logOperation } from './operation-enhancement';
+export { default as autoLog } from './auto-log';
 export { default as addTransactionId } from './transaction-id';

@@ -3,7 +3,7 @@ import request from 'supertest';
 import compose from 'compose-function';
 
 import logger, { logAction, toMiddleware } from '../index';
-import logOperation from '../operation';
+import logOperation from '../operation-enhancement';
 
 jest.mock('@financial-times/n-logger');
 

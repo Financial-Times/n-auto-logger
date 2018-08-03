@@ -1,5 +1,5 @@
 import logger from '../index';
-import logAction from '../action';
+import logAction from '../action-enhancement';
 import { RESULTS } from '../constants';
 
 jest.mock('@financial-times/n-logger');

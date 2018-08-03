@@ -1,5 +1,5 @@
 import logger from '../index';
-import loggerEvent from '../event';
+import loggerEvent from '../event-logger';
 import { CATEGORIES, RESULTS } from '../constants';
 
 jest.mock('@financial-times/n-logger');
