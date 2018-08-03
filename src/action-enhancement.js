@@ -29,7 +29,9 @@ const logAction = actionFunction => (paramsOrArgs, meta, ...excessive) => {
 	if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.start();
 
 	try {
-		const call = actionFunction(paramsOrArgs, meta);
+		const call = meta
+			? actionFunction(paramsOrArgs, meta)
+			: actionFunction(paramsOrArgs);
 		if (isPromise(call)) {
 			return call
 				.then(data => {
