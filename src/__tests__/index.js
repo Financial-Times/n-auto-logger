@@ -1,5 +1,4 @@
 import logger, {
-	loggerEvent,
 	logAction,
 	logOperation,
 	addTransactionId,
@@ -12,10 +11,6 @@ import logger, {
 describe('n-auto-logger exports', () => {
 	it('logger', () => {
 		expect(typeof logger).toBe('object');
-	});
-
-	it('loggerEvent', () => {
-		expect(typeof loggerEvent).toBe('function');
 	});
 
 	it('logAction', () => {

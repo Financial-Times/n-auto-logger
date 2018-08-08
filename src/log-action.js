@@ -1,6 +1,6 @@
 import { isPromise } from '@financial-times/n-express-enhancer';
 
-import { createEventLogger } from './event-logger';
+import createEventLogger from './event-logger';
 import { LOG_LEVELS } from './constants';
 
 const logAction = actionFunction => (paramsOrArgs, meta, ...excessive) => {
@@ -20,9 +20,9 @@ const logAction = actionFunction => (paramsOrArgs, meta, ...excessive) => {
 
 	const event = createEventLogger({
 		...meta,
+		...metaInArgs,
 		action: actionFunction.name,
 		...params,
-		...metaInArgs,
 	});
 	const { AUTO_LOG_LEVEL = LOG_LEVELS.verbose } = process.env;
 
@@ -32,6 +32,7 @@ const logAction = actionFunction => (paramsOrArgs, meta, ...excessive) => {
 		const call = meta
 			? actionFunction(paramsOrArgs, meta)
 			: actionFunction(paramsOrArgs);
+
 		if (isPromise(call)) {
 			return call
 				.then(data => {
@@ -43,6 +44,7 @@ const logAction = actionFunction => (paramsOrArgs, meta, ...excessive) => {
 					throw e;
 				});
 		}
+
 		const data = call;
 		if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.success();
 		return data;

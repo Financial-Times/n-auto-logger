@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createEventLogger filter in input meta data of data nested in user field 1`] = `
+Array [
+  Array [
+    Object {
+      "a": "test",
+      "b": "test",
+      "operation": "test",
+      "transactionId": "test",
+      "userId": "test",
+    },
+  ],
+]
+`;
+
+exports[`createEventLogger filter in input meta data of empty or undefined field 1`] = `
+Array [
+  Array [
+    Object {
+      "a": "test",
+      "b": "test",
+      "operation": "test",
+      "transactionId": "test",
+      "userId": "test",
+    },
+  ],
+]
+`;
+
+exports[`createEventLogger filter in input meta data of fields defined in LOGGER_MUTE_FIELDS 1`] = `
+Array [
+  Array [
+    Object {
+      "a": "test",
+      "b": "test",
+      "operation": "test",
+    },
+  ],
+]
+`;
+
+exports[`createEventLogger filter in input meta data of function fields 1`] = `
+Array [
+  Array [
+    Object {
+      "a": "test",
+      "b": "test",
+      "operation": "test",
+      "transactionId": "test",
+      "userId": "test",
+    },
+  ],
+]
+`;
+
+exports[`createEventLogger fires logger failureLogger with .failure() 1`] = `
+Array [
+  Array [
+    Object {
+      "a": "test",
+      "b": "test",
+      "category": "CUSTOM_ERROR",
+      "message": "some error message",
+      "operation": "test",
+      "result": "failure",
+      "transactionId": "test",
+      "userId": "test",
+    },
+  ],
+]
+`;
+
+exports[`createEventLogger fires logger info with .start() 1`] = `
+Array [
+  Array [
+    Object {
+      "a": "test",
+      "b": "test",
+      "operation": "test",
+      "transactionId": "test",
+      "userId": "test",
+    },
+  ],
+]
+`;
+
+exports[`createEventLogger fires logger info with .success() 1`] = `
+Array [
+  Array [
+    Object {
+      "a": "test",
+      "b": "test",
+      "data": Object {
+        "d": "some data",
+        "e": "some other data",
+      },
+      "operation": "test",
+      "result": "success",
+      "transactionId": "test",
+      "userId": "test",
+    },
+  ],
+]
+`;

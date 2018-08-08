@@ -5,7 +5,7 @@ import { fieldStringToArray } from './utils';
 import failureLogger from './failure-logger';
 import { RESULTS, ALWAYS_MUTTED } from './constants';
 
-export const createEventLogger = meta => {
+const createEventLogger = meta => {
 	const loggerMuteFields = [
 		...fieldStringToArray(process.env.LOGGER_MUTE_FIELDS),
 		...ALWAYS_MUTTED,
@@ -20,10 +20,4 @@ export const createEventLogger = meta => {
 	};
 };
 
-export const loggerEvent = meta => {
-	const eventLogger = createEventLogger(meta);
-	eventLogger.start();
-	return eventLogger;
-};
-
-export default loggerEvent;
+export default createEventLogger;
