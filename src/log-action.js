@@ -1,4 +1,4 @@
-import { isPromise } from '@financial-times/n-express-enhancer';
+import { createEnhancer, isPromise } from '@financial-times/n-express-enhancer';
 
 import createEventLogger from './event-logger';
 import { LOG_LEVELS } from './constants';
@@ -54,4 +54,4 @@ const logAction = actionFunction => (paramsOrArgs, meta, ...excessive) => {
 	}
 };
 
-export default logAction;
+export default createEnhancer(logAction);
