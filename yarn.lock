@@ -101,9 +101,9 @@
     isomorphic-fetch "^2.2.1"
     node-fetch "^2.2.0"
 
-"@financial-times/n-express-enhancer@^1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@financial-times/n-express-enhancer/-/n-express-enhancer-1.6.2.tgz#6898eb6035d443e1a05800e0bf27bf85a564cd2f"
+"@financial-times/n-express-enhancer@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@financial-times/n-express-enhancer/-/n-express-enhancer-1.7.0.tgz#8b62f273e967420567256ace1be0d68bb8f4bc92"
   dependencies:
     compose-function "^3.0.3"
 
@@ -115,9 +115,9 @@
     http-errors "^1.6.1"
     node-fetch "^1.6.3"
 
-"@financial-times/n-gage@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@financial-times/n-gage/-/n-gage-2.0.2.tgz#b6e4890c2ef6e8a9bd5976243ac5648bb0adf925"
+"@financial-times/n-gage@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@financial-times/n-gage/-/n-gage-2.0.3.tgz#60efe3f9cf1bc001a67d1dc7ea55e1237e03235d"
   dependencies:
     "@financial-times/n-fetch" "^1.0.0-beta.4"
     "@financial-times/secret-squirrel" "^2.6.0"
