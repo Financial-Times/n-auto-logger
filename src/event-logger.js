@@ -6,11 +6,11 @@ import failureLogger from './failure-logger';
 import { RESULTS, ALWAYS_MUTTED } from './constants';
 
 const createEventLogger = meta => {
-	const loggerMuteFields = [
+	const mutedMetaFields = [
 		...fieldStringToArray(process.env.LOGGER_MUTE_FIELDS),
 		...ALWAYS_MUTTED,
 	];
-	const filteredMeta = removeObjectKeys(meta)(loggerMuteFields);
+	const filteredMeta = removeObjectKeys(meta)(mutedMetaFields);
 	const event = onlyValues(filteredMeta);
 	return {
 		start: () => logger.info(event),

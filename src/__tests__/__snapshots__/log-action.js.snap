@@ -1,32 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`logAction args format should log callFunction with lazy signature correctly 1`] = `
-Array [
-  Array [
-    Object {
-      "action": "callFunction",
-      "b": "bar",
-      "paramA": "foo",
-    },
-  ],
-  Array [
-    Object {
-      "action": "callFunction",
-      "b": "bar",
-      "paramA": "foo",
-      "result": "success",
-    },
-  ],
-]
-`;
-
-exports[`logAction args format should log error if input arg meta is specified but not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
-
-exports[`logAction args format should log error if input arg params is not an Object 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
-
-exports[`logAction args format should throw error if there're more than 2 args 1`] = `"input args of autoLogged function [callFunction] needs to (params: Object, meta?: Object)"`;
-
-exports[`logAction async function should invoke callFunction correctly 1`] = `
+exports[`logAction can enhance async actionFunction to invoke actionFunction and return the same result 1`] = `
 Array [
   Array [
     Object {
@@ -39,11 +13,11 @@ Array [
 ]
 `;
 
-exports[`logAction async function should log callFunction failure correctly and throw the original exception 1`] = `
+exports[`logAction can enhance async actionFunction to log actionFunction failure and throw the caught error 1`] = `
 Array [
   Array [
     Object {
-      "action": "callFunction",
+      "action": "actionFunction",
       "category": "CUSTOM_ERROR",
       "message": "bar",
       "meta": "b",
@@ -54,18 +28,18 @@ Array [
 ]
 `;
 
-exports[`logAction async function should log callFunction success correctly 1`] = `
+exports[`logAction can enhance async actionFunction to log event when actionFunction success 1`] = `
 Array [
   Array [
     Object {
-      "action": "callFunction",
+      "action": "actionFunction",
       "meta": "b",
       "test": "a",
     },
   ],
   Array [
     Object {
-      "action": "callFunction",
+      "action": "actionFunction",
       "meta": "b",
       "result": "success",
       "test": "a",
@@ -74,7 +48,7 @@ Array [
 ]
 `;
 
-exports[`logAction non-async function should invoke callFunction correctly 1`] = `
+exports[`logAction can enhance sync actionFunction to invoke actionFunction and return the same result 1`] = `
 Array [
   Array [
     Object {
@@ -87,11 +61,11 @@ Array [
 ]
 `;
 
-exports[`logAction non-async function should log callFunction failure correctly and throw the original exception 1`] = `
+exports[`logAction can enhance sync actionFunction to log actionFunction failure and throw the caught error 1`] = `
 Array [
   Array [
     Object {
-      "action": "callFunction",
+      "action": "actionFunction",
       "category": "CUSTOM_ERROR",
       "message": "bar",
       "meta": "b",
@@ -102,18 +76,18 @@ Array [
 ]
 `;
 
-exports[`logAction non-async function should log callFunction success correctly 1`] = `
+exports[`logAction can enhance sync actionFunction to log event when actionFunction success 1`] = `
 Array [
   Array [
     Object {
-      "action": "callFunction",
+      "action": "actionFunction",
       "meta": "b",
       "test": "a",
     },
   ],
   Array [
     Object {
-      "action": "callFunction",
+      "action": "actionFunction",
       "meta": "b",
       "result": "success",
       "test": "a",
@@ -121,3 +95,9 @@ Array [
   ],
 ]
 `;
+
+exports[`logAction throw erros if enhancedFunction has invalid input args with more than 2 args 1`] = `"invalid input for action function [actionFunction] following signature standard of (param: Object, meta?: Object)"`;
+
+exports[`logAction throw erros if enhancedFunction has invalid input args with non-Object as first arg (param) 1`] = `"invalid input for action function [callFunction] following signature standard of (param: Object, meta?: Object)"`;
+
+exports[`logAction throw erros if enhancedFunction has invalid input args with non-Object as second arg (meta) 1`] = `"invalid input for action function [callFunction] following signature standard of (param: Object, meta?: Object)"`;

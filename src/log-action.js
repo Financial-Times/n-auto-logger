@@ -3,35 +3,30 @@ import { createEnhancer, isPromise } from '@financial-times/n-express-enhancer';
 import createEventLogger from './event-logger';
 import { LOG_LEVELS } from './constants';
 
-const logAction = actionFunction => (paramsOrArgs, meta, ...excessive) => {
+const logAction = actionFunction => (param = {}, meta = {}, ...excessive) => {
 	if (
 		excessive.length ||
-		(paramsOrArgs !== undefined && typeof paramsOrArgs !== 'object') ||
-		(meta !== undefined && typeof meta !== 'object')
+		typeof param !== 'object' ||
+		typeof meta !== 'object'
 	) {
 		throw Error(
-			`input args of autoLogged function [${
+			`invalid input for action function [${
 				actionFunction.name
-			}] needs to (params: Object, meta?: Object)`,
+			}] following signature standard of (param: Object, meta?: Object)`,
 		);
 	}
 
-	const { meta: metaInArgs, ...params } = paramsOrArgs || {};
-
+	const { AUTO_LOG_LEVEL = LOG_LEVELS.verbose } = process.env;
 	const event = createEventLogger({
 		...meta,
-		...metaInArgs,
 		action: actionFunction.name,
-		...params,
+		...param,
 	});
-	const { AUTO_LOG_LEVEL = LOG_LEVELS.verbose } = process.env;
 
 	if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.start();
 
 	try {
-		const call = meta
-			? actionFunction(paramsOrArgs, meta)
-			: actionFunction(paramsOrArgs);
+		const call = actionFunction(param, meta);
 
 		if (isPromise(call)) {
 			return call

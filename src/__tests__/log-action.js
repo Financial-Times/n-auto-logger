@@ -9,127 +9,105 @@ describe('logAction', () => {
 		jest.resetAllMocks();
 	});
 
-	it('logs callFunction name as action name', async () => {
-		const callFunction = () => null;
-		logAction(callFunction)();
-		expect(logger.info.mock.calls[1][0]).toEqual({
-			action: 'callFunction',
-			result: RESULTS.SUCCESS,
-		});
-	});
-
-	describe('async function', () => {
-		it('should invoke callFunction correctly', async () => {
-			const callFunction = jest.fn(() => Promise.resolve('foo'));
-			const params = { test: 'a' };
-			const meta = { meta: 'b' };
-			const result = await logAction(callFunction)(params, meta);
-			expect(callFunction.mock.calls).toMatchSnapshot();
-			const expectedResult = await callFunction(params, meta);
-			expect(result).toBe(expectedResult);
-		});
-
-		it('should log callFunction success correctly', async () => {
-			const callFunction = () => Promise.resolve('foo');
-			const params = { test: 'a' };
-			const meta = { meta: 'b' };
-			await logAction(callFunction)(params, meta);
-			expect(logger.info.mock.calls).toMatchSnapshot();
-		});
-
-		it('should log callFunction failure correctly and throw the original exception', async () => {
-			const errorInstance = { message: 'bar' };
-			const callFunction = async () => {
-				throw errorInstance;
-			};
-			const params = { test: 'a' };
-			const meta = { meta: 'b' };
-			try {
-				await logAction(callFunction)(params, meta);
-			} catch (e) {
-				expect(e).toBe(errorInstance);
-				expect(logger.error.mock.calls).toMatchSnapshot();
-			}
-		});
-	});
-
-	describe('non-async function', () => {
-		it('should invoke callFunction correctly', () => {
-			const callFunction = jest.fn(() => 'foo');
-			const params = { test: 'a' };
-			const meta = { meta: 'b' };
-			const result = logAction(callFunction)(params, meta);
-			expect(callFunction.mock.calls).toMatchSnapshot();
-			const expectedResult = callFunction(params, meta);
-			expect(result).toBe(expectedResult);
-		});
-
-		it('should log callFunction success correctly', () => {
-			const callFunction = () => 'foo';
-			const params = { test: 'a' };
-			const meta = { meta: 'b' };
-			logAction(callFunction)(params, meta);
-			expect(logger.info.mock.calls).toMatchSnapshot();
-		});
-
-		it('should log callFunction failure correctly and throw the original exception', () => {
-			const errorInstance = { message: 'bar' };
-			const callFunction = () => {
-				throw errorInstance;
-			};
-			const params = { test: 'a' };
-			const meta = { meta: 'b' };
-			try {
-				logAction(callFunction)(params, meta);
-			} catch (e) {
-				expect(e).toBe(errorInstance);
-				expect(logger.error.mock.calls).toHaveLength(1);
-				expect(logger.error.mock.calls).toMatchSnapshot();
-			}
-		});
-	});
-
-	describe('args format', () => {
-		it('should support lazy callFunction signature in one object or no meta', async () => {
-			const callFunction = () => null;
-			const enhanced = args => logAction(callFunction)(args);
-			const params = { a: 'foo' };
-			const meta = { b: 'bar' };
-			const args = { ...params, ...meta };
-			await enhanced(args);
+	describe('can enhance sync actionFunction', () => {
+		it('log actionFunction name as action name', () => {
+			const actionFunction = () => null;
+			logAction(actionFunction)();
 			expect(logger.info.mock.calls[1][0]).toEqual({
-				...params,
-				...meta,
-				action: 'callFunction',
-				result: RESULTS.SUCCESS,
-			});
-			await enhanced(params);
-			expect(logger.info.mock.calls[3][0]).toEqual({
-				...params,
-				action: 'callFunction',
+				action: 'actionFunction',
 				result: RESULTS.SUCCESS,
 			});
 		});
 
-		it('should log callFunction with lazy signature correctly', async () => {
-			const callFunction = ({ paramA, meta }) => ({ paramA, ...meta });
-			const enhanced = logAction(callFunction);
-			const params = { paramA: 'foo' };
-			const meta = { b: 'bar' };
-			await enhanced({ ...params, meta });
+		it('to invoke actionFunction and return the same result', () => {
+			const actionFunction = jest.fn(() => 'foo');
+			const param = { test: 'a' };
+			const meta = { meta: 'b' };
+			const result = logAction(actionFunction)(param, meta);
+			expect(actionFunction.mock.calls).toMatchSnapshot();
+			const expectedResult = actionFunction(param, meta);
+			expect(result).toBe(expectedResult);
+		});
+
+		it('to log event when actionFunction success', () => {
+			const actionFunction = () => 'foo';
+			const param = { test: 'a' };
+			const meta = { meta: 'b' };
+			logAction(actionFunction)(param, meta);
 			expect(logger.info.mock.calls).toMatchSnapshot();
 		});
 
-		it("should throw error if there're more than 2 args", () => {
-			const callFunction = () => null;
+		it('to log actionFunction failure and throw the caught error', () => {
+			const errorInstance = { message: 'bar' };
+			const actionFunction = () => {
+				throw errorInstance;
+			};
+			const param = { test: 'a' };
+			const meta = { meta: 'b' };
+			try {
+				logAction(actionFunction)(param, meta);
+			} catch (e) {
+				expect(e).toBe(errorInstance);
+				expect(logger.error.mock.calls).toMatchSnapshot();
+			}
+		});
+	});
+
+	describe('can enhance async actionFunction', () => {
+		it('log actionFunction name as action name', async () => {
+			const actionFunction = async () => null;
+			await logAction(actionFunction)();
+			expect(logger.info.mock.calls[1][0]).toEqual({
+				action: 'actionFunction',
+				result: RESULTS.SUCCESS,
+			});
+		});
+
+		it('to invoke actionFunction and return the same result', async () => {
+			const actionFunction = jest.fn(async () => 'foo');
+			const param = { test: 'a' };
+			const meta = { meta: 'b' };
+			const result = await logAction(actionFunction)(param, meta);
+			expect(actionFunction.mock.calls).toMatchSnapshot();
+			const expectedResult = await actionFunction(param, meta);
+			expect(result).toBe(expectedResult);
+		});
+
+		it('to log event when actionFunction success', async () => {
+			const actionFunction = async () => 'foo';
+			const param = { test: 'a' };
+			const meta = { meta: 'b' };
+			await logAction(actionFunction)(param, meta);
+			expect(logger.info.mock.calls).toMatchSnapshot();
+		});
+
+		it('to log actionFunction failure and throw the caught error', async () => {
+			const errorInstance = { message: 'bar' };
+			const actionFunction = async () => {
+				throw errorInstance;
+			};
+			const param = { test: 'a' };
+			const meta = { meta: 'b' };
+			try {
+				await logAction(actionFunction)(param, meta);
+			} catch (e) {
+				expect(e).toBe(errorInstance);
+				expect(logger.error.mock.calls).toMatchSnapshot();
+			}
+		});
+	});
+
+	describe('throw erros if enhancedFunction has invalid input args', () => {
+		it('with more than 2 args', () => {
+			const actionFunction = () => null;
 			const params = { a: 'test' };
 			const meta = { b: 'k' };
 			const random = 'test';
-			const execution = () => logAction(callFunction)(params, meta, random);
+			const execution = () => logAction(actionFunction)(params, meta, random);
 			expect(execution).toThrowErrorMatchingSnapshot();
 		});
 
-		it('should log error if input arg params is not an Object', () => {
+		it('with non-Object as first arg (param)', () => {
 			const callFunction = () => null;
 			const params = 'test';
 			const meta = { b: 'k' };
@@ -137,7 +115,7 @@ describe('logAction', () => {
 			expect(execution).toThrowErrorMatchingSnapshot();
 		});
 
-		it('should log error if input arg meta is specified but not an Object', () => {
+		it('with non-Object as second arg (meta)', () => {
 			const callFunction = () => null;
 			const params = { a: 'foo' };
 			const meta = 'bar';
