@@ -20,7 +20,7 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 - [Quickstart](#quickstart)
   * [autoLog an action](#autolog-an-action)
   * [autoLog an operation](#autolog-an-operation)
-  * [addTransactionId](#addtransactionid)
+  * [requestId](#requestId)
   * [mute logger fields](#mute-logger-fields)
   * [auto log level](#auto-log-level)
 - [Install](#install)
@@ -36,18 +36,18 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 
 ## Quickstart
 
-### autoLog an action
+### log an action
 
 automatically log the start, success/failure state with necessary metadata including function name as `action`, it can be applied to both individual action function or an action function bundle.
 
 ```js
-import { autoLog, tagService, compose } from '@financial-times/n-auto-logger';
+import { logAction, tagService, compose } from '@financial-times/n-auto-logger';
 
-const result = autoLog(someFunction)({...params, meta}); // action function
+const result = logAction(someFunction)({...params, meta}); // action function
 
 export default compose(
  tagService('service-name'), // optional
- autoLog,
+ logAction,
 )({ 
  methodA, 
  methodB, 
@@ -57,22 +57,22 @@ export default compose(
 
 > more details on [action function](https://github.com/financial-Times/n-express-enhancer#action-function)
 
-### autoLog an Operation
+### log an Operation
 
 automatically log the start, success/failure state with necessary metadata including function name as `operation`, it can be applied to both individual operation function or an operation function bundle.
 
 ```js
-import { autoLog, toMiddleware, compose } from '@financial-times/n-auto-logger';
+import { logOperation, toMiddleware, compose } from '@financial-times/n-auto-logger';
 
 const operationFunction = (meta, req, res) => {}; // operation function
 const someMiddleware = compose(
  toMiddleware, 
- autoLog
+ logOperation
 )(operationFunction);
 
 export default compose(
  toMiddleware, 
- autoLog
+ logOperation
 )({ 
  operationFunctionA, 
  operationFuncitonB 
@@ -84,17 +84,17 @@ export default compose(
 
 > more details on [chain with other enhancers](https://github.com/Financial-Times/n-express-enhancer/blob/master/README.md#chain-a-series-of-enhancers)
 
-### addTransactionId
+### requestId
 
-use the addTransactionId to ensure the logs are easy to thread when debugging, and this would work well with [n-api-factory](https://github.com/Financial-Times/n-api-factory) to pass it to up stream services.
+use the requestIdMiddleware to ensure the logs are easy to thread when debugging, and this would work well with [n-api-factory](https://github.com/Financial-Times/n-api-factory) to pass it to up stream services.
 
 ```js
-import { addTransactionId } from '@financial-times/n-auto-logger';
+import { requestIdMiddleware } from '@financial-times/n-auto-logger';
 
 // you might want to exclude `__*` path from log
 app.use(/^\/(?!_{2}).*$/, [
  // use it before any other middleware to be logged
- addTransactionId,
+ requestIdMiddleware,
  //...other middlewares
 ]);
 ```
