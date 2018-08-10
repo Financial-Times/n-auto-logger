@@ -34,7 +34,7 @@ describe('logOperation', () => {
 		it('to invoke operationFunction with operationFunction name in req.meta.operation', () => {
 			enhancedOperation({}, mockRes);
 			expect(monitorFunction.mock.calls).toMatchSnapshot();
-			expect(mockRes.send.mock.calls).toMatchSnapshot();
+			expect(mockRes.send).toHaveBeenCalled();
 		});
 
 		it('to log operaitonFunction on success', () => {
