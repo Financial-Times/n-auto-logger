@@ -67,7 +67,7 @@ describe('logOperation', () => {
 			if (req.error) {
 				throw errorInstance;
 			}
-			res.send(req.meta);
+			res.send();
 		};
 		const enhancedOperation = logOperation(operationFunction);
 		const mockRes = {
@@ -85,7 +85,7 @@ describe('logOperation', () => {
 		it('to invoke operationFunction with operationFunction name in req.meta.operation', async () => {
 			await enhancedOperation({}, mockRes);
 			expect(monitorFunction.mock.calls).toMatchSnapshot();
-			expect(mockRes.send.mock.calls).toMatchSnapshot();
+			expect(mockRes.send).toHaveBeenCalled();
 		});
 
 		it('to log operaitonFunction on success', async () => {

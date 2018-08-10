@@ -28,16 +28,6 @@ Array [
 ]
 `;
 
-exports[`logOperation can enhance async operationFunction to invoke operationFunction with operationFunction name in req.meta.operation 2`] = `
-Array [
-  Array [
-    Object {
-      "operation": "operationFunction",
-    },
-  ],
-]
-`;
-
 exports[`logOperation can enhance async operationFunction to log operaitonFunction on success 1`] = `
 Array [
   Array [
