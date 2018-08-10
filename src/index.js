@@ -1,6 +1,6 @@
 export { default } from '@financial-times/n-logger';
 export {
-	toMiddleware,
+	errorToHandler,
 	tagService,
 	enhancedRender,
 	compose,

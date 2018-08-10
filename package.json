@@ -16,14 +16,14 @@
   },
   "dependencies": {
     "@financial-times/n-error": "^1.0.6",
-    "@financial-times/n-express-enhancer": "^1.7.0",
+    "@financial-times/n-express-enhancer": "^1.8.0",
     "@financial-times/n-logger": "^5.7.2",
     "@financial-times/n-utils": "^0.1.0",
     "node-fetch": "^2.2.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "@financial-times/n-gage": "^2.0.3",
+    "@financial-times/n-gage": "^2.0.4",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.6",
@@ -34,13 +34,13 @@
     "eslint-config-airbnb-base": "13.0.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.12.0",
-    "eslint-plugin-jest": "^21.18.0",
+    "eslint-plugin-jest": "^21.20.2",
     "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-prettier": "^2.6.2",
     "express": "^4.16.3",
     "jest": "^23.4.2",
     "nodemon": "^1.18.3",
-    "prettier": "^1.14.0",
+    "prettier": "^1.14.2",
     "supertest": "^3.1.0"
   },
   "engines": {
