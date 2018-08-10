@@ -1,31 +1,44 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`logOperation and toMiddleware logs meta from previous middleware correctly 1`] = `
-Object {
-  "operation": "operationFunction",
-  "transactionId": "xxxx-xxxx",
-}
-`;
-
-exports[`logOperation and toMiddleware logs meta from previous middleware correctly 2`] = `
+exports[`logOperation can enhance async operationFunction inherit meta passed to req.meta from previous middleware and log them 1`] = `
 Array [
   Array [
     Object {
       "operation": "operationFunction",
-      "transactionId": "xxxx-xxxx",
+      "userId": "mock-id",
     },
   ],
   Array [
     Object {
       "operation": "operationFunction",
       "result": "success",
-      "transactionId": "xxxx-xxxx",
+      "userId": "mock-id",
     },
   ],
 ]
 `;
 
-exports[`logOperation logs operation correctly combined with logAction when failure of async function 1`] = `
+exports[`logOperation can enhance async operationFunction to invoke operationFunction with operationFunction name in req.meta.operation 1`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+    },
+  ],
+]
+`;
+
+exports[`logOperation can enhance async operationFunction to invoke operationFunction with operationFunction name in req.meta.operation 2`] = `
+Array [
+  Array [
+    Object {
+      "operation": "operationFunction",
+    },
+  ],
+]
+`;
+
+exports[`logOperation can enhance async operationFunction to log operaitonFunction on success 1`] = `
 Array [
   Array [
     Object {
@@ -34,40 +47,14 @@ Array [
   ],
   Array [
     Object {
-      "action": "callFunction",
       "operation": "operationFunction",
+      "result": "success",
     },
   ],
 ]
 `;
 
-exports[`logOperation logs operation correctly combined with logAction when failure of async function 2`] = `
-Array [
-  Array [
-    Object {
-      "action": "callFunction",
-      "category": "CUSTOM_ERROR",
-      "message": "Not Found",
-      "operation": "operationFunction",
-      "result": "failure",
-      "status": 404,
-    },
-  ],
-  Array [
-    Object {
-      "category": "CUSTOM_ERROR",
-      "message": "Not Found",
-      "operation": "operationFunction",
-      "result": "failure",
-      "status": 404,
-    },
-  ],
-]
-`;
-
-exports[`logOperation logs operation correctly combined with logAction when failure of async function 3`] = `Array []`;
-
-exports[`logOperation logs operation correctly combined with logAction when failure of non-async function 1`] = `
+exports[`logOperation can enhance async operationFunction to log operationFunction name as operation name 1`] = `
 Array [
   Array [
     Object {
@@ -76,25 +63,17 @@ Array [
   ],
   Array [
     Object {
-      "action": "callFunction",
       "operation": "operationFunction",
+      "result": "success",
     },
   ],
 ]
 `;
 
-exports[`logOperation logs operation correctly combined with logAction when failure of non-async function 2`] = `
+exports[`logOperation can enhance async operationFunction to log operationFunction on failure and throw the caught error 1`] = `Array []`;
+
+exports[`logOperation can enhance async operationFunction to log operationFunction on failure and throw the caught error 2`] = `
 Array [
-  Array [
-    Object {
-      "action": "callFunction",
-      "category": "CUSTOM_ERROR",
-      "message": "Not Found",
-      "operation": "operationFunction",
-      "result": "failure",
-      "status": 404,
-    },
-  ],
   Array [
     Object {
       "category": "CUSTOM_ERROR",
@@ -107,61 +86,68 @@ Array [
 ]
 `;
 
-exports[`logOperation logs operation correctly combined with logAction when failure of non-async function 3`] = `Array []`;
-
-exports[`logOperation logs operation correctly combined with logAction when success of async function with async sub actions 1`] = `
+exports[`logOperation can enhance sync operationFunction inherit meta passed to req.meta from previous middleware and log them 1`] = `
 Array [
   Array [
     Object {
       "operation": "operationFunction",
-    },
-  ],
-  Array [
-    Object {
-      "action": "callFunction",
-      "operation": "operationFunction",
-    },
-  ],
-  Array [
-    Object {
-      "action": "callFunction",
-      "operation": "operationFunction",
-      "result": "success",
-    },
-  ],
-  Array [
-    Object {
-      "operation": "operationFunction",
-      "result": "success",
+      "userId": "mock-id",
     },
   ],
 ]
 `;
 
-exports[`logOperation logs operation correctly combined with logAction when success of non-async function with non async sub actions 1`] = `
+exports[`logOperation can enhance sync operationFunction to invoke operationFunction with operationFunction name in req.meta.operation 1`] = `
 Array [
   Array [
     Object {
       "operation": "operationFunction",
     },
   ],
+]
+`;
+
+exports[`logOperation can enhance sync operationFunction to invoke operationFunction with operationFunction name in req.meta.operation 2`] = `
+Array [
   Array [
     Object {
-      "action": "callFunction",
       "operation": "operationFunction",
     },
   ],
+]
+`;
+
+exports[`logOperation can enhance sync operationFunction to log operaitonFunction on success 1`] = `
+Array [
   Array [
     Object {
-      "action": "callFunction",
       "operation": "operationFunction",
-      "result": "success",
     },
   ],
+]
+`;
+
+exports[`logOperation can enhance sync operationFunction to log operationFunction name as operation name 1`] = `
+Array [
   Array [
     Object {
       "operation": "operationFunction",
-      "result": "success",
+    },
+  ],
+]
+`;
+
+exports[`logOperation can enhance sync operationFunction to log operationFunction on failure and throw the caught error 1`] = `Array []`;
+
+exports[`logOperation can enhance sync operationFunction to log operationFunction on failure and throw the caught error 2`] = `
+Array [
+  Array [
+    Object {
+      "category": "CUSTOM_ERROR",
+      "message": "Not Found",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 404,
     },
   ],
 ]

@@ -1,139 +1,112 @@
-import express from 'express';
-import request from 'supertest';
-import compose from 'compose-function';
-
-import logger, { logAction, toMiddleware } from '../index';
+import logger from '../index';
 import logOperation from '../log-operation';
 
 jest.mock('@financial-times/n-logger');
-
-/* eslint-disable no-unused-vars */
-const commonErrorHandler = (err, req, res, next) => {
-	res.status(err.status).send(err);
-};
-/* eslint-enable no-unused-vars */
-const commonErrorInstance = { status: 404, message: 'Not Found' };
-const errorOperationFunction = () => {
-	throw commonErrorInstance;
-};
 
 describe('logOperation', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
 
-	describe('returns a valid operation function', () => {
-		it('the standard argument length', () => {
-			const operationFunction = () => {};
-			const enhanced = logOperation(operationFunction);
-			expect(enhanced).toHaveLength(3);
+	describe('can enhance sync operationFunction', () => {
+		const monitorFunction = jest.fn();
+		const errorInstance = { status: 404, message: 'Not Found' };
+		const operationFunction = (req, res) => {
+			monitorFunction(req.meta);
+			if (req.error) {
+				throw errorInstance;
+			}
+			res.send(req.meta);
+		};
+		const enhancedOperation = logOperation(operationFunction);
+		const mockRes = {
+			send: jest.fn(),
+		};
+		const errorReq = {
+			error: true,
+		};
+
+		it('to log operationFunction name as operation name', () => {
+			enhancedOperation({}, mockRes);
+			expect(logger.info.mock.calls).toMatchSnapshot();
 		});
 
-		it('throws error correctly', async () => {
-			const operationFunction = errorOperationFunction;
-			const enhanced = logOperation(operationFunction);
+		it('to invoke operationFunction with operationFunction name in req.meta.operation', () => {
+			enhancedOperation({}, mockRes);
+			expect(monitorFunction.mock.calls).toMatchSnapshot();
+			expect(mockRes.send.mock.calls).toMatchSnapshot();
+		});
+
+		it('to log operaitonFunction on success', () => {
+			enhancedOperation({}, mockRes);
+			expect(logger.info.mock.calls).toMatchSnapshot();
+		});
+
+		it('inherit meta passed to req.meta from previous middleware and log them', () => {
+			const reqWithMeta = { meta: { userId: 'mock-id' } };
+			enhancedOperation(reqWithMeta, mockRes);
+			expect(logger.info.mock.calls).toMatchSnapshot();
+		});
+
+		it('to log operationFunction on failure and throw the caught error', async () => {
 			try {
-				await enhanced();
+				await enhancedOperation(errorReq, mockRes);
 			} catch (e) {
-				expect(e).toBe(commonErrorInstance);
+				expect(e).toBe(errorInstance);
+				expect(logger.error.mock.calls).toMatchSnapshot();
+				expect(logger.warn.mock.calls).toMatchSnapshot();
 			}
 		});
 	});
 
-	describe('logs operation correctly combined with logAction when', () => {
-		describe('success of', () => {
-			it('async function with async sub actions', async () => {
-				const callFunction = () => Promise.resolve('foo');
-				const operationFunction = async meta => {
-					await logAction(callFunction)(null, meta);
-				};
-				const enhanced = logOperation(operationFunction);
-				await enhanced();
-				expect(logger.info.mock.calls).toMatchSnapshot();
-			});
+	describe('can enhance async operationFunction', () => {
+		const monitorFunction = jest.fn();
+		const errorInstance = { status: 404, message: 'Not Found' };
+		const operationFunction = async (req, res) => {
+			await monitorFunction(req.meta);
+			if (req.error) {
+				throw errorInstance;
+			}
+			res.send(req.meta);
+		};
+		const enhancedOperation = logOperation(operationFunction);
+		const mockRes = {
+			send: jest.fn(),
+		};
+		const errorReq = {
+			error: true,
+		};
 
-			it('non-async function with non async sub actions', async () => {
-				const callFunction = () => {};
-				const operationFunction = meta => {
-					logAction(callFunction)(null, meta);
-				};
-				const enhanced = logOperation(operationFunction);
-				await enhanced();
-				expect(logger.info.mock.calls).toMatchSnapshot();
-			});
+		it('to log operationFunction name as operation name', async () => {
+			await enhancedOperation({}, mockRes);
+			expect(logger.info.mock.calls).toMatchSnapshot();
 		});
 
-		describe('failure of', () => {
-			it('non-async function', async () => {
-				const callFunction = () => {
-					throw commonErrorInstance;
-				};
-				const operationFunction = meta => {
-					try {
-						logAction(callFunction)(null, meta);
-					} catch (e) {
-						throw e;
-					}
-				};
-				const enhanced = logOperation(operationFunction);
-				try {
-					await enhanced();
-				} catch (e) {
-					expect(logger.info.mock.calls).toMatchSnapshot();
-					expect(logger.warn.mock.calls).toMatchSnapshot();
-					expect(logger.error.mock.calls).toMatchSnapshot();
-				}
-			});
-
-			it('async function', async () => {
-				const callFunction = () => {
-					throw commonErrorInstance;
-				};
-				const operationFunction = async meta => {
-					try {
-						await logAction(callFunction)(null, meta);
-					} catch (e) {
-						throw e;
-					}
-				};
-				const enhanced = logOperation(operationFunction);
-				try {
-					await enhanced();
-				} catch (e) {
-					expect(logger.info.mock.calls).toMatchSnapshot();
-					expect(logger.warn.mock.calls).toMatchSnapshot();
-					expect(logger.error.mock.calls).toMatchSnapshot();
-				}
-			});
+		it('to invoke operationFunction with operationFunction name in req.meta.operation', async () => {
+			await enhancedOperation({}, mockRes);
+			expect(monitorFunction.mock.calls).toMatchSnapshot();
+			expect(mockRes.send.mock.calls).toMatchSnapshot();
 		});
-	});
-});
 
-describe('logOperation and toMiddleware', () => {
-	afterEach(() => {
-		jest.resetAllMocks();
-	});
+		it('to log operaitonFunction on success', async () => {
+			await enhancedOperation({}, mockRes);
+			expect(logger.info.mock.calls).toMatchSnapshot();
+		});
 
-	it('logs meta from previous middleware correctly', async () => {
-		const metaMiddleware = (req, res, next) => {
-			req.meta = {
-				...req.meta,
-				transactionId: 'xxxx-xxxx',
-			};
-			next();
-		};
-		const operationFunction = async (meta, req, res) => {
-			res.status(200).send(meta);
-		};
-		const middleware = compose(
-			toMiddleware,
-			logOperation,
-		)(operationFunction);
-		const app = express();
-		app.use('/', metaMiddleware, middleware);
-		const res = await request(app).get('/');
-		expect(res.statusCode).toBe(200);
-		expect(res.body).toMatchSnapshot();
-		expect(logger.info.mock.calls).toMatchSnapshot();
+		it('inherit meta passed to req.meta from previous middleware and log them', async () => {
+			const reqWithMeta = { meta: { userId: 'mock-id' } };
+			await enhancedOperation(reqWithMeta, mockRes);
+			expect(logger.info.mock.calls).toMatchSnapshot();
+		});
+
+		it('to log operationFunction on failure and throw the caught error', async () => {
+			try {
+				await enhancedOperation(errorReq, mockRes);
+			} catch (e) {
+				expect(e).toBe(errorInstance);
+				expect(logger.error.mock.calls).toMatchSnapshot();
+				expect(logger.warn.mock.calls).toMatchSnapshot();
+			}
+		});
 	});
 });

@@ -9,7 +9,7 @@ const runCommonTestCases = () => {
 	describe('success of', () => {
 		it('async function with async sub actions', async () => {
 			const callFunction = () => Promise.resolve('foo');
-			const operationFunction = async meta => {
+			const operationFunction = async ({ meta }) => {
 				await logAction(callFunction)(null, meta);
 			};
 			const enhanced = logOperation(operationFunction);
@@ -19,7 +19,7 @@ const runCommonTestCases = () => {
 
 		it('non-async function with non async sub actions', async () => {
 			const callFunction = () => {};
-			const operationFunction = meta => {
+			const operationFunction = ({ meta }) => {
 				logAction(callFunction)(null, meta);
 			};
 			const enhanced = logOperation(operationFunction);
@@ -33,7 +33,7 @@ const runCommonTestCases = () => {
 			const callFunction = () => {
 				throw commonErrorInstance;
 			};
-			const operationFunction = meta => {
+			const operationFunction = ({ meta }) => {
 				try {
 					logAction(callFunction)(null, meta);
 				} catch (e) {
@@ -54,7 +54,7 @@ const runCommonTestCases = () => {
 			const callFunction = async () => {
 				throw commonErrorInstance;
 			};
-			const operationFunction = async meta => {
+			const operationFunction = async ({ meta }) => {
 				try {
 					await logAction(callFunction)(null, meta);
 				} catch (e) {
