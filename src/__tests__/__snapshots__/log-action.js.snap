@@ -1,18 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`logAction can enhance async actionFunction to invoke actionFunction and return the same result 1`] = `
-Array [
-  Array [
-    Object {
-      "test": "a",
-    },
-    Object {
-      "meta": "b",
-    },
-  ],
-]
-`;
-
 exports[`logAction can enhance async actionFunction to log actionFunction failure and throw the caught error 1`] = `
 Array [
   Array [
@@ -22,7 +9,24 @@ Array [
       "message": "bar",
       "meta": "b",
       "result": "failure",
-      "test": "a",
+    },
+  ],
+]
+`;
+
+exports[`logAction can enhance async actionFunction to log actionFunction name as action name 1`] = `
+Array [
+  Array [
+    Object {
+      "action": "actionFunction",
+      "input": "a",
+    },
+  ],
+  Array [
+    Object {
+      "action": "actionFunction",
+      "input": "a",
+      "result": "success",
     },
   ],
 ]
@@ -33,29 +37,16 @@ Array [
   Array [
     Object {
       "action": "actionFunction",
+      "input": "a",
       "meta": "b",
-      "test": "a",
     },
   ],
   Array [
     Object {
       "action": "actionFunction",
+      "input": "a",
       "meta": "b",
       "result": "success",
-      "test": "a",
-    },
-  ],
-]
-`;
-
-exports[`logAction can enhance sync actionFunction to invoke actionFunction and return the same result 1`] = `
-Array [
-  Array [
-    Object {
-      "test": "a",
-    },
-    Object {
-      "meta": "b",
     },
   ],
 ]
@@ -70,7 +61,24 @@ Array [
       "message": "bar",
       "meta": "b",
       "result": "failure",
-      "test": "a",
+    },
+  ],
+]
+`;
+
+exports[`logAction can enhance sync actionFunction to log actionFunction name as action name 1`] = `
+Array [
+  Array [
+    Object {
+      "action": "actionFunction",
+      "input": "a",
+    },
+  ],
+  Array [
+    Object {
+      "action": "actionFunction",
+      "input": "a",
+      "result": "success",
     },
   ],
 ]
@@ -81,16 +89,16 @@ Array [
   Array [
     Object {
       "action": "actionFunction",
+      "input": "a",
       "meta": "b",
-      "test": "a",
     },
   ],
   Array [
     Object {
       "action": "actionFunction",
+      "input": "a",
       "meta": "b",
       "result": "success",
-      "test": "a",
     },
   ],
 ]
