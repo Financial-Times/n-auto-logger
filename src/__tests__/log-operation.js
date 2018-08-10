@@ -16,7 +16,7 @@ describe('logOperation', () => {
 			if (req.error) {
 				throw errorInstance;
 			}
-			res.send(req.meta);
+			res.send();
 		};
 		const enhancedOperation = logOperation(operationFunction);
 		const mockRes = {
