@@ -1,6 +1,7 @@
 # n-auto-logger 
 
-an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log function calls automatically with the operation/action model, based on [n-logger](https://github.com/Financial-Times/n-logger)
+an opinionated [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log function calls in the operation/action model
+> based on [n-logger](https://github.com/Financial-Times/n-logger)
 
 [![npm version](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger.svg)](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger)
 ![npm download](https://img.shields.io/npm/dm/@financial-times/n-auto-logger.svg)
@@ -18,9 +19,9 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 <br>
 
 - [Quickstart](#quickstart)
-  * [autoLog an action](#autolog-an-action)
-  * [autoLog an operation](#autolog-an-operation)
-  * [requestId](#requestId)
+  * [log an Action](#log-an-action)
+  * [log an Operation](#log-an-operation)
+  * [requestId](#requestid)
   * [mute logger fields](#mute-logger-fields)
   * [auto log level](#auto-log-level)
 - [Install](#install)
@@ -36,7 +37,7 @@ an [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log func
 
 ## Quickstart
 
-### log an action
+### log an Action
 
 automatically log the start, success/failure state with necessary metadata including function name as `action`, it can be applied to both individual action function or an action function bundle.
 
@@ -55,34 +56,31 @@ export default compose(
 }); // action function bundle
 ```
 
-> more details on [action function](https://github.com/financial-Times/n-express-enhancer#action-function)
+> more details on [action function](https://github.com/financial-Times/n-express-monitor#action-function)
 
 ### log an Operation
 
 automatically log the start, success/failure state with necessary metadata including function name as `operation`, it can be applied to both individual operation function or an operation function bundle.
 
 ```js
-import { logOperation, toMiddleware, compose } from '@financial-times/n-auto-logger';
+import { logOperation, errorToHanlder, compose } from '@financial-times/n-auto-logger';
 
 const operationFunction = (meta, req, res) => {}; // operation function
 const someMiddleware = compose(
- toMiddleware, 
+ errorToHandler, 
  logOperation
 )(operationFunction);
 
 export default compose(
- toMiddleware, 
+ errorToHandler, 
  logOperation
 )({ 
  operationFunctionA, 
  operationFuncitonB 
 }); // operation function bundle
 ```
-> check [use res.render](https://github.com/Financial-Times/n-express-enhancer#use-resrender)
 
-> more details on [operation function](https://github.com/financial-Times/n-express-enhancer#operatoin-function)
-
-> more details on [chain with other enhancers](https://github.com/Financial-Times/n-express-enhancer/blob/master/README.md#chain-a-series-of-enhancers)
+> more details on [operation function](https://github.com/financial-Times/n-express-monitor#operatoin-function)
 
 ### requestId
 
