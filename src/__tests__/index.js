@@ -2,7 +2,7 @@ import logger, {
 	logAction,
 	logOperation,
 	requestIdMiddleware,
-	errorToHandler,
+	autoNext,
 	tagService,
 	enhancedRender,
 	compose,
@@ -21,8 +21,8 @@ describe('n-auto-logger exports', () => {
 		expect(typeof logOperation).toBe('function');
 	});
 
-	it('errorToHandler', () => {
-		expect(typeof errorToHandler).toBe('function');
+	it('autoNext', () => {
+		expect(typeof autoNext).toBe('function');
 	});
 
 	it('requestIdMiddleware', () => {
