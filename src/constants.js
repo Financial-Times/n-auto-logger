@@ -10,6 +10,7 @@ export const RESULTS = {
 
 export const LOG_LEVELS = {
 	verbose: 'verbose',
+	standard: 'standard',
 	concise: 'concise',
 	error: 'error',
 };

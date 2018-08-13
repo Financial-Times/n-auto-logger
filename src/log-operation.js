@@ -9,7 +9,7 @@ export const logOperation = operationFunction => async (req = {}, res = {}) => {
 		...req.meta,
 		operation,
 	};
-	const { AUTO_LOG_LEVEL = LOG_LEVELS.verbose } = process.env;
+	const { AUTO_LOG_LEVEL = LOG_LEVELS.standard } = process.env;
 
 	const event = createEventLogger(meta);
 
@@ -18,9 +18,11 @@ export const logOperation = operationFunction => async (req = {}, res = {}) => {
 	try {
 		req.meta = meta;
 		await operationFunction(req, res);
-		if (AUTO_LOG_LEVEL !== LOG_LEVELS.error) event.success();
+		if ([LOG_LEVELS.verbose, LOG_LEVELS.standard].includes(AUTO_LOG_LEVEL))
+			event.success();
 	} catch (e) {
-		event.failure(e);
+		if ([LOG_LEVELS.verbose, LOG_LEVELS.standard].includes(AUTO_LOG_LEVEL))
+			event.failure(e);
 		throw e;
 	}
 };

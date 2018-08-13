@@ -1,8 +1,112 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AUTO_LOG_LEVEL =concise logs success/failure of operation and only failure of action  failure of async function with async sub actions 1`] = `Array []`;
+exports[`AUTO_LOG_LEVEL =concise logs success/failure of action without param  failure of async function with async sub actions 1`] = `Array []`;
 
-exports[`AUTO_LOG_LEVEL =concise logs success/failure of operation and only failure of action  failure of async function with async sub actions 2`] = `
+exports[`AUTO_LOG_LEVEL =concise logs success/failure of action without param  failure of async function with async sub actions 2`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "category": "CUSTOM_ERROR",
+      "message": "Not Found",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 404,
+    },
+  ],
+]
+`;
+
+exports[`AUTO_LOG_LEVEL =concise logs success/failure of action without param  failure of async function with async sub actions 3`] = `Array []`;
+
+exports[`AUTO_LOG_LEVEL =concise logs success/failure of action without param  failure of non-async function with non-async sub actions 1`] = `Array []`;
+
+exports[`AUTO_LOG_LEVEL =concise logs success/failure of action without param  failure of non-async function with non-async sub actions 2`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "category": "CUSTOM_ERROR",
+      "message": "Not Found",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 404,
+    },
+  ],
+]
+`;
+
+exports[`AUTO_LOG_LEVEL =concise logs success/failure of action without param  failure of non-async function with non-async sub actions 3`] = `Array []`;
+
+exports[`AUTO_LOG_LEVEL =concise logs success/failure of action without param  success of async function with async sub actions 1`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "operation": "operationFunction",
+      "result": "success",
+    },
+  ],
+]
+`;
+
+exports[`AUTO_LOG_LEVEL =concise logs success/failure of action without param  success of non-async function with non async sub actions 1`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "operation": "operationFunction",
+      "result": "success",
+    },
+  ],
+]
+`;
+
+exports[`AUTO_LOG_LEVEL =error logs only failure of action failure of async function with async sub actions 1`] = `Array []`;
+
+exports[`AUTO_LOG_LEVEL =error logs only failure of action failure of async function with async sub actions 2`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "category": "CUSTOM_ERROR",
+      "message": "Not Found",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 404,
+    },
+  ],
+]
+`;
+
+exports[`AUTO_LOG_LEVEL =error logs only failure of action failure of async function with async sub actions 3`] = `Array []`;
+
+exports[`AUTO_LOG_LEVEL =error logs only failure of action failure of non-async function with non-async sub actions 1`] = `Array []`;
+
+exports[`AUTO_LOG_LEVEL =error logs only failure of action failure of non-async function with non-async sub actions 2`] = `
+Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "category": "CUSTOM_ERROR",
+      "message": "Not Found",
+      "operation": "operationFunction",
+      "result": "failure",
+      "status": 404,
+    },
+  ],
+]
+`;
+
+exports[`AUTO_LOG_LEVEL =error logs only failure of action failure of non-async function with non-async sub actions 3`] = `Array []`;
+
+exports[`AUTO_LOG_LEVEL =error logs only failure of action success of async function with async sub actions 1`] = `Array []`;
+
+exports[`AUTO_LOG_LEVEL =error logs only failure of action success of non-async function with non async sub actions 1`] = `Array []`;
+
+exports[`AUTO_LOG_LEVEL =standard logs success/failure of operation and action  failure of async function with async sub actions 1`] = `Array []`;
+
+exports[`AUTO_LOG_LEVEL =standard logs success/failure of operation and action  failure of async function with async sub actions 2`] = `
 Array [
   Array [
     Object {
@@ -26,11 +130,11 @@ Array [
 ]
 `;
 
-exports[`AUTO_LOG_LEVEL =concise logs success/failure of operation and only failure of action  failure of async function with async sub actions 3`] = `Array []`;
+exports[`AUTO_LOG_LEVEL =standard logs success/failure of operation and action  failure of async function with async sub actions 3`] = `Array []`;
 
-exports[`AUTO_LOG_LEVEL =concise logs success/failure of operation and only failure of action  failure of non-async function with non-async sub actions 1`] = `Array []`;
+exports[`AUTO_LOG_LEVEL =standard logs success/failure of operation and action  failure of non-async function with non-async sub actions 1`] = `Array []`;
 
-exports[`AUTO_LOG_LEVEL =concise logs success/failure of operation and only failure of action  failure of non-async function with non-async sub actions 2`] = `
+exports[`AUTO_LOG_LEVEL =standard logs success/failure of operation and action  failure of non-async function with non-async sub actions 2`] = `
 Array [
   Array [
     Object {
@@ -54,10 +158,17 @@ Array [
 ]
 `;
 
-exports[`AUTO_LOG_LEVEL =concise logs success/failure of operation and only failure of action  failure of non-async function with non-async sub actions 3`] = `Array []`;
+exports[`AUTO_LOG_LEVEL =standard logs success/failure of operation and action  failure of non-async function with non-async sub actions 3`] = `Array []`;
 
-exports[`AUTO_LOG_LEVEL =concise logs success/failure of operation and only failure of action  success of async function with async sub actions 1`] = `
+exports[`AUTO_LOG_LEVEL =standard logs success/failure of operation and action  success of async function with async sub actions 1`] = `
 Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "operation": "operationFunction",
+      "result": "success",
+    },
+  ],
   Array [
     Object {
       "operation": "operationFunction",
@@ -67,8 +178,15 @@ Array [
 ]
 `;
 
-exports[`AUTO_LOG_LEVEL =concise logs success/failure of operation and only failure of action  success of non-async function with non async sub actions 1`] = `
+exports[`AUTO_LOG_LEVEL =standard logs success/failure of operation and action  success of non-async function with non async sub actions 1`] = `
 Array [
+  Array [
+    Object {
+      "action": "callFunction",
+      "operation": "operationFunction",
+      "result": "success",
+    },
+  ],
   Array [
     Object {
       "operation": "operationFunction",
@@ -77,46 +195,6 @@ Array [
   ],
 ]
 `;
-
-exports[`AUTO_LOG_LEVEL =error logs only failure of operation and action failure of async function with async sub actions 1`] = `Array []`;
-
-exports[`AUTO_LOG_LEVEL =error logs only failure of operation and action failure of async function with async sub actions 2`] = `
-Array [
-  Array [
-    Object {
-      "category": "CUSTOM_ERROR",
-      "message": "Not Found",
-      "operation": "operationFunction",
-      "result": "failure",
-      "status": 404,
-    },
-  ],
-]
-`;
-
-exports[`AUTO_LOG_LEVEL =error logs only failure of operation and action failure of async function with async sub actions 3`] = `Array []`;
-
-exports[`AUTO_LOG_LEVEL =error logs only failure of operation and action failure of non-async function with non-async sub actions 1`] = `Array []`;
-
-exports[`AUTO_LOG_LEVEL =error logs only failure of operation and action failure of non-async function with non-async sub actions 2`] = `
-Array [
-  Array [
-    Object {
-      "category": "CUSTOM_ERROR",
-      "message": "Not Found",
-      "operation": "operationFunction",
-      "result": "failure",
-      "status": 404,
-    },
-  ],
-]
-`;
-
-exports[`AUTO_LOG_LEVEL =error logs only failure of operation and action failure of non-async function with non-async sub actions 3`] = `Array []`;
-
-exports[`AUTO_LOG_LEVEL =error logs only failure of operation and action success of async function with async sub actions 1`] = `Array []`;
-
-exports[`AUTO_LOG_LEVEL =error logs only failure of operation and action success of non-async function with non async sub actions 1`] = `Array []`;
 
 exports[`AUTO_LOG_LEVEL =verbose logs every stage of operation and action failure of async function with async sub actions 1`] = `
 Array [

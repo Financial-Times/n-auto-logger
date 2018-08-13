@@ -1,11 +1,20 @@
 import logger from '../index';
 import logAction from '../log-action';
+import { LOG_LEVELS } from '../constants';
 
 jest.mock('@financial-times/n-logger');
 
 describe('logAction', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
+	});
+
+	beforeAll(() => {
+		process.env.AUTO_LOG_LEVEL = LOG_LEVELS.verbose;
+	});
+
+	afterAll(() => {
+		delete process.env.AUTO_LOG_LEVEL;
 	});
 
 	describe('can enhance sync actionFunction', () => {

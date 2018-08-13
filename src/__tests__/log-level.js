@@ -90,7 +90,19 @@ describe('AUTO_LOG_LEVEL', () => {
 		runCommonTestCases();
 	});
 
-	describe('=concise logs success/failure of operation and only failure of action ', () => {
+	describe('=standard logs success/failure of operation and action ', () => {
+		beforeAll(() => {
+			process.env.AUTO_LOG_LEVEL = LOG_LEVELS.standard;
+		});
+
+		afterAll(() => {
+			delete process.env.AUTO_LOG_LEVEL;
+		});
+
+		runCommonTestCases();
+	});
+
+	describe('=concise logs success/failure of action without param ', () => {
 		beforeAll(() => {
 			process.env.AUTO_LOG_LEVEL = LOG_LEVELS.concise;
 		});
@@ -102,7 +114,7 @@ describe('AUTO_LOG_LEVEL', () => {
 		runCommonTestCases();
 	});
 
-	describe('=error logs only failure of operation and action', () => {
+	describe('=error logs only failure of action', () => {
 		beforeAll(() => {
 			process.env.AUTO_LOG_LEVEL = LOG_LEVELS.error;
 		});

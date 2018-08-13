@@ -16,11 +16,11 @@ const logAction = actionFunction => (param = {}, meta = {}, ...excessive) => {
 		);
 	}
 
-	const { AUTO_LOG_LEVEL = LOG_LEVELS.verbose } = process.env;
+	const { AUTO_LOG_LEVEL = LOG_LEVELS.standard } = process.env;
 	const event = createEventLogger({
 		...meta,
 		action: actionFunction.name,
-		...param,
+		...(AUTO_LOG_LEVEL === LOG_LEVELS.concise ? {} : param),
 	});
 
 	if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.start();
@@ -31,20 +31,20 @@ const logAction = actionFunction => (param = {}, meta = {}, ...excessive) => {
 		if (isPromise(call)) {
 			return call
 				.then(data => {
-					if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.success();
+					if (AUTO_LOG_LEVEL !== LOG_LEVELS.error) event.success();
 					return data;
 				})
 				.catch(e => {
-					if (AUTO_LOG_LEVEL !== LOG_LEVELS.error) event.failure(e);
+					event.failure(e);
 					throw e;
 				});
 		}
 
 		const data = call;
-		if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.success();
+		if (AUTO_LOG_LEVEL !== LOG_LEVELS.error) event.success();
 		return data;
 	} catch (e) {
-		if (AUTO_LOG_LEVEL !== LOG_LEVELS.error) event.failure(e);
+		event.failure(e);
 		throw e;
 	}
 };
