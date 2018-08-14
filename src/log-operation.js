@@ -16,13 +16,11 @@ export const logOperation = operationFunction => async (req = {}, res = {}) => {
 	if (AUTO_LOG_LEVEL === LOG_LEVELS.verbose) event.start();
 
 	try {
-		req.meta = meta;
+		req.meta = meta; // assigned the updated meta to be passed to action function
 		await operationFunction(req, res);
-		if ([LOG_LEVELS.verbose, LOG_LEVELS.standard].includes(AUTO_LOG_LEVEL))
-			event.success();
+		if (AUTO_LOG_LEVEL !== LOG_LEVELS.error) event.success();
 	} catch (e) {
-		if ([LOG_LEVELS.verbose, LOG_LEVELS.standard].includes(AUTO_LOG_LEVEL))
-			event.failure(e);
+		event.failure(e);
 		throw e;
 	}
 };
