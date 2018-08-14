@@ -1,6 +1,6 @@
 export { CATEGORIES } from '@financial-times/n-error';
 
-export const UNMUTTABLE = ['operation', 'action', 'category', 'result'];
+export const UNMUTTABLE = ['operation', 'action'];
 export const ALWAYS_MUTTED = ['user', 'handler', '_locals'];
 
 export const RESULTS = {

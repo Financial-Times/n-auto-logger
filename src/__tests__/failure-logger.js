@@ -246,7 +246,7 @@ describe('failureLogger', () => {
 
 	describe('mute non-reserved fields of LOGGER_MUTE_FIELDS including .stack in', () => {
 		beforeAll(() => {
-			process.env.LOGGER_MUTE_FIELDS = 'action, stack, result';
+			process.env.LOGGER_MUTE_FIELDS = 'action, stack';
 		});
 
 		afterAll(() => {

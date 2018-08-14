@@ -8,8 +8,6 @@ import { onlyValues, removeObjectKeys } from '@financial-times/n-utils';
 import { fieldStringToArray } from './utils';
 import { CATEGORIES, ALWAYS_MUTTED, UNMUTTABLE, RESULTS } from './constants';
 
-// TODO: consider logics to decide default logger level based on status
-// for generic error without status or falsely reported error, use 'error'
 const statusLoggerWithFilter = log => {
 	const loggerMuteFields = [
 		...fieldStringToArray(process.env.LOGGER_MUTE_FIELDS),
@@ -22,7 +20,7 @@ const statusLoggerWithFilter = log => {
 };
 
 export default (context = {}) => async e => {
-	// in case of failure without a specified error, e.g. .action('someAction').failure()
+	// in case of failure without a specified error, e.g. .failure()
 	if (typeof e === 'undefined' || e === null) {
 		return logger.warn({
 			...context,
