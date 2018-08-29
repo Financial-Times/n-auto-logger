@@ -1,7 +1,7 @@
 # n-auto-logger 
 
 an opinionated [enhancer](https://github.com/Financial-Times/n-express-enhancer) to log function calls in the operation/action model
-> based on [n-logger](https://github.com/Financial-Times/n-logger)
+> using [n-logger](https://github.com/Financial-Times/n-logger) by default, can be set to any logger instance
 
 [![npm version](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger.svg)](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger)
 ![npm download](https://img.shields.io/npm/dm/@financial-times/n-auto-logger.svg)
@@ -18,13 +18,14 @@ an opinionated [enhancer](https://github.com/Financial-Times/n-express-enhancer)
 
 <br>
 
-- [Quickstart](#quickstart)
+- [Install](#install)
+- [Usage](#usage)
   * [log an Action](#log-an-action)
   * [log an Operation](#log-an-operation)
-  * [requestId](#requestid)
-  * [mute logger fields](#mute-logger-fields)
   * [auto log level](#auto-log-level)
-- [Install](#install)
+  * [mute logger fields](#mute-logger-fields)
+  * [customise logger instance](#customise-logger-instance)
+  * [requestId](#requestid)
 - [Gotcha](#gotcha)
   * [reserved fields](#reserved-fields)
   * [ignored fields](#ignored-fields)
@@ -35,7 +36,12 @@ an opinionated [enhancer](https://github.com/Financial-Times/n-express-enhancer)
 
 <br>
 
-## Quickstart
+## Install
+```shell
+npm install @financial-times/n-auto-logger
+```
+
+## Usage
 
 ### log an Action
 
@@ -82,29 +88,6 @@ export default compose(
 
 > more details on [operation function](https://github.com/financial-Times/n-express-monitor#operatoin-function)
 
-### requestId
-
-use the requestIdMiddleware to ensure the logs are easy to thread when debugging, and this would work well with [n-api-factory](https://github.com/Financial-Times/n-api-factory) to pass it to up stream services.
-
-```js
-import { requestIdMiddleware } from '@financial-times/n-auto-logger';
-
-// you might want to exclude `__*` path from log
-app.use(/^\/(?!_{2}).*$/, [
- // use it before any other middleware to be logged
- requestIdMiddleware,
- //...other middlewares
-]);
-```
-
-### mute logger fields
-
-set key names of fields to be muted in .env to reduce log for development or filter fields in production.
-
-```js
-LOGGER_MUTE_FIELDS=transactionId, userId
-```
-
 ### auto log level
 
 set auto log level in `.env` with 3 options: `verbose`(default) | `concise` | `error`.
@@ -119,9 +102,36 @@ AUTO_LOG_LEVEL=concise
 
 You can override the ENV_VAR with a flag value as well if you would like to switch log level in production for debugging.
 
-## Install
-```shell
-npm install @financial-times/n-auto-logger
+### mute logger fields
+
+set key names of fields to be muted in .env to reduce log for development or filter fields in production.
+
+```js
+LOGGER_MUTE_FIELDS=transactionId, userId
+```
+
+### customise logger instance
+
+```js
+import { setupLoggerInstance } from '@financial-times/n-auto-logger';
+import winston from 'winston'; // you can use any instance as long as it has .info, .warn, .error method
+
+setupLoggerInstance(winston); // set the logger instance before using the enhancer
+```
+
+### requestId
+
+use the requestIdMiddleware to ensure the logs are easy to thread when debugging, and this would work well with [n-api-factory](https://github.com/Financial-Times/n-api-factory) to pass it to up stream services.
+
+```js
+import { requestIdMiddleware } from '@financial-times/n-auto-logger';
+
+// you might want to exclude `__*` path from log
+app.use(/^\/(?!_{2}).*$/, [
+ // use it before any other middleware to be logged
+ requestIdMiddleware,
+ //...other middlewares
+]);
 ```
 
 ## Gotcha
