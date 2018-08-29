@@ -24,7 +24,6 @@
   },
   "devDependencies": {
     "@financial-times/n-gage": "^2.0.4",
-    "@financial-times/n-mask-logger": "^2.1.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.6",
@@ -36,7 +35,7 @@
     "eslint-config-prettier": "^3.0.1",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^21.21.0",
-    "eslint-plugin-json": "^1.2.1",
+    "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-prettier": "^2.6.2",
     "eslint-plugin-react": "^7.9.1",
@@ -44,8 +43,7 @@
     "jest": "^23.5.0",
     "nodemon": "^1.18.3",
     "prettier": "^1.14.2",
-    "supertest": "^3.1.0",
-    "winston": "^3.0.0"
+    "supertest": "^3.1.0"
   },
   "engines": {
     "node": ">=6.1.0"

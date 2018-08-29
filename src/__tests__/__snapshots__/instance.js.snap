@@ -1,40 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`instance can be set to MaskLogger and log properly 1`] = `
-Array [
-  Array [
-    Object {
-      "event": "USER-LOGIN",
-      "password": "dummy-password",
-    },
-  ],
-  Array [
-    Object {
-      "event": "USER-LOGIN",
-      "password": "dummy-password",
-      "result": "success",
-    },
-  ],
-]
-`;
-
-exports[`instance can be set to MaskLogger and log properly 2`] = `Array []`;
-
-exports[`instance can be set to MaskLogger and log properly 3`] = `
-Array [
-  Array [
-    Object {
-      "category": "CUSTOM_ERROR",
-      "event": "USER-LOGIN",
-      "message": "user with the email already exists",
-      "password": "dummy-password",
-      "result": "failure",
-    },
-  ],
-]
-`;
-
-exports[`instance can be set to winston and log properly 1`] = `
+exports[`instance can be set to other instance and log properly 1`] = `
 Array [
   Array [
     Object {
@@ -50,9 +16,9 @@ Array [
 ]
 `;
 
-exports[`instance can be set to winston and log properly 2`] = `Array []`;
+exports[`instance can be set to other instance and log properly 2`] = `Array []`;
 
-exports[`instance can be set to winston and log properly 3`] = `
+exports[`instance can be set to other instance and log properly 3`] = `
 Array [
   Array [
     Object {
