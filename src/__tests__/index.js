@@ -1,6 +1,7 @@
 import logger, {
 	logAction,
 	logOperation,
+	setupLoggerInstance,
 	requestIdMiddleware,
 	autoNext,
 	tagService,
@@ -19,6 +20,10 @@ describe('n-auto-logger exports', () => {
 
 	it('logOperation', () => {
 		expect(typeof logOperation).toBe('function');
+	});
+
+	it('setupLoggerInstance', () => {
+		expect(typeof setupLoggerInstance).toBe('function');
 	});
 
 	it('autoNext', () => {
