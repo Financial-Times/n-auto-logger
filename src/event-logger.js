@@ -1,11 +1,12 @@
-import logger from '@financial-times/n-logger';
 import { onlyValues, removeObjectKeys } from '@financial-times/n-utils';
 
+import { getLoggerInstance } from './instance';
 import failureLogger from './failure-logger';
 import { fieldStringToArray } from './utils';
 import { RESULTS, ALWAYS_MUTTED } from './constants';
 
 const createEventLogger = meta => {
+	const logger = getLoggerInstance();
 	const mutedMetaFields = [
 		...fieldStringToArray(process.env.LOGGER_MUTE_FIELDS),
 		...ALWAYS_MUTTED,

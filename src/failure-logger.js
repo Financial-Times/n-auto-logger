@@ -1,14 +1,15 @@
-import logger from '@financial-times/n-logger';
 import NError, {
 	isFetchError,
 	parseFetchError,
 } from '@financial-times/n-error';
 import { onlyValues, removeObjectKeys } from '@financial-times/n-utils';
 
+import { getLoggerInstance } from './instance';
 import { fieldStringToArray } from './utils';
 import { CATEGORIES, ALWAYS_MUTTED, UNMUTTABLE, RESULTS } from './constants';
 
 const statusLoggerWithFilter = log => {
+	const logger = getLoggerInstance();
 	const loggerMuteFields = [
 		...fieldStringToArray(process.env.LOGGER_MUTE_FIELDS),
 		...ALWAYS_MUTTED,
@@ -20,6 +21,8 @@ const statusLoggerWithFilter = log => {
 };
 
 export default (context = {}) => async e => {
+	const logger = getLoggerInstance();
+
 	// in case of failure without a specified error, e.g. .failure()
 	if (typeof e === 'undefined' || e === null) {
 		return logger.warn({
