@@ -53,9 +53,9 @@ setupLoggerInstance(winston); // if logger instance not set, it would use n-logg
 
 ### decorate functions
 
-A top level execution is categorised as an Operation, this can be an express middleware or controller function. Any lower level execution is categorised as an Action, and a simple two-layer operation-action is encouraged.
+A top level execution is categorised as an Operation, this can be an express middleware or controller function. Any lower level execution is categorised as an Action, and a two-level model of operation-action is encouraged.
 
-With different log level settings, it would log the start, success/failure status of the function execution with necessary metadata to locate the operation and action with function names and the cause of failures.
+With different log level settings, it would log the start, success/failure `status` of the function execution, function names to `scope` the operation/action, description of the `error` and params you need to `recreate` the error.
 
 ```js
 import { logOperation } from '@financial-times/n-auto-logger';
