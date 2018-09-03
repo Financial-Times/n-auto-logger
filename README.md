@@ -26,11 +26,11 @@ a configurable logger [decorator](https://github.com/Financial-Times/n-express-e
   * [thread the log](#thread-the-log)
   * [config log level](#config-log-level)
 - [Gotcha](#gotcha)
+  * [the Log](#the-log)
   * [the Meta](#the-meta)
   * [ignored fields](#ignored-fields)
   * [error auto parse](#error-auto-parse)
-  * [log auto trim](#log-auto-trim)
-  * [mute logger in test](#mute-logger-in-test)
+  * [test mock](#test-mock)
 - [Licence](#licence)
 
 <br>
@@ -74,6 +74,12 @@ const action = (params: Object, meta: Object) => {}; // the function signature n
 
 export default logAction(action);
 ```
+```
+const operation = ({ meta }, res, next) => {
+  action(param, meta); // pass the meta object from req.meta to thread operation/action
+  //...
+};
+```
 
 > [want even less lines of code?](https://github.com/Financial-Times/n-express-enhancer#enhance-a-set-of-functions)
 
@@ -103,6 +109,17 @@ LOGGER_MUTE_FIELDS=transactionId, userId
 ```
 
 ## Gotcha
+
+### the Log
+
+`threader`(requestId, userId)-`scope`(operation, action, service)-`status`(success/failure)-`error`(category, status)-`recreation`(params used in the function call)
+
+based on the log, a brief next step guideline is as following:
+
+* `NODE_SYSTEM_ERROR` would indicate implementation flaws in the system codebase
+* `CUSTOM_ERROR` or 4XX `FETCH_RESPONSE_ERROR` would indicate known issues happening or validation/user journey flaws in the system
+* 5XX `FETCH_RESPONSE_ERROR` would indicate issues potentially in the codebase of upstream systems
+* `FETCH_NETWORK_ERROR` can be caused either by configuration in current system or upstream systems
 
 ### the Meta
 
@@ -144,11 +161,8 @@ throw nError({ status: 404 }).extend({ handler: 'REDIRECT_TO_INDEX' });
 * Custom objects extends native Error object
 * [NError](https://github.com/Financial-Times/n-error)
 
-### log auto trim
 
-`n-auto-logger` would trim any empty fields and method fields in the input meta or error objects automatically to concise log ([detail](src/index.js)), you shouldn't be concerned about passing excessive meta fields or extend Error object with methods.
-
-### mute logger in test
+### test mock
 
 stub the logger instance instead of the whole module
 
