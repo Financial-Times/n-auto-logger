@@ -1,10 +1,8 @@
 # n-auto-logger 
 
-a configurable logger [decorator](https://github.com/Financial-Times/n-express-enhancer) to automate function logs
+a configurable logger [decorator](https://github.com/Financial-Times/n-express-enhancer) to automate function logs, compatible with [winston](https://github.com/winstonjs/winston), [n-logger](https://github.com/Financial-Times/n-logger), [n-mask-logger](https://github.com/financial-Times/n-mask-logger), etc.
 
-> compatible with [winston](https://github.com/winstonjs/winston), [n-logger](https://github.com/Financial-Times/n-logger), [n-mask-logger](https://github.com/financial-Times/n-mask-logger) and more
-
-> consolidated into [n-express-monitor](https://github.com/financial-Times/n-mask-logger) and we encourage to use it instead unless you want more customisation
+> It has been consolidated into [n-express-monitor](https://github.com/financial-Times/n-express-monitor), please use that instead unless you're curious about things under the hood or want to customise your own tool chain
 
 [![npm version](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger.svg)](https://badge.fury.io/js/%40financial-times%2Fn-auto-logger)
 ![npm download](https://img.shields.io/npm/dm/@financial-times/n-auto-logger.svg)
