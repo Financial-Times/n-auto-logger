@@ -74,7 +74,7 @@ const action = (params: Object, meta: Object) => {}; // the function signature n
 
 export default logAction(action);
 ```
-```
+```js
 const operation = ({ meta }, res, next) => {
   action(param, meta); // pass the meta object from req.meta to thread operation/action
   //...
