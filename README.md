@@ -58,13 +58,16 @@ A top level execution is categorised as an Operation, this can be an express mid
 With different log level settings, it would log the start, success/failure `status` of the function execution, function names to `scope` the operation/action, description of the `error` and params you need to `recreate` the error.
 
 ```js
-import { logOperation } from '@financial-times/n-auto-logger';
+import { compose, autoNext, logOperation } from '@financial-times/n-auto-logger';
 
-const operation = (req, res, next) => {
-  next();
+const operation = (req, res) => {
+  //let the error to be thrown
 };
 
-export default logOperation(operation);
+export default compose(
+  autoNext,
+  logOperation,
+)(operation);
 ```
 
 ```js
