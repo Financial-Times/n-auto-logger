@@ -10,9 +10,7 @@ const logAction = actionFunction => (param = {}, meta = {}, ...excessive) => {
 		typeof meta !== 'object'
 	) {
 		throw Error(
-			`invalid input for action function [${
-				actionFunction.name
-			}] following signature standard of (param: Object, meta?: Object)`,
+			`invalid input for action function [${actionFunction.name}] following signature standard of (param: Object, meta?: Object)`,
 		);
 	}
 
