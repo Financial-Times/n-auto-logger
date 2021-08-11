@@ -3,12 +3,12 @@
 
 references:
 
-  container_config_node8: &container_config_node8
+  container_config_node12: &container_config_node12
     working_directory: ~/project/build
     docker:
-      - image: circleci/node:8-browsers
+      - image: circleci/node:12-browsers
 
-  container_config_lambda_node8: &container_config_lambda_node8
+  container_config_lambda_node12: &container_config_lambda_node12
     working_directory: ~/project/build
     docker:
       - image: lambci/lambda:build-nodejs8.10
@@ -60,7 +60,7 @@ version: 2
 jobs:
 
   build:
-    <<: *container_config_node8
+    <<: *container_config_node12
     steps:
       - checkout
       - run:
@@ -93,7 +93,7 @@ jobs:
             - build
 
   test:
-    <<: *container_config_node8
+    <<: *container_config_node12
     steps:
       - *attach_workspace
       - run:
@@ -109,7 +109,7 @@ jobs:
           destination: test-results
 
   publish:
-    <<: *container_config_node8
+    <<: *container_config_node12
     steps:
       - *attach_workspace
       - run:
