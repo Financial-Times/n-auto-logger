@@ -31,7 +31,7 @@ export default (context = {}) => async e => {
 		});
 	}
 	// in case of a fetch error, both Response Error and Network Error
-	// find more details in https://github.com/Financial-Times/n-error/blob/master/src/parser.js
+	// find more details in https://github.com/Financial-Times/n-error/blob/main/src/parser.js
 	if (isFetchError(e)) {
 		const parsed = await parseFetchError(e); // parsed: NError
 		const { stack, ...rest } = parsed;
