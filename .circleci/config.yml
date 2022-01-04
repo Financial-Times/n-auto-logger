@@ -67,6 +67,8 @@ jobs:
           name: Checkout next-ci-shared-helpers
           command: git clone --depth 1 git@github.com:Financial-Times/next-ci-shared-helpers.git .circleci/shared-helpers
       - *restore_npm_cache
+      - node/install-npm:
+          version: "7"
       - run:
           name: Install project dependencies
           command: make install
@@ -78,8 +80,6 @@ jobs:
           command: .circleci/shared-helpers/helper-generate-build-state-artifacts
           when: always
       - *cache_npm_cache
-      - node/install-npm:
-          version: "7"
       - store_artifacts:
           path: build-state
           destination: build-state
